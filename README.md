@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/authcompanion/authcompanion" rel="noopener">
+  <a href="https://github.com/authcompanion/authcompanion2" rel="noopener">
  <img width=200px height=200px src="https://i.imgur.com/VjsHEC9.png" alt="Project logo"></a>
 </p>
 
@@ -13,10 +13,10 @@
 <a href="">
      <img alt="Active" src="https://img.shields.io/badge/status-needs%20early%20adopter%20feedback-orange?">
    </a>
-   <a href="https://github.com/pmprosociety/authcompanion2/stargazers">
-     <img alt="GitHub stars" src="https://img.shields.io/github/stars/pmprosociety/authcompanion2">
+   <a href="https://github.com/authcompanion/authcompanion2/stargazers">
+     <img alt="GitHub stars" src="https://img.shields.io/github/stars/authcompanion/authcompanion2">
    </a>
-   <a href="https://github.com/denoland/deno/releases/tag/v1.21.2">
+   <a href="https://nodejs.org/en/">
      <img src="https://img.shields.io/badge/node-v18.5.0-green?logo=node.js"/>
    </a>
 

@@ -1,0 +1,7 @@
+node_modules
+.env
+*.db
+keyfile
+.DS_Store
+.vscode
+.idea

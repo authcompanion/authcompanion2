@@ -1,0 +1,29 @@
+{
+  "name": "authc2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon",
+    "test": "ava",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/static": "^6.4.0",
+    "argon2": "^0.28.7",
+    "better-sqlite3": "^7.5.3",
+    "dotenv": "^16.0.1",
+    "emailjs": "^4.0.0",
+    "fastify": "^4.2.0",
+    "fastify-plugin": "^3.0.1",
+    "jose": "^4.8.3"
+  },
+  "devDependencies": {
+    "ava": "^4.3.1",
+    "nodemon": "^2.0.19"
+  }
+}

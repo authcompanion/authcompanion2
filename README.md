@@ -22,29 +22,35 @@
 
 </div>
 <br />
-<p align="center">  <a href="https://docs.authcompanion.com/"> Read the  Documentation Here</a>
+<p align="center">  <a href="https://docs.authcompanion.com/"> Read the Documentation Here</a>
 </p>
 
 ---
 
 ## Introduction
 
-AuthCompanion aims to satisfy the most common authentication and user management needs for a web application.
+AuthCompanion aims to satisfy the most common authentication and user management
+needs for web applications.
 
 With AuthC you can:
 
 - Confidently store your web application's user accounts
-- Securely handle the registration, login, logout, and account recovery of your applicaiton's users
-- Generate and validate [JWTs](https://jwt.io/introduction), a token used for authenticating users into your application's backend APIs
+- Securely handle the registration, login, logout, and account recovery of your
+  applicaiton's users
+- Generate and validate [JWTs](https://jwt.io/introduction), a token used for
+  authenticating users into your application's backend APIs
 
 ## Try it
 
 The instructions below will launch the default server for development purposes.
-Please see the env.example file for more details on the server configuration options.
+Please see the env.example file for more details on the server configuration
+options.
 
 ### With Docker
 
-Make sure to have the [respository cloned](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository). Then from the main directory, build the AuthC server image:
+Make sure to have the
+[respository cloned](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
+Then from the main directory, build the AuthC server image:
 
 ```bash
 $ docker build -t authc_server .
@@ -64,7 +70,8 @@ Pre-requirement:
 
 - [Node.js](http://nodejs.org) **version 16+**
 
-Clone the repo if you haven't done so, and install dependencies using this command:
+Clone the repo if you haven't done so, and install dependencies using this
+command:
 
 ```bash
 $ npm install
@@ -92,20 +99,22 @@ web form: http://localhost:3002/v1/web/register
 
 Next, log in with the account you just created using your email and password at
 this web form: http://localhost:3002/v1/web/login. The server response includes
-a special access token for use when authenticating to backend APIs.
+an access token for use when authenticating to backend APIs.
 
 ### 3. Examine the APIs
 
-Lastly, check out the [Authentication API](#authentication-api) for information
-on how you can manage user authentication with tokens!
+Lastly, have a read through the [Authentication API](#authentication-api) for
+information on how you can manage user authentication for your web app. Both the
+Web Forms and Auth API work together to get up and running with user auth
+quickly.
 
 ---
 
 ## Features
 
-- [x] **Web Forms for User Auth:** Use pre-built and customizable web forms for
-      your application users to: log in with their credentials, register an
-      account, update their profile, and issue forgotten passwords.
+- [x] **Web Forms for User Authentication:** Use pre-built and customizable web
+      forms for your application users to: log in with their credentials,
+      register an account, update their profile, and issue forgotten passwords.
 
 - [x] **Manage User Profiles and JWTs:** Update the password and profile
       information of your users - all account information is stored in a SQLite
@@ -116,29 +125,32 @@ on how you can manage user authentication with tokens!
       the **Forgot Password** flow which sends a special link via email for
       helping users quickly recover their account.
 
-- [x] **Extensible Plugins:** AuthC supports a plugin system for easily adding
-      more functionality and coving more use cases to the base platform.
+- [x] **Extensible Platform:** AuthC supports a
+      [plugin system](https://www.fastify.io/docs/latest/Reference/Plugins/) for
+      easily adding more functionality and covering more auth use cases.
 
 ### Web Forms for Authentication
 
-The web forms are built using
-[Vue.js](https://v3.vuejs.org/) and [Tailwindcss](https://tailwindcss.com/) -
-making them easily customizable for your specific branding and authentication needs.
-No build step required to make changes to the web forms; just save and then view your code changes. 👍
+The web forms are built using [Vue.js](https://v3.vuejs.org/) and
+[Tailwindcss](https://tailwindcss.com/) - making them easily customizable for
+your specific branding and authentication needs. No build step required to make
+changes to the Web Form look and feel; just save and then view your style
+changes. 👍
 
 |             Login Screen             |            Registration Screen             |
 | :----------------------------------: | :----------------------------------------: |
 | ![Login](./.github/public/login.png) | ![Register](./.github/public/register.png) |
 |  http://localhost:3002/v1/web/login  |   http://localhost:3002/v1/web/register    |
 
-Also included in Authcompanion is the profile page (for updating user accounts), available at `/profile` and
-the forgot password page at `/recovery`.
+Also included in Authcompanion is the profile page (for updating user accounts),
+available at `/profile` and the forgot password page at `/recovery`.
 
 ---
 
 ## Authentication API Docs
 
-The RESTful Authentication API powers the web forms and rounds out your user authentication flows. Have a look:
+The RESTful Authentication API powers the web forms and is used to round out
+your user authentication flows. Have a look:
 
 ### Server URL
 
@@ -150,9 +162,10 @@ Returns Content-Type: application/json
 
 ### auth/register
 
-Description: Register a user. Returns a JWT access token and sets a
-refresh token (as a http only cookie). JWTs are used by your application to
-authenticate a user so make sure to store the access token in your frontend application's memory.
+Description: Register a user. Returns a JWT access token and sets a refresh
+token (as a http only cookie). JWTs are used by your application to authenticate
+a user so make sure to store the access token in your frontend application's
+memory.
 
 **POST** Request Body:
 
@@ -256,12 +269,14 @@ Response:
 
 ### auth/recovery
 
-Description: If the request has a valid user email, issue an account recovery email which contains a URL with a recovery token
-(referred to as a Magic Link).
+Description: If the request has a valid user email, issue an account recovery
+email which contains a URL with a recovery token (referred to as a Magic Link).
 
 Works together with '/auth/refresh/' to restore a user's access to an account.
 
-Your application UI will be responsible for 1) trading the recovery token for an access token using '/auth/refresh/' below 2) handling where to route the user within the application once successful.
+Your application UI will be responsible for 1) trading the recovery token for an
+access token using '/auth/refresh/' below 2) handling where to route the user
+within the application once successful.
 
 **POST** Request Body:
 
@@ -284,15 +299,17 @@ Response:
 
 ### auth/refresh
 
-Description: Sometimes your access token (JWTs) will expire. When it does, you can refresh the access token without asking your user to log in again.
+Description: Sometimes your access token (JWTs) will expire. When it does, you
+can refresh the access token without asking your user to log in again.
 
-If the request has a valid refresh token (stored as http only
-cookie) return an access token and set a new refresh token (http only cookie).
+If the request has a valid refresh token (stored as http only cookie) return an
+access token and set a new refresh token (http only cookie).
 
 Cookie required: `refreshToken={user's refresh token}`
 
-OR If the request has a valid and short lived recovery token (issued
-from the recovery email), trade it for a new access token (on this same route), so the user can login. This completed the "Forgot Password" user flow!
+OR If the request has a valid and short lived recovery token (issued from the
+recovery email), trade it for a new access token (on this same route), so the
+user can login. This completed the "Forgot Password" user flow!
 
 **POST** Request Body (optional, leave blank if cookie is available):
 
@@ -326,7 +343,8 @@ Response:
 
 ## Related Readings
 
-Be sure to familiarize yourself with token-based authentication using JSON Web Tokens.
+Be sure to familiarize yourself with token-based authentication using JSON Web
+Tokens.
 
 - [The Ultimate Guide to handling JWTs on frontend
   clients](https://hasura.io/blog/best-practices-of-using-jwt-with-graphql/)
@@ -336,7 +354,10 @@ Be sure to familiarize yourself with token-based authentication using JSON Web T
 ## License
 
 AuthCompanion is licensed under the
-[Big Time Public License](https://bigtimelicense.com/versions/2.0.1). These terms let you use and share this software for noncommercial purposes and in small business for free, while also guaranteeing that paid licenses for big businesses will be available on fair, reasonable, and nondiscriminatory terms.
+[Big Time Public License](https://bigtimelicense.com/versions/2.0.1). These
+terms let you use and share this software for noncommercial purposes and in
+small business for free, while also guaranteeing that paid licenses for big
+businesses will be available on fair, reasonable, and nondiscriminatory terms.
 
 ## Contributions
 

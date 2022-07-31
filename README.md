@@ -22,8 +22,8 @@
 
 </div>
 <br />
-<!-- <p align="center">  <a href="https://docs.authcompanion.com/"> Read the  Documentation Here</a>
-</p> -->
+<p align="center">  <a href="https://docs.authcompanion.com/"> Read the  Documentation Here</a>
+</p>
 
 ---
 

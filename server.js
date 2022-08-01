@@ -40,4 +40,4 @@ function handleSignal() {
 process.on("SIGTERM", handleSignal);
 process.on("SIGINT", handleSignal);
 
-await startServer();
+startServer();

@@ -1,20 +1,41 @@
 //import fastifyPlugin from "fastify-plugin";
+import { readFileSync } from "fs";
 
 const webRoutes = async function (fastify, options) {
   fastify.get("/login", (request, reply) => {
-    return reply.sendFile("loginPage.html");
+    const loginPage = readFileSync("./ui/loginPage.html");
+    reply.headers({
+      "Content-Type": `text/html`,
+    });
+    return loginPage;
   });
   fastify.get("/register", (request, reply) => {
-    return reply.sendFile("registrationPage.html");
+    const registrationPage = readFileSync("./ui/registrationPage.html");
+    reply.headers({
+      "Content-Type": `text/html`,
+    });
+    return registrationPage;
   });
   fastify.get("/profile", (request, reply) => {
-    return reply.sendFile("profilePage.html");
+    const profilePage = readFileSync("./ui/profilePage.html");
+    reply.headers({
+      "Content-Type": `text/html`,
+    });
+    return profilePage;
   });
   fastify.get("/recovery", (request, reply) => {
-    return reply.sendFile("recoveryPage.html");
+    const recoveryPage = readFileSync("./ui/recoveryPage.html");
+    reply.headers({
+      "Content-Type": `text/html`,
+    });
+    return recoveryPage;
   });
   fastify.get("/home", (request, reply) => {
-    return reply.sendFile("homePage.html");
+    const homePage = readFileSync("./ui/homePage.html");
+    reply.headers({
+      "Content-Type": `text/html`,
+    });
+    return homePage;
   });
 };
 

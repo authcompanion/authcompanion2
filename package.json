@@ -13,7 +13,6 @@
   "author": "Paul Fischer",
   "license": "Big Time Public License",
   "dependencies": {
-    "@fastify/static": "^6.4.0",
     "argon2": "^0.28.7",
     "better-sqlite3": "^7.5.3",
     "dotenv": "^16.0.1",

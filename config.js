@@ -1,10 +1,11 @@
-import * as dotenv from 'dotenv';
+import * as dotenv from "dotenv";
 dotenv.config();
 
 const AUTHPORT = process.env.PORT || "3002";
 const ORIGIN = process.env.ORIGIN || "http://localhost:3002";
 const SECURE = process.env.SECURE || "false";
-const RECOVERYURL = process.env.RECOVERY_REDIRECT_URL || "http://localhost:3002/v1/web/home";
+const RECOVERYURL =
+  process.env.RECOVERY_REDIRECT_URL || "http://localhost:3002/v1/web/home";
 const DBPATH = process.env.DB_PATH || "./authcompanion_users.db";
 const KEYPATH = process.env.KEY_PATH || "./keyfile";
 const WEBMODE = process.env.WEB_MODE || "true";

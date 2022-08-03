@@ -20,7 +20,7 @@ export async function verifyPasswordWithHash(password, hash) {
   return await argon2.verify(hash, password, hashingConfig);
 }
 
-// Describes how to use! 
+// Describes how to use!
 // hashPassword("somePassword").then(async (hash) => {
 //     console.log("Hash + salt of the password:", hash)
 //     console.log("Password verification success:", await verifyPasswordWithHash("somePassword", hash));

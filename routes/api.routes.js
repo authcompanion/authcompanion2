@@ -29,4 +29,3 @@ const serverRoutes = async function (fastify, options) {
 //Wrap with Fastify Plugin
 //export default fastifyPlugin(serverRoutes);
 export default serverRoutes;
-

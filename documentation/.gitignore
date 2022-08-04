@@ -1,0 +1,10 @@
+node_modules
+.temp
+.cache
+docs/.vuepress/dist/
+.DS_Store
+.env
+*.db
+keyfile
+.vscode
+.idea

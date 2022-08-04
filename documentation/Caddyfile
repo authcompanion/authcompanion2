@@ -1,0 +1,11 @@
+{
+    auto_https off
+}
+docs.authcompanion.com:80 {
+    root * /usr/share/caddy
+    file_server
+}
+
+authc-docs.fly.dev:80 {
+    redir https://docs.authcompanion.com
+}

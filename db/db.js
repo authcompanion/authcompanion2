@@ -5,14 +5,13 @@ import fastifyPlugin from "fastify-plugin";
 
 const dbfunc = async function connectDB(fastify, options) {
   let db = {};
-
   try {
     //create test database if just testing the application
     if (options.testdb) {
       config.DBPATH = "./test.db";
       db = new Database(config.DBPATH);
 
-      const migration = readFileSync("./db/1__users.sql", "utf8");
+      const migration = readFileSync("./db/1__main.sql", "utf8");
       db.exec(migration);
       console.log("Test database - CREATED");
     }
@@ -24,7 +23,7 @@ const dbfunc = async function connectDB(fastify, options) {
 
       console.log("Sqlite3 database - CREATED");
 
-      const migration = readFileSync("./db/1__users.sql", "utf8");
+      const migration = readFileSync("./db/1__main.sql", "utf8");
       db.exec(migration);
     } else {
       db = new Database(config.DBPATH);

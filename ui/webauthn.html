@@ -17,23 +17,23 @@
         font-family: "Inter var", sans-serif;
       }
     </style>
-    <title>Login</title>
+    <title>authcompanion</title>
   </head>
 
   <body class="flex flex-col h-full bg-gray-50">
     <div id="app" class="">
       <div class="w-full my-8 text-center">
-        <p>COMPANY LOGO</p>
+        <p>COMPANY LOGO.</p>
       </div>
       <div class="w-full my-8 text-center">
         <p class="py-3 text-2xl font-semibold text-gray-700">
-          Please sign into your account
+          Please register your account
         </p>
         <p class="py-3 text-sm font-semibold text-gray-700">
-          Or if you don't have one,
+          Or if you have one,
           <span class="text-blue-700 underline">
-            <a href="register">Register</a>
-          </span>
+            <a href="login">Login</a></span
+          >
           instead
         </p>
       </div>
@@ -55,6 +55,15 @@
             <!-- Form -->
             <div class="grid max-w-md grid-cols-1 gap-6">
               <label class="block">
+                <span class="text-gray-700">Full Name</span>
+                <input
+                  type="text"
+                  v-model="name"
+                  class="block w-full mt-1 text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:border-gray-500 focus:bg-white focus:ring-0"
+                  placeholder=""
+                />
+              </label>
+              <label class="block">
                 <span class="text-gray-700">Email</span>
                 <input
                   type="email"
@@ -72,35 +81,21 @@
                   placeholder=""
                 />
               </label>
+              <label class="block">
+                <span class="text-gray-700"> Confirm Password</span>
+                <input
+                  v-model="confirmPassword"
+                  type="password"
+                  class="block w-full mt-1 text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:border-gray-500 focus:bg-white focus:ring-0"
+                  placeholder=""
+                />
+              </label>
               <button
-                type="submit"
-                class="block w-full px-6 py-3 text-lg font-semibold text-white bg-gray-800 rounded-lg shadow-xl hover:text-white hover:bg-gray-900"
                 @click="submit"
-                @keyup.enter="submit"
+                class="block w-full px-6 py-3 mt-3 text-lg font-semibold text-white bg-gray-800 rounded-lg shadow-xl hover:text-white hover:bg-black"
               >
-                > Login
+                > Register
               </button>
-
-              <div class="relative flex py-5 items-center">
-                <div class="flex-grow border-t border-gray-400"></div>
-                <span class="flex-shrink mx-4 text-gray-700">Or</span>
-                <div class="flex-grow border-t border-gray-400"></div>
-              </div>
-
-              <button
-                type="button"
-                class="block w-full px-6 py-3 text-lg font-semibold text-white bg-gray-800 rounded-lg shadow-xl hover:text-white hover:bg-gray-900"
-                @click="passkeySubmit"
-              >
-                > Passkey
-              </button>
-              <a
-                href="#"
-                class="tracking-tighter text-blue-700 border-gray-200 cursor-pointer hover:border-gray-400"
-                @click="forgotPassword"
-              >
-                <span>Forgot Password?</span>
-              </a>
             </div>
           </div>
         </div>
@@ -117,13 +112,16 @@
       </div>
     </div>
     <!-- scripts -->
-    <script>
+    <script type="module">
       const { ref, computed } = Vue;
-      const { startAuthentication } = SimpleWebAuthnBrowser;
+      const { startRegistration } = SimpleWebAuthnBrowser;
+
       const app = Vue.createApp({
         setup() {
+          const name = ref("");
           const email = ref("");
           const password = ref("");
+          const confirmPassword = ref("");
 
           const showError = ref(false);
           let errorTitle = ref(null);
@@ -131,82 +129,64 @@
 
           const submit = async () => {
             try {
-              let response = await fetch("/v1/auth/login", {
-                method: "POST",
-                credentials: "include",
-                body: JSON.stringify({
-                  email: email.value,
-                  password: password.value,
-                }),
+              // if (password.value !== confirmPassword.value) {
+              //   showError.value = true;
+              //   errorTitle.value = "Validation Error";
+              //   errorDetail.value = "Passwords do not match, please try again";
+
+              //   return;
+              // }
+
+              let response = await fetch("/v1/auth/registration-options", {
+                method: "GET",
+                // body: JSON.stringify({
+                //   name: name.value,
+                //   email: email.value,
+                //   password: password.value,
+                // }),
                 headers: {
                   "content-type": "application/json",
                 },
               });
-              const appOrigin = await response.headers.get(
-                "x-authc-app-origin"
-              );
+              // const appOrigin = await response.headers.get(
+              //   "x-authc-app-origin"
+              // );
               const resbody = await response.json();
 
-              if (response.ok) {
-                window.localStorage.setItem(
-                  "ACCESS_TOKEN",
-                  resbody.data.attributes.access_token
-                );
-
-                window.location.href = appOrigin;
-              } else {
-                errorTitle.value = resbody.errors[0].title;
-                errorDetail.value = resbody.errors[0].detail;
-
-                showError.value = true;
-              }
-            } catch (e) {
-              console.log(e);
-              showError.value = true;
-
-              errorTitle.value = "Error";
-              errorDetail.value =
-                "There was an issue logging in, please try again";
-            }
-          };
-
-          const forgotPassword = () => {
-            window.location.href = "recovery";
-          };
-
-          const passkeySubmit = async () => {
-            try {
-              let response = await fetch("/v1/auth/login-options", {
-                method: "GET",
-                headers: {
-                  "content-type": "application/json",
-                },
-              });
+              let attResp;
 
               if (response.ok) {
-                const resbody = await response.json();
+                console.log(resbody);
+                attResp = await startRegistration(resbody);
+                console.log(attResp);
 
-                const asseResp = await startAuthentication(resbody);
-                console.log(asseResp);
-
-
-
-
-                // const appOrigin = await response.headers.get(
-                //   "x-authc-app-origin"
-                // );
+                // let response = await fetch("/v1/auth/registration-options", {
+                //   method: "GET",
+                //   // body: JSON.stringify({
+                //   //   name: name.value,
+                //   //   email: email.value,
+                //   //   password: password.value,
+                //   // }),
+                //   headers: {
+                //     "content-type": "application/json",
+                //   },
+                // });
 
                 // window.localStorage.setItem(
                 //   "ACCESS_TOKEN",
                 //   resbody.data.attributes.access_token
                 // );
+                // showError.value = false;
+
+                // showError.value = false;
 
                 // window.location.href = appOrigin;
               } else {
-                errorTitle.value = resbody.errors[0].title;
-                errorDetail.value = resbody.errors[0].detail;
-
                 showError.value = true;
+
+                errorTitle.value = "Error";
+                errorDetail.value =
+                  "Error occured, please try registering again";
               }
             } catch (e) {
               console.log(e);
@@ -214,20 +194,20 @@
 
               errorTitle.value = "Error";
               errorDetail.value =
-                "There was an issue connecting, refresh and try again";
+                "There was an issue connecting to authcompanion";
             }
           };
 
-          // expose to the html template
+          // expose to template
           return {
             showError,
             errorTitle,
             errorDetail,
             submit,
-            passkeySubmit,
+            name,
             email,
             password,
-            forgotPassword,
+            confirmPassword,
           };
         },
       });

@@ -12,9 +12,14 @@ import { profileRecoveryHandler } from "../services/recovery.js";
 
 import { tokenRefreshHandler } from "../services/refresh.js";
 //import { refreshSchema } from "../services/schemas/refreshSchema.js";
-//import fastifyPlugin from "fastify-plugin";
+
+import { registrationOptionsHandler } from "../services/webAuthn/registrationOptions.js";
+import { registrationVerificationHandler } from "../services/webAuthn/registrationVerification.js";
+import { loginOptionsHandler } from "../services/webAuthn/loginOptions.js";
+import { loginVerificationHandler } from "../services/webAuthn/loginVerification.js";
 
 const serverRoutes = async function (fastify, options) {
+  //auth API routes
   fastify.post("/register", registrationSchema, registrationHandler);
   fastify.post("/login", loginSchema, loginHandler);
   fastify.post(
@@ -24,8 +29,12 @@ const serverRoutes = async function (fastify, options) {
   );
   fastify.post("/recovery", profileRecoverySchema, profileRecoveryHandler);
   fastify.post("/refresh", tokenRefreshHandler);
+
+  //webAuthn routes
+  fastify.get("/registration-options", registrationOptionsHandler);
+  fastify.post("/registration-verification", registrationVerificationHandler);
+  fastify.get("/login-options", loginOptionsHandler);
+  fastify.get("/login-verification", loginVerificationHandler);
 };
 
-//Wrap with Fastify Plugin
-//export default fastifyPlugin(serverRoutes);
 export default serverRoutes;

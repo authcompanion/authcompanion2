@@ -7,17 +7,17 @@ export const registrationVerificationHandler = async (request, reply) => {
   try {
     const db = new Database(config.DBPATH);
 
-    // Human-readable title for your website
-    const rpName = "AuthCompanion";
-    // A unique identifier for your website
+    // A unique identifier for the Authc website
     const rpID = "localhost";
     // The URL at which registrations and authentications should occur
     const origin = `http://${rpID}:3002`;
 
     // Fetch user from database
-    const stmt = db.prepare("SELECT challenge FROM users WHERE email = ?;");
+    const requestedAccount = request.headers["x-authc-app-userid"]
 
-    const { challenge } = await stmt.get("hello_world@authcompanion.com");
+    const stmt = db.prepare("SELECT challenge FROM users WHERE email = ?;");
+    
+    const { challenge } = await stmt.get(requestedAccount);
 
     //verify the request for registration
     const verification = await verifyRegistrationResponse({
@@ -36,6 +36,7 @@ export const registrationVerificationHandler = async (request, reply) => {
       throw { statusCode: 400, message: "Registration Failed" };
     }
 
+    //create the returned authenticator
     const { credentialPublicKey, credentialID, counter } =
       verification.registrationInfo;
 
@@ -47,14 +48,13 @@ export const registrationVerificationHandler = async (request, reply) => {
       credentialPublicKey,
       counter
     );
-    console.log(authenticatorObj);
 
+    //associate the authenticator to the user
     const userStmt = db.prepare(
-      "UPDATE users SET authenticator_id = ? WHERE uuid = '009d3824-f3b9-43d7-aae7-148cfa244124' RETURNING uuid, name, email, jwt_id, created_at, updated_at;"
+      "UPDATE users SET authenticator_id = ? WHERE uuid = ? RETURNING uuid, name, email, jwt_id, created_at, updated_at;"
     );
-    userObj = userStmt.get(authenticatorObj.id);
-
-    console.log(userObj);
+    
+    userObj = userStmt.get(authenticatorObj.id, requestedAccount);
 
     //Prepare the reply
     const userAccessToken = await makeAccesstoken(userObj);

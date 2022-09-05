@@ -3,8 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="https://unpkg.com/favicon.ico" />
     <script src="https://unpkg.com/vue@3.2.37/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.com/@simplewebauthn/browser@6.0.0/dist/bundle/index.es5.umd.min.js"></script>
+    <!-- <script src="https://unpkg.com/browse/qrcode-js-package@1.0.4/qrcode.min.js"></script> -->
     <link
       rel="stylesheet"
       href="https://unpkg.com/@tailwindcss/forms@0.4.0/dist/forms.min.css"
@@ -16,24 +17,23 @@
         font-family: "Inter var", sans-serif;
       }
     </style>
-    <title>authcompanion</title>
+    <title>Registration</title>
   </head>
 
   <body class="flex flex-col h-full bg-gray-50">
     <div id="app" class="">
       <div class="w-full my-8 text-center">
-        <p>COMPANY LOGO.</p>
+        <p>COMPANY LOGO</p>
       </div>
       <div class="w-full my-8 text-center">
         <p class="py-3 text-2xl font-semibold text-gray-700">
-          Please register your account
+          Please Register Your Account
         </p>
         <p class="py-3 text-sm font-semibold text-gray-700">
-          Or if you have one,
+          Or if you have one, please
           <span class="text-blue-700 underline">
             <a href="login">Login</a></span
           >
-          instead
         </p>
       </div>
       <div
@@ -54,12 +54,12 @@
             <!-- Form -->
             <div class="grid max-w-md grid-cols-1 gap-6">
               <label class="block">
-                <span class="text-gray-700">Full Name</span>
+                <span class="text-gray-700">Name</span>
                 <input
                   type="text"
                   v-model="name"
                   class="block w-full mt-1 text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:border-gray-500 focus:bg-white focus:ring-0"
-                  placeholder=""
+                  placeholder="Authy Person"
                 />
               </label>
               <label class="block">
@@ -77,7 +77,7 @@
                   type="password"
                   v-model="password"
                   class="block w-full mt-1 text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:border-gray-500 focus:bg-white focus:ring-0"
-                  placeholder=""
+                  placeholder="********"
                 />
               </label>
               <label class="block">
@@ -86,7 +86,7 @@
                   v-model="confirmPassword"
                   type="password"
                   class="block w-full mt-1 text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:border-gray-500 focus:bg-white focus:ring-0"
-                  placeholder=""
+                  placeholder="********"
                 />
               </label>
               <button
@@ -94,6 +94,20 @@
                 class="block w-full px-6 py-3 mt-3 text-lg font-semibold text-white bg-gray-800 rounded-lg shadow-xl hover:text-white hover:bg-black"
               >
                 > Register
+              </button>
+
+              <div class="relative flex py-5 items-center">
+                <div class="flex-grow border-t border-gray-400"></div>
+                <span class="flex-shrink mx-4 text-gray-700">Or</span>
+                <div class="flex-grow border-t border-gray-400"></div>
+              </div>
+
+              <button
+                type="button"
+                class="block w-full px-6 py-3 text-lg font-semibold text-white bg-gray-800 rounded-lg shadow-xl hover:text-white hover:bg-gray-900"
+                @click="passkeySubmit"
+              >
+                > Passkey
               </button>
             </div>
           </div>
@@ -113,6 +127,7 @@
     <!-- scripts -->
     <script>
       const { ref, computed } = Vue;
+      const { startRegistration } = SimpleWebAuthnBrowser;
       const app = Vue.createApp({
         setup() {
           const name = ref("");
@@ -178,12 +193,69 @@
             }
           };
 
+          const passkeySubmit = async () => {
+            try {
+              let optionsResponse = await fetch(
+                "/v1/auth/registration-options",
+                {
+                  method: "GET",
+                  headers: {
+                    "content-type": "application/json",
+                  },
+                }
+              );
+
+              if (optionsResponse.ok) {
+                const opts = await optionsResponse.json();
+
+                let attResp = await startRegistration(opts);
+
+                let verificationResponse = await fetch(
+                  "/v1/auth/registration-verification",
+                  {
+                    method: "POST",
+                    body: JSON.stringify(attResp),
+                    headers: {
+                      "content-type": "application/json",
+                      "x-authc-app-userid": opts.user.id,
+                    },
+                  }
+                );
+                const reply = await verificationResponse.json();
+                const appOrigin = await verificationResponse.headers.get(
+                  "x-authc-app-origin"
+                );
+
+                window.localStorage.setItem(
+                  "ACCESS_TOKEN",
+                  reply.data.attributes.access_token
+                );
+                showError.value = false;
+                showError.value = false;
+                window.location.href = appOrigin;
+              } else {
+                showError.value = true;
+
+                errorTitle.value = "Error";
+                errorDetail.value =
+                  "Error occured, please try registering again";
+              }
+            } catch (e) {
+              console.log(e);
+              showError.value = true;
+
+              errorTitle.value = "Error";
+              errorDetail.value =
+                "There was an issue connecting to authcompanion";
+            }
+          };
           // expose to template
           return {
             showError,
             errorTitle,
             errorDetail,
             submit,
+            passkeySubmit,
             name,
             email,
             password,

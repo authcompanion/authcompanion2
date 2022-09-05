@@ -185,12 +185,10 @@
 
               if (response.ok) {
                 const resbody = await response.json();
+                console.log(resbody);
 
                 const asseResp = await startAuthentication(resbody);
                 console.log(asseResp);
-
-
-
 
                 // const appOrigin = await response.headers.get(
                 //   "x-authc-app-origin"

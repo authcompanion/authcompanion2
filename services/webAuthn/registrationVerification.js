@@ -13,10 +13,10 @@ export const registrationVerificationHandler = async (request, reply) => {
     const origin = `http://${rpID}:3002`;
 
     // Fetch user from database
-    const requestedAccount = request.headers["x-authc-app-userid"]
+    const requestedAccount = request.headers["x-authc-app-userid"];
 
-    const stmt = db.prepare("SELECT challenge FROM users WHERE email = ?;");
-    
+    const stmt = db.prepare("SELECT challenge FROM users WHERE UUID = ?;");
+
     const { challenge } = await stmt.get(requestedAccount);
 
     //verify the request for registration
@@ -53,7 +53,7 @@ export const registrationVerificationHandler = async (request, reply) => {
     const userStmt = db.prepare(
       "UPDATE users SET authenticator_id = ? WHERE uuid = ? RETURNING uuid, name, email, jwt_id, created_at, updated_at;"
     );
-    
+
     userObj = userStmt.get(authenticatorObj.id, requestedAccount);
 
     //Prepare the reply

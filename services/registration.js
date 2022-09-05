@@ -63,7 +63,6 @@ export const registrationHandler = async (request, reply) => {
       },
     };
   } catch (err) {
-    console.log(err);
     throw { statusCode: err.statusCode, message: err.message };
   }
 };

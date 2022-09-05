@@ -34,7 +34,7 @@ const serverRoutes = async function (fastify, options) {
   fastify.get("/registration-options", registrationOptionsHandler);
   fastify.post("/registration-verification", registrationVerificationHandler);
   fastify.get("/login-options", loginOptionsHandler);
-  fastify.get("/login-verification", loginVerificationHandler);
+  fastify.post("/login-verification", loginVerificationHandler);
 };
 
 export default serverRoutes;

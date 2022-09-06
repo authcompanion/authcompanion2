@@ -10,7 +10,8 @@ export const registrationOptionsHandler = async (request, reply) => {
     //create a user.id for the new registration
     const userUUID = randomUUID();
     //set the PR's ID value
-    const rpID = "localhost"
+    const domain = (new URL(config.ORIGIN));
+    const rpID = domain.hostname
 
     //build webauthn options for "passwordless" flow. 
     let opts = {

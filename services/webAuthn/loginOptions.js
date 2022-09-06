@@ -6,11 +6,15 @@ export const loginOptionsHandler = async (request, reply) => {
   try {
     const db = new Database(config.DBPATH);
 
+    //set the PR's ID value
+    const domain = new URL(config.ORIGIN);
+    const rpID = domain.hostname;
+
     //generate registration options
     const opts = {
       userVerification: "required",
       timeout: 60000,
-      rpID: "localhost",
+      rpID,
     };
 
     const generatedOptions = generateAuthenticationOptions(opts);

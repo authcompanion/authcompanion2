@@ -7,10 +7,11 @@ export const registrationVerificationHandler = async (request, reply) => {
   try {
     const db = new Database(config.DBPATH);
 
-    // A unique identifier for the Authc website
-    const rpID = "localhost";
+    //set the PR's ID value
+    const domain = new URL(config.ORIGIN);
+    const rpID = domain.hostname;
     // The URL at which registrations and authentications should occur
-    const origin = `http://${rpID}:3002`;
+    const origin = config.ORIGIN;
 
     // Fetch user from database
     const requestedAccount = request.headers["x-authc-app-userid"];
@@ -27,8 +28,6 @@ export const registrationVerificationHandler = async (request, reply) => {
       expectedRPID: rpID,
       requireUserVerification: true,
     });
-
-    let userObj = {};
 
     //check if the registration request is verified
     if (!verification.verified) {
@@ -54,7 +53,7 @@ export const registrationVerificationHandler = async (request, reply) => {
       "UPDATE users SET authenticator_id = ? WHERE uuid = ? RETURNING uuid, name, email, jwt_id, created_at, updated_at;"
     );
 
-    userObj = userStmt.get(authenticatorObj.id, requestedAccount);
+    const userObj = userStmt.get(authenticatorObj.id, requestedAccount);
 
     //Prepare the reply
     const userAccessToken = await makeAccesstoken(userObj);

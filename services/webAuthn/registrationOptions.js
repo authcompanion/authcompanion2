@@ -18,7 +18,7 @@ export const registrationOptionsHandler = async (request, reply) => {
       rpName: "AuthCompanion",
       rpID,
       userID: userUUID,
-      userName: `(A username for ${rpID} created at ${Date.now()} by Authcompanion)`,
+      userName: `(A username for ${rpID} created at ${new Date().toGMTString()} by Authcompanion)`,
       timeout: 60000,
       attestationType: "indirect",
       authenticatorSelection: {
@@ -40,9 +40,9 @@ export const registrationOptionsHandler = async (request, reply) => {
     );
     const userObj = registerStmt.get(
       userUUID,
-      "placeholder",
+      "n/a",
       generatedUniqueEmail,
-      "placeholder",
+      "n/a",
       generatedOptions.challenge,
       "1",
       jwtid

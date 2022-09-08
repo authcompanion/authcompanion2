@@ -35,9 +35,10 @@ needs for web application.
 With AuthC you can:
 
 - Securely handle the registration, login, logout, and account recovery of your
-  applicaiton's users using traditional passwords or passkeys
+  applicaiton user accounts. Users can register and login wth traditional passwords or go passwordless with a mobile device using passkeys
 - Generate and validate [JWTs](https://jwt.io/introduction), a token used for your user's session and authenticating them into your application's backend APIs
 - Confidently store and manage your web application's user accounts
+
 
 ## Try it
 

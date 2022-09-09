@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="https://unpkg.com/favicon.ico" />
     <script src="https://unpkg.com/vue@3.2.37/dist/vue.global.prod.js"></script>
     <link
       rel="stylesheet"
@@ -16,7 +15,7 @@
         font-family: "Inter var", sans-serif;
       }
     </style>
-    <title>authcompanion</title>
+    <title>Recovery</title>
   </head>
 
   <body class="flex flex-col h-full bg-gray-50">
@@ -26,10 +25,10 @@
       </div>
       <div class="w-full my-8 text-center">
         <p class="py-3 text-2xl font-semibold text-gray-700">
-          Recover your account
+          Recover Your Account
         </p>
         <p class="py-3 text-sm font-semibold text-gray-700">
-          An email will be sent to your address containing a link to log in.
+          An email will be sent to your address containing a link to login.
         </p>
       </div>
       <div
@@ -60,7 +59,7 @@
               </label>
               <button
                 type="submit"
-                class="block w-full px-6 py-3 mt-3 text-lg font-semibold text-white bg-gray-800 rounded-lg shadow-xl hover:text-white hover:bg-black"
+                class="block w-full px-6 py-3 mt-3 text-sm font-semibold text-white bg-gray-800 rounded-lg shadow-xl hover:text-white hover:bg-black"
                 @click="submit"
                 @keyup.enter="submit"
               >

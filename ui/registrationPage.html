@@ -3,8 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="https://unpkg.com/favicon.ico" />
     <script src="https://unpkg.com/vue@3.2.37/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.com/@simplewebauthn/browser@6.0.0/dist/bundle/index.es5.umd.min.js"></script>
+    <!-- <script src="https://unpkg.com/browse/qrcode-js-package@1.0.4/qrcode.min.js"></script> -->
     <link
       rel="stylesheet"
       href="https://unpkg.com/@tailwindcss/forms@0.4.0/dist/forms.min.css"
@@ -16,24 +17,23 @@
         font-family: "Inter var", sans-serif;
       }
     </style>
-    <title>authcompanion</title>
+    <title>Registration</title>
   </head>
 
   <body class="flex flex-col h-full bg-gray-50">
     <div id="app" class="">
       <div class="w-full my-8 text-center">
-        <p>COMPANY LOGO.</p>
+        <p>COMPANY LOGO</p>
       </div>
       <div class="w-full my-8 text-center">
         <p class="py-3 text-2xl font-semibold text-gray-700">
-          Please register your account
+          Register Your Account
         </p>
         <p class="py-3 text-sm font-semibold text-gray-700">
-          Or if you have one,
+          Or if you have one, please
           <span class="text-blue-700 underline">
             <a href="login">Login</a></span
           >
-          instead
         </p>
       </div>
       <div
@@ -54,12 +54,12 @@
             <!-- Form -->
             <div class="grid max-w-md grid-cols-1 gap-6">
               <label class="block">
-                <span class="text-gray-700">Full Name</span>
+                <span class="text-gray-700">Name</span>
                 <input
                   type="text"
                   v-model="name"
                   class="block w-full mt-1 text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:border-gray-500 focus:bg-white focus:ring-0"
-                  placeholder=""
+                  placeholder="Authy Person"
                 />
               </label>
               <label class="block">
@@ -77,7 +77,7 @@
                   type="password"
                   v-model="password"
                   class="block w-full mt-1 text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:border-gray-500 focus:bg-white focus:ring-0"
-                  placeholder=""
+                  placeholder="********"
                 />
               </label>
               <label class="block">
@@ -86,14 +86,60 @@
                   v-model="confirmPassword"
                   type="password"
                   class="block w-full mt-1 text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:border-gray-500 focus:bg-white focus:ring-0"
-                  placeholder=""
+                  placeholder="********"
                 />
               </label>
               <button
                 @click="submit"
-                class="block w-full px-6 py-3 mt-3 text-lg font-semibold text-white bg-gray-800 rounded-lg shadow-xl hover:text-white hover:bg-black"
+                class="block w-full px-6 py-3 mt-3 text-sm font-semibold text-white bg-gray-800 rounded-lg shadow-xl hover:text-white hover:bg-black"
               >
-                > Register
+                <span class="absolute flex items-center">
+                  <svg
+                    class="h-5 w-5 text-white group-hover:text-indigo-400"
+                    x-description="Heroicon name: mini/lock-closed"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </span>
+                Register
+              </button>
+
+              <div class="relative flex py-2 items-center">
+                <div class="flex-grow border-t border-gray-400"></div>
+                <span class="flex-shrink mx-4 text-gray-700">Or</span>
+                <div class="flex-grow border-t border-gray-400"></div>
+              </div>
+
+              <button
+                type="button"
+                class="block w-full px-6 py-3 text-sm font-semibold text-white bg-gray-800 rounded-lg shadow-xl hover:text-white hover:bg-gray-900"
+                @click="passkeySubmit"
+              >
+                <span class="absolute flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M7.864 4.243A7.5 7.5 0 0119.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 004.5 10.5a7.464 7.464 0 01-1.15 3.993m1.989 3.559A11.209 11.209 0 008.25 10.5a3.75 3.75 0 117.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 01-3.6 9.75m6.633-4.596a18.666 18.666 0 01-2.485 5.33"
+                    />
+                  </svg>
+                </span>
+                Passkey
               </button>
             </div>
           </div>
@@ -113,6 +159,7 @@
     <!-- scripts -->
     <script>
       const { ref, computed } = Vue;
+      const { startRegistration } = SimpleWebAuthnBrowser;
       const app = Vue.createApp({
         setup() {
           const name = ref("");
@@ -174,16 +221,73 @@
 
               errorTitle.value = "Error";
               errorDetail.value =
-                "There was an issue connecting to authcompanion";
+                "There was an issue connecting, please try again";
             }
           };
 
+          const passkeySubmit = async () => {
+            try {
+              let optionsResponse = await fetch(
+                "/v1/auth/registration-options",
+                {
+                  method: "GET",
+                  headers: {
+                    "content-type": "application/json",
+                  },
+                }
+              );
+
+              if (optionsResponse.ok) {
+                const opts = await optionsResponse.json();
+
+                let attResp = await startRegistration(opts);
+
+                let verificationResponse = await fetch(
+                  "/v1/auth/registration-verification",
+                  {
+                    method: "POST",
+                    body: JSON.stringify(attResp),
+                    headers: {
+                      "content-type": "application/json",
+                      "x-authc-app-userid": opts.user.id,
+                    },
+                  }
+                );
+                const reply = await verificationResponse.json();
+                const appOrigin = await verificationResponse.headers.get(
+                  "x-authc-app-origin"
+                );
+
+                window.localStorage.setItem(
+                  "ACCESS_TOKEN",
+                  reply.data.attributes.access_token
+                );
+                showError.value = false;
+                showError.value = false;
+                window.location.href = appOrigin;
+              } else {
+                showError.value = true;
+
+                errorTitle.value = "Error";
+                errorDetail.value =
+                  "Error occured, please try registering again";
+              }
+            } catch (e) {
+              console.log(e);
+              showError.value = true;
+
+              errorTitle.value = "Error";
+              errorDetail.value =
+                "There was an issue connecting to authcompanion";
+            }
+          };
           // expose to template
           return {
             showError,
             errorTitle,
             errorDetail,
             submit,
+            passkeySubmit,
             name,
             email,
             password,

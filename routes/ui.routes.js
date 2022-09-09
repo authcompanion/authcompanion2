@@ -37,6 +37,13 @@ const webRoutes = async function (fastify, options) {
     });
     return homePage;
   });
+  fastify.get("/webauthn", (request, reply) => {
+    const homePage = readFileSync("./ui/webauthn.html");
+    reply.headers({
+      "Content-Type": `text/html`,
+    });
+    return homePage;
+  });
 };
 
 //Wrap with Fastify Plugin

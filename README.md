@@ -11,7 +11,7 @@
 <div align="center">
 
 <a href="">
-     <img alt="Active" src="https://img.shields.io/badge/status-needs%20early%20adopter%20feedback-orange?">
+     <img alt="Active" src="https://img.shields.io/badge/status-looking%20for%20early%20adopter%20feedback-orange?">
    </a>
    <a href="https://github.com/authcompanion/authcompanion2/stargazers">
      <img alt="GitHub stars" src="https://img.shields.io/github/stars/authcompanion/authcompanion2">
@@ -30,21 +30,21 @@
 ## Introduction
 
 AuthCompanion aims to satisfy the most common authentication and user management
-needs for web applications.
+needs for web application.
 
 With AuthC you can:
 
-- Confidently store your web application's user accounts
 - Securely handle the registration, login, logout, and account recovery of your
-  applicaiton's users
-- Generate and validate [JWTs](https://jwt.io/introduction), a token used for
-  authenticating users into your application's backend APIs
+  applicaiton user accounts.
+- Users can register and login wth traditional passwords or go passwordless by using a passkey with their mobile device
+- Generate and validate [JWTs](https://jwt.io/introduction), a token used for your user's session and authenticating them into your application's backend APIs
+- Confidently store and manage your web application's user accounts
 
 ## Try it
 
 The instructions below will launch the default server for development purposes.
 Please see the env.example file for more details on the server configuration
-options.
+options as you move to production environments.
 
 ### With Docker
 
@@ -99,13 +99,12 @@ web form: http://localhost:3002/v1/web/register
 
 Next, log in with the account you just created using your email and password at
 this web form: http://localhost:3002/v1/web/login. The server response includes
-an access token for use when authenticating to backend APIs.
+an access token for use when authenticating to backend APIs and redirects the user to your application's home page.
 
 ### 3. Examine the APIs
 
 Lastly, have a read through the [Authentication API](#authentication-api) for
-information on how you can manage user authentication for your web app. Both the
-Web Forms and Auth API work together to get up and running with user auth
+information on how you can manage user authentication for your web app. Both the built-in Web Forms and Auth API work together to get up and running with user auth
 quickly.
 
 ---
@@ -127,7 +126,9 @@ quickly.
 
 - [x] **Extensible Platform:** AuthC supports a
       [plugin system](https://www.fastify.io/docs/latest/Reference/Plugins/) for
-      easily adding more functionality and covering more auth use cases.
+      easily adding new functionality to cover more of your authentication needs.
+
+- [x] **Passwordless Flow:** Streamline user Login and Registration without passwords with a user's computer or mobile phone using passkey.
 
 ### Web Forms for Authentication
 

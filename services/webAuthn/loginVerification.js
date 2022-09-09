@@ -30,7 +30,7 @@ export const loginVerificationHandler = async (request, reply) => {
       authenticator: userAuthenticator,
       requireUserVerification: true,
     });
-    
+
     //check if the registration request is verified
     if (!verification.verified) {
       request.log.info("Authenticator was not verified - Registration failed");

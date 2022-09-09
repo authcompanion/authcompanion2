@@ -35,10 +35,10 @@ needs for web application.
 With AuthC you can:
 
 - Securely handle the registration, login, logout, and account recovery of your
-  applicaiton user accounts. Users can register and login wth traditional passwords or go passwordless with a mobile device using passkeys
+  applicaiton user accounts.
+- Users can register and login wth traditional passwords or go passwordless by using a passkey with their mobile device
 - Generate and validate [JWTs](https://jwt.io/introduction), a token used for your user's session and authenticating them into your application's backend APIs
 - Confidently store and manage your web application's user accounts
-
 
 ## Try it
 
@@ -126,7 +126,7 @@ quickly.
 
 - [x] **Extensible Platform:** AuthC supports a
       [plugin system](https://www.fastify.io/docs/latest/Reference/Plugins/) for
-      easily adding functionality and covering more authentication use cases for your application needs.
+      easily adding new functionality to cover more of your authentication needs.
 
 - [x] **Passwordless Flow:** Streamline user Login and Registration without passwords with a user's computer or mobile phone using passkey.
 

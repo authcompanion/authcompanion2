@@ -10,10 +10,10 @@ export const registrationOptionsHandler = async (request, reply) => {
     //create a user.id for the new registration
     const userUUID = randomUUID();
     //set the PR's ID value
-    const domain = (new URL(config.ORIGIN));
-    const rpID = domain.hostname
+    const domain = new URL(config.ORIGIN);
+    const rpID = domain.hostname;
 
-    //build webauthn options for "passwordless" flow. 
+    //build webauthn options for "passwordless" flow.
     let opts = {
       rpName: "AuthCompanion",
       rpID,
@@ -22,8 +22,8 @@ export const registrationOptionsHandler = async (request, reply) => {
       timeout: 60000,
       attestationType: "indirect",
       authenticatorSelection: {
-        userVerification: 'required',
-        residentKey: 'required',
+        userVerification: "required",
+        residentKey: "required",
       },
       supportedAlgorithmIDs: [-7, -257],
     };
@@ -31,7 +31,7 @@ export const registrationOptionsHandler = async (request, reply) => {
     //generate registration options to prepare the response
     const generatedOptions = generateRegistrationOptions(opts);
 
-    //Create the user in the Database, with some placeholder record information. 
+    //Create the user in the Database, with some placeholder record information.
     const jwtid = randomUUID();
     const generatedUniqueEmail = randomUUID();
 
@@ -50,7 +50,6 @@ export const registrationOptionsHandler = async (request, reply) => {
 
     //send the reply
     return generatedOptions;
-
   } catch (err) {
     throw { statusCode: err.statusCode, message: err.message };
   }

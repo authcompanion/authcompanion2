@@ -1,18 +1,24 @@
-//import fastifyPlugin from "fastify-plugin";
 import { readFileSync } from "fs";
+import { randomUUID } from "crypto";
 
 const webRoutes = async function (fastify, options) {
   fastify.get("/login", (request, reply) => {
+    //create session id for tracking webauthn challenges used for verification. Send session id as cookie
+    const sessionID = randomUUID();
     const loginPage = readFileSync("./ui/loginPage.html");
     reply.headers({
       "Content-Type": `text/html`,
+      "set-cookie": `sessionID=${sessionID}; Path=/; SameSite=None; Secure; HttpOnly`,
     });
     return loginPage;
   });
   fastify.get("/register", (request, reply) => {
+    //create session id for tracking webauthn challenges used for verification. Send session id as cookie
+    const sessionID = randomUUID();
     const registrationPage = readFileSync("./ui/registrationPage.html");
     reply.headers({
       "Content-Type": `text/html`,
+      "set-cookie": `sessionID=${sessionID}; Path=/; SameSite=None; Secure; HttpOnly`,
     });
     return registrationPage;
   });
@@ -37,15 +43,6 @@ const webRoutes = async function (fastify, options) {
     });
     return homePage;
   });
-  fastify.get("/webauthn", (request, reply) => {
-    const homePage = readFileSync("./ui/webauthn.html");
-    reply.headers({
-      "Content-Type": `text/html`,
-    });
-    return homePage;
-  });
 };
 
-//Wrap with Fastify Plugin
-//export default fastifyPlugin(webRoutes);
 export default webRoutes;

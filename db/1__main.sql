@@ -25,4 +25,9 @@ CREATE TABLE authc_version (
     version INTEGER PRIMARY KEY
 );
 
+CREATE TABLE storage (
+    sessionID TEXT PRIMARY KEY,
+    data TEXT NOT NULL
+);
+
 INSERT INTO authc_version(version) VALUES (1);

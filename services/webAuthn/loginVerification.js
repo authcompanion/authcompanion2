@@ -1,5 +1,6 @@
 import Database from "better-sqlite3";
 import config from "../../config.js";
+import { parse } from "cookie";
 import { makeAccesstoken, makeRefreshtoken } from "../../utilities/jwt.js";
 import { verifyAuthenticationResponse } from "@simplewebauthn/server";
 
@@ -13,18 +14,28 @@ export const loginVerificationHandler = async (request, reply) => {
     // The URL at which registrations and authentications should occur
     const origin = config.ORIGIN;
 
-    const challenge = request.headers["x-authc-app-challenge"];
+    //fetch cookies (we'll need session id. session id is set on page load in ui.routes.js)
+    const cookies = parse(request.headers.cookie);
+
+    //retrieve the session's challenge from storage
+    const storageStmt = db.prepare(
+      "SELECT data FROM storage WHERE sessionID = ?;"
+    );
+    const sessionChallenge = await storageStmt.get(cookies.sessionID);
+
+    //set userID from response
     const userID = request.body.response.userHandle;
 
+    //retrieve the user's authenticator
     const stmt = db.prepare(
       "SELECT credentialPublicKey, credentialID, counter, transports FROM authenticator INNER JOIN users ON users.authenticator_id = authenticator.id WHERE users.uuid = ?;"
     );
     const userAuthenticator = await stmt.get(userID);
 
-    //verify the request for login
+    //verify the request for login with all the information gathered
     const verification = await verifyAuthenticationResponse({
       credential: request.body,
-      expectedChallenge: challenge,
+      expectedChallenge: sessionChallenge.data,
       expectedOrigin: origin,
       expectedRPID: rpID,
       authenticator: userAuthenticator,
@@ -37,7 +48,12 @@ export const loginVerificationHandler = async (request, reply) => {
       throw { statusCode: 400, message: "Registration Failed" };
     }
 
-    // Looks good! Let's prepare the reply
+    //session clean up in the storage
+    const deleteStmt = db.prepare("DELETE FROM storage WHERE sessionID = ?;");
+    await deleteStmt.run(cookies.sessionID);
+
+    // All looks good! Let's prepare the reply
+
     // Fetch user from database
     const userStmt = db.prepare(
       "SELECT uuid, name, email, jwt_id, password, active, created_at, updated_at FROM users WHERE uuid = ?;"
@@ -58,7 +74,7 @@ export const loginVerificationHandler = async (request, reply) => {
     expireDate.setTime(expireDate.getTime() + 7 * 24 * 60 * 60 * 1000); // TODO: Make configurable now, set to 7 days
 
     reply.headers({
-      "set-cookie": `userRefreshToken=${userRefreshToken.token}; Expires=${expireDate}; SameSite=None; Secure; HttpOnly`,
+      "set-cookie": `userRefreshToken=${userRefreshToken.token}; Path=/; Expires=${expireDate}; SameSite=None; Secure; HttpOnly`,
       "x-authc-app-origin": config.APPLICATIONORIGIN,
     });
 

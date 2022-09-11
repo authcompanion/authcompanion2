@@ -6,9 +6,6 @@ import config from "../config.js";
 
 export const registrationHandler = async (request, reply) => {
   try {
-    //Connect to the Database
-    //const db = await fastify.connectdb();
-
     const db = new Database(config.DBPATH);
 
     //Check if the user exists already
@@ -51,7 +48,7 @@ export const registrationHandler = async (request, reply) => {
     expireDate.setTime(expireDate.getTime() + 7 * 24 * 60 * 60 * 1000); // TODO: Make configurable now, set to 7 days
 
     reply.headers({
-      "set-cookie": `userRefreshToken=${userRefreshToken.token}; Expires=${expireDate}; SameSite=None; Secure; HttpOnly`,
+      "set-cookie": `userRefreshToken=${userRefreshToken.token}; Path=/; Expires=${expireDate}; SameSite=None; Secure; HttpOnly`,
       "x-authc-app-origin": config.APPLICATIONORIGIN,
     });
 

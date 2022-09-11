@@ -1,3 +1,12 @@
+# [3.0.0-beta.2](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.1...3.0.0-beta.2) (2022-09-11)
+
+
+### Bug Fixes
+
+* generate and store webauthn challenge ([24dc2ab](https://github.com/authcompanion/authcompanion2/commit/24dc2ab666e6b13e69b9a6ac99b220c635da4129))
+
+
+
 # [3.0.0-beta.1](https://github.com/authcompanion/authcompanion2/compare/2.0.0-beta.1...3.0.0-beta.1) (2022-09-09)
 
 ## Features

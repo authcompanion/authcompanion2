@@ -1,7 +1,7 @@
 {
-  "name": "authc-docs",
-  "version": "2.0.0",
-  "description": "The Documenation for AuthCompanion",
+  "name": "authc2-docs",
+  "version": "3.0.0-beta.2",
+  "description": "The Documenation site for AuthCompanion",
   "main": "index.js",
   "scripts": {
     "docs:dev": "vuepress dev docs",
@@ -10,7 +10,7 @@
   "author": "Paul Fischer",
   "devDependencies": {
     "@vuepress/client": "2.0.0-beta.49",
-    "vue": "^3.2.37",
-    "vuepress": "^2.0.0-beta.49"
+    "vue": "^3.2.39",
+    "vuepress": "^2.0.0-beta.51"
   }
 }

@@ -29,22 +29,21 @@
 
 ## Introduction
 
-AuthCompanion aims to satisfy the most common authentication and user management
-needs for web application.
+AuthCompanion aims to satisfy the most common authentication and user management needs for your web application.
 
 With AuthC you can:
 
-- Securely handle the registration, login, logout, and account recovery of your
-  applicaiton user accounts.
-- Users can register and login wth traditional passwords or go passwordless by using a passkey with their mobile device
+- Securely handle the registration, login, logout, and account recovery of your web applicaiton's user accounts.
 - Generate and validate [JWTs](https://jwt.io/introduction), a token used for your user's session and authenticating them into your application's backend APIs
-- Confidently store and manage your web application's user accounts
+- Confidently store and own your web application's user accounts
+- Support your users with registering and logining in with a passkey on their mobile device (passwordless) or with traditional username/passwords
 
 ## Try it
 
-The instructions below will launch the default server for development purposes.
+The instructions below will launch the default server for integration purposes.
+
 Please see the env.example file for more details on the server configuration
-options as you move to production environments.
+options as you move AuthC into production.
 
 ### With Docker
 
@@ -128,7 +127,7 @@ quickly.
       [plugin system](https://www.fastify.io/docs/latest/Reference/Plugins/) for
       easily adding new functionality to cover more of your authentication needs.
 
-- [x] **Passwordless Flow:** Streamline user Login and Registration without passwords with a user's computer or mobile phone using passkey.
+- [x] **Passwordless Flow:** Streamline user Login and Registration without passwords with a user's computer or mobile phone with passkey.
 
 ### Web Forms for Authentication
 

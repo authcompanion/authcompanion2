@@ -5,12 +5,11 @@ import {
 } from "../utilities/jwt.js";
 import Database from "better-sqlite3";
 import config from "../config.js";
+import { parse } from "cookie";
 
 export const tokenRefreshHandler = async (request, reply) => {
   try {
     //Connect to the Database
-    //const db = await fastify.connectdb();
-
     const db = new Database(config.DBPATH);
 
     let requestToken = {};
@@ -19,7 +18,8 @@ export const tokenRefreshHandler = async (request, reply) => {
     if (request.body) {
       requestToken = request.body.token;
     } else if (request.headers.cookie) {
-      requestToken = request.headers.cookie.split("=")[1];
+      const cookies = parse(request.headers.cookie);
+      requestToken = cookies.userRefreshToken;
     } else {
       request.log.info(
         "Request did not have cookie or token - Refresh Token Failed"

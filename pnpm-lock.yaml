@@ -100,8 +100,8 @@ packages:
       - supports-color
     dev: false
 
-  /@noble/ed25519/1.7.0:
-    resolution: {integrity: sha512-LeAxFK0+181zQOhOUuKE8Jnd3duzYhDNd3iCLxpmzA5K+e4I1FdbrK3Ot0ZHBwZMeRD/6EojyUfTbpHZ+hkQHg==}
+  /@noble/ed25519/1.7.1:
+    resolution: {integrity: sha512-Rk4SkJFaXZiznFyC/t77Q0NKS4FL7TLJJsVG2V2oiEq3kJVeTdxysEe/yRWSpnWMe808XRDJ+VFh5pt/FN5plw==}
     dev: false
 
   /@nodelib/fs.scandir/2.1.5:
@@ -160,7 +160,7 @@ packages:
     resolution: {integrity: sha512-1drkSoGS4I0jBgRk+mm+e8PdVw2mMKhK7Zp7MTNpNvuGHX72XG3068oewf4GqUdw9OkH8+jPy/u9HMZXUoWV8A==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@noble/ed25519': 1.7.0
+      '@noble/ed25519': 1.7.1
       '@peculiar/asn1-android': 2.3.0
       '@peculiar/asn1-schema': 2.3.0
       '@peculiar/asn1-x509': 2.3.0

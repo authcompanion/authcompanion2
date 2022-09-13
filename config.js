@@ -2,6 +2,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const AUTHPORT = process.env.PORT || "3002";
+const ORIGIN = process.env.ORIGIN || "http://localhost:3002";
 const RECOVERYURL =
   process.env.RECOVERY_REDIRECT_URL || "http://localhost:3002/v1/web/home";
 const DBPATH = process.env.DB_PATH || "./authcompanion_users.db";
@@ -16,6 +17,7 @@ const FROMADDRESS = process.env.FROM_ADDRESS || "no_reply@example.com";
 
 export default {
   AUTHPORT,
+  ORIGIN,
   KEYPATH,
   SMTPHOSTNAME,
   SMTPPORT,

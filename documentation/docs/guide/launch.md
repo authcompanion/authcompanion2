@@ -87,7 +87,7 @@ Once deployment has completed - navigate to `https://cold-glitter-1600.fly.dev/v
 
 1. **No persistent storage** - Volumes are persistent storage for Fly apps, they allow AuthC to save its user data and the application can be restarted with that information in place. Please create a [volume](https://fly.io/docs/reference/volumes/) (the 3GB is free) to persist your users.
    
-2. **No outbound email** - When a user requests to have their passwords reset, AuthC requires an SMTP connection to send that mail. In this example, we have not provided an SMTP connect (users will not recieve a password reset email until one is provided).
+2. **No outbound email** - When a user requests to have their passwords reset, AuthC requires an SMTP connection to send that mail. In this example, we have not provided an SMTP connection to AuthC (users will not recieve a password reset email until one is provided).
 
 3. **Custom Domain** - this example uses the fly.dev domain but, you can set your own custom domain through these [instructions](https://fly.io/blog/how-to-custom-domains-with-fly/). Make sure to change the settings in your `fly.toml` file and redeploy!
    :::

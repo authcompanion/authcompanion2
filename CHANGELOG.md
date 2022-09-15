@@ -1,3 +1,24 @@
+# [3.0.0-beta.3](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.2...3.0.0-beta.3) (2022-09-15)
+
+
+### Bug Fixes
+
+* improved cookie parsing for refresh api ([6f4a996](https://github.com/authcompanion/authcompanion2/commit/6f4a996dcad0455056496fe7bc0abdbd9fb106f6))
+* removed unused configs + updated env file doc ([5b4c8dd](https://github.com/authcompanion/authcompanion2/commit/5b4c8dd26c5e25ccbab22d1639eb1d7007b12a67))
+* set correct origin for authenticator based on config ([174b194](https://github.com/authcompanion/authcompanion2/commit/174b194a466b0f1c61112f116439be814fdbe5c6))
+
+
+### Features
+
+* adds a default route to familiarize new users ([a3a8f7f](https://github.com/authcompanion/authcompanion2/commit/a3a8f7fd5b1812b6faae5e6ec66b974ec554dd1e))
+
+
+### Reverts
+
+* config removal and improved .env doc ([48c9dfb](https://github.com/authcompanion/authcompanion2/commit/48c9dfb55442a57cb5220c7e10d9651e7586096e))
+
+
+
 # [3.0.0-beta.2](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.1...3.0.0-beta.2) (2022-09-11)
 
 

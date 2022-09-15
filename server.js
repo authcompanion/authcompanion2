@@ -10,11 +10,10 @@ const server = await buildApp({
  */
 const startServer = async () => {
   try {
-    server.listen({
+    await server.listen({
       port: config.AUTHPORT,
       host: "0.0.0.0",
     });
-
     console.log(`
       #############################################################
               The Authcompanion Server has started
@@ -30,14 +29,18 @@ const startServer = async () => {
 };
 
 //setup for gracefully exiting the AuthCompanion server
-function handleSignal() {
-  server.close(() => {
-    console.log(`
-    AuthCompanion has exited, Good bye👋`);
-  });
+async function handleSignal() {
+  try {
+    await server.close();
+  console.log(`
+    AuthCompanion has exited, Good bye👋`)
+  } catch (error) {
+    server.log.error(err);
+    process.exit(1);
+  }
 }
 
 process.on("SIGTERM", handleSignal);
 process.on("SIGINT", handleSignal);
 
-startServer();
+await startServer();

@@ -8,8 +8,8 @@ export const loginOptionsHandler = async (request, reply) => {
     const db = new Database(config.DBPATH);
 
     //set the PR's ID value
-    const domain = new URL(config.ORIGIN);
-    const rpID = domain.hostname;
+    const appURL = new URL(config.ORIGIN);
+    const rpID = appURL.hostname;
 
     //set registration options
     const opts = {

@@ -9,10 +9,11 @@ export const loginVerificationHandler = async (request, reply) => {
     const db = new Database(config.DBPATH);
 
     //set the PR's ID value
-    const domain = new URL(config.ORIGIN);
-    const rpID = domain.hostname;
+    const appURL = new URL(config.ORIGIN);
+    
+    const rpID = appURL.hostname;
     // The URL at which registrations and authentications should occur
-    const origin = config.ORIGIN;
+    const origin = appURL.origin;
 
     //fetch cookies (we'll need session id. session id is set on page load in ui.routes.js)
     const cookies = parse(request.headers.cookie);

@@ -8,16 +8,15 @@ export const registrationVerificationHandler = async (request, reply) => {
     const db = new Database(config.DBPATH);
 
     //set the PR's ID value
-    const domain = new URL(config.ORIGIN);
-    const rpID = domain.hostname;
+    const appURL = new URL(config.ORIGIN);    
+    const rpID = appURL.hostname;
     // The URL at which registrations and authentications should occur
-    const origin = config.ORIGIN;
+    const origin = appURL.origin;
 
     // Fetch user from database
     const requestedAccount = request.headers["x-authc-app-userid"];
 
     const stmt = db.prepare("SELECT challenge FROM users WHERE UUID = ?;");
-
     const { challenge } = await stmt.get(requestedAccount);
 
     //verify the request for registration

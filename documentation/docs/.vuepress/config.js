@@ -39,6 +39,7 @@ export default defineUserConfig({
             "/guide/configuration.md",
             "/guide/webforms.md",
             "/guide/authapi.md",
+            "/guide/launch.md",
           ],
         },
       ],

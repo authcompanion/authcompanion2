@@ -22,6 +22,13 @@ export default async function buildApp(opts = {}) {
   if (config.WEBMODE == "true") {
     app.register(webRoutes, { prefix: "/v1/web" });
   }
-  //await app.ready()
+
+  //register a default route welcoming the user
+  app.register(async function defaultRoute(fastify, opts) {
+    fastify.get("/", async (req, reply) => {
+      return `Welcome and hello 👋. AuthCompanion is serving requests!
+      Please navigate to the login and registration web forms`;
+    });
+  });
   return app;
 }

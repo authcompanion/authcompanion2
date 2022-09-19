@@ -29,33 +29,36 @@
 
 ## Introduction
 
-AuthCompanion aims to satisfy the most common authentication and user management needs for a web application.
+AuthCompanion aims to satisfy the most common authentication and user management needs for your web application.
 
 With AuthC you can:
 
-- Confidently store your web application's user accounts
-- Securely handle the registration, login, logout, and account recovery of your applicaiton's users
-- Generate and validate [JWTs](https://jwt.io/introduction), a token used for authenticating users into your application's backend APIs
+- Securely handle the registration, login, logout, and account recovery of your web applicaiton's user accounts.
+- Generate and validate [JWTs](https://jwt.io/introduction), a token used for your user's session and authenticating them into your application's backend APIs
+- Confidently store and own your web application's user accounts
+- Support your users with registering and logining in with a passkey on their mobile device (passwordless) or with traditional username/passwords
 
 ---
 
 ## Features
 
 - **Web Forms for User Authentication:** Use pre-built and customizable web
-  forms for your application users to: log in with their credentials,
-  register an account, update their profile, and issue forgotten passwords.
+      forms for your application users to: log in with their credentials,
+      register an account, update their profile, and issue forgotten passwords.
 
 - **Manage User Profiles and JWTs:** Update the password and profile
-  information of your users - all account information is stored in a SQLite
-  database. Easily manage the life-cycle of your user's JWT used for
-  authentication.
+      information of your users - all account information is stored in a SQLite
+      database. Easily manage the life-cycle of your user's JWT used for
+      authentication.
 
 - **User Account Recovery:** Restore a user's access to their account using
-  the **Forgot Password** flow which sends a special link via email for
-  helping users quickly recover their account.
+      the **Forgot Password** flow which sends a special link via email for
+      helping users quickly recover their account.
 
 - **Extensible Platform:** AuthC supports a
-  [plugin system](https://www.fastify.io/docs/latest/Reference/Plugins/) for
-  easily adding more functionality and covering more auth use cases.
+      [plugin system](https://www.fastify.io/docs/latest/Reference/Plugins/) for
+      easily adding new functionality to cover more of your authentication needs.
+
+- **Passwordless Flow:** Streamline user Login and Registration without passwords with a user's computer or mobile phone with passkey.
 
 Take AuthCompanion, the useful sidekick, into your next web project! 👏

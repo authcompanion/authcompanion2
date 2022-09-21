@@ -1,4 +1,4 @@
-# Web Forms for Authentication
+# Web Forms
 
 AuthCompanion provides web forms for your application users to login, register
 their accounts and trigger forgotten password flow.

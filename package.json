@@ -20,9 +20,9 @@
     "cookie": "^0.5.0",
     "dotenv": "^16.0.3",
     "emailjs": "^4.0.1",
-    "fastify": "^4.7.0",
+    "fastify": "^4.9.2",
     "fastify-plugin": "^3.0.1",
-    "jose": "^4.10.0"
+    "jose": "^4.10.3"
   },
   "devDependencies": {
     "ava": "^4.3.3",

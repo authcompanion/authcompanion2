@@ -36,10 +36,16 @@ export default defineUserConfig({
           children: [
             "/guide/gettingstarted.md",
             "/guide/explore.md",
-            "/guide/configuration.md",
             "/guide/webforms.md",
-            "/guide/authapi.md",
+            "/guide/configuration.md",
+            "/guide/integrate.md",
             "/guide/launch.md",
+          ],
+        },
+        {
+          text: "Reference",
+          children: [
+            "/guide/authapi.md",
           ],
         },
       ],

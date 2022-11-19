@@ -6,13 +6,15 @@ flow for your users, for example: validating the magic URL in the forgot
 password flow or refreshing a token. Using both the Auth API and Web Forms will
 help cover your use cases.
 
-### Server URL
+## Server URL
 
 http://localhost:3002/v1/
 
-### Paths
+### Path
 
 Returns Content-Type: application/json
+
+## Endpoints
 
 ### auth/register
 

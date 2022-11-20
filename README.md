@@ -25,7 +25,7 @@
 
 </div>
 <br />
-<p align="center">  <a href="https://docs.authcompanion.com/"> Documentation</a> | <a href="https://github.com/authcompanion/authcompanion2/blob/main/CHANGELOG.md"> CHANGELOG</a> | <a href="https://demo.authcompanion.com/v1/web/login"> Demo Site</a>
+<p align="center">  <a href="https://docs.authcompanion.com/"> Documentation</a> | <a href="https://github.com/authcompanion/authcompanion2/blob/main/CHANGELOG.md"> CHANGELOG</a> | <a href="https://demo.authcompanion.com/v1/web/login"> Demo Site</a> | <a rel="me" href="https://hachyderm.io/@paulfish"> Follow on Mastodon</a>
 </p>
 
 ---

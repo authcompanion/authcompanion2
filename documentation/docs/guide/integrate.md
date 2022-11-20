@@ -2,9 +2,7 @@
 
 ## With Backend Web Services
 
-When you start the AuthC server a secret key is generated on `KEY_PATH=./keyfile` (in the JSON Web Key format). This key is used to verify the JWT token received by your web services.
-
-Through an environment variable or by reading the key from a file, your web service requires access to the JWK. 
+When you start the AuthC server a secret key is generated on `KEY_PATH=./keyfile` (in the JSON Web Key format). Through an environment variable or by reading the key from a file, your web service requires access to the JWK. This key is used to verify the JWT token received by your web services.
 
 Example ./keyfile that the web service will use. This key is provided to you by AuthC when turned on. Both the key on the AuthC user management server and your web service must match, even if they live on different servers. 
 
@@ -72,3 +70,15 @@ export async function validateJWT(jwt) {
 }
 ```
 Passing the verification step allows the request to access the API resources - any errors should deny the request. 
+
+## With Frontend Clients
+
+After a user's successful account registration or login, AuthC will save the users JWT in local storage and Refresh token as a cookie, then redirect the user to your frontend application.
+
+With the token your web application can now:
+- Retrieve the token from local storage and add it as a Bearer HTTP `authentication` header with JavaScript when calling backend APIs/services.
+- Check if a user is logged in by seeing if the JWT variable is set. If it isn't redirect the user to the login page. 
+- Decode the JWT on the client to access data in the payload - which provides more information about the user. 
+- Logout a user by simply deleting the token on the client side, so that it can't be used for subsequent API calls. 
+- Trigger a logout and redirect the user to login again if an API response comes back with a validitation error that a token is expired/invalid.
+- Refresh the token, should it expire, using the Refresh Token cookie set by AuthCompanion. 

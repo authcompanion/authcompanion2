@@ -40,8 +40,9 @@ necessary; if you have questions please see
 $ cp env.example .env
 ```
 
-Then restart the server with your new settings. The default settings are great
-for getting started and trying things out.
+Then restart the server with your new settings. 
+
+AuthC's default settings are great for getting started and trying things out.
 
 ## With Docker
 

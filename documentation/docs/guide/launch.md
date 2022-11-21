@@ -1,12 +1,16 @@
 # Launch
 
-In this walk-through we're going to deploy the Authcompanion server to [Fly.io](https://fly.io/). All we do is hand off the AuthC container image (via [Dockerfile](https://github.com/authcompanion/authcompanion2/blob/main/dockerfile)) with some deployment options, and we'll get back a secure  (accessible via HTTPS) site for your application users to register accounts and login. It's simple, lets get started. 
+In this walk-through we're going to deploy the Authcompanion server to [Fly.io](https://fly.io/). 
+
+We hand off the AuthC container image (via [Dockerfile](https://github.com/authcompanion/authcompanion2/blob/main/dockerfile)) with some deployment options to Fly.io, and we'll get back a secure  (accessible via HTTPS) site for your application users to both register accounts and login. 
+
+It's simple, lets get started! 
 
 ## Step 1 - Prepare
 
 Install the Flyctl by following these instructions. Make sure to sign-up (requires a credit card) but, don't worry, we'll deploy AuthC using the [free tier](https://fly.io/docs/about/pricing/).
 
-[Install Flyctl](https://fly.io/docs/hands-on/install-flyctl/)
+Instructions: [Install Flyctl](https://fly.io/docs/hands-on/install-flyctl/)
 
 ## Step 2 - App Configuration
 

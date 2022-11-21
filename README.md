@@ -126,11 +126,12 @@ quickly.
       the **Forgot Password** flow which sends a special link via email for
       helping users quickly recover their account.
 
+- [x] **Passwordless Flow:** Streamline your user's Login and Registration with Passkey,
+      and drop asking users username/password.
+
 - [x] **Extensible Platform:** AuthC supports a
       [plugin system](https://www.fastify.io/docs/latest/Reference/Plugins/) for
       easily adding new functionality to cover more of your authentication needs.
-
-- [x] **Passwordless Flow:** Streamline user Login and Registration without passwords with a user's computer or mobile phone with passkey.
 
 ### Web Forms for Authentication
 
@@ -152,7 +153,7 @@ available at `/profile` and the forgot password page at `/recovery`.
 
 ## Authentication API Docs
 
-The RESTful Authentication API powers the Web Forms by which users authenticate into your web app. It's important to note that the web forms alone don't cover every auth flow for your users. For example: validating the magic URL in the forgot password flow or refreshing an expired access token would require the APIs.  
+The RESTful Authentication API powers the Web Forms by which users authenticate into your web app. It's important to note that the web forms alone don't cover every auth flow for your users. For example: validating the magic URL in the forgot password flow or refreshing an expired access token would require the APIs.
 
 Using both the Auth API and Web Forms you can easily integrate and cover your auth use cases. For more information about the Authentication API check out the docs here: [https://docs.authcompanion.com/guide/authapi.html](https://docs.authcompanion.com/guide/authapi.html)
 

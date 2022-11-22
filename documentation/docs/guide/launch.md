@@ -43,8 +43,14 @@ kill_timeout = 5
 processes = []
 
 [env]
-ORIGIN="http://cold-glitter-1600.fly.dev"
-APPLICATION_ORIGIN="http://cold-glitter-1600.fly.dev/v1/web/home"
+  # Your server name.
+  # The URL at which registrations and authentications
+  # should occur (required for passkeys).
+  ORIGIN="http://cold-glitter-1600.fly.dev"
+  # After a successful login or register profile update, 
+  # redirect the user to your main application UI using 
+  # the supplied URL below.
+  APPLICATION_ORIGIN="http://cold-glitter-1600.fly.dev/v1/web/home"
 
 [experimental]
   allowed_public_ports = []
@@ -85,15 +91,24 @@ With the server configuration complete, let's launch the application on fly.io.
 $ flyctl deploy
 ```
 
-Once deployment has completed - navigate to `https://cold-glitter-1600.fly.dev/v1/web/login` and try it out (replace the dns name with yours in this example)!
+Once deployment has completed - navigate to `https://cold-glitter-1600.fly.dev/v1/web/login` and try it out (replace the URL name with your generated name)!
+
+## Step 4 - DNS Name
+
+In this example we'll use the app name from `fly.toml` that was generated as `cold-glitter-1600` and replace it with our an example DNS of `auth.example.com`.
+
+- Run `flyctl ips list -a cold-glitter-1600` to get the IPv4 and IPv6 addresses.
+- Head over to your DNS provider and add A and AAAA records for `auth.example.com` with the IPv4 and IPv6 values show in the previous step. 
+- Run `flyctl certs add auth.example.com -a cold-glitter-1600`
+- Run `flyctl certs show auth.example.com -a cold-glitter-1600` to watch your certificates being issued.
+
+Connect to https://auth.example.com and use your application with auto-renewing Let's Encrypt TLS certificates, edge TLS.
 
 ::: warning Important Notes About This deployment
 
-1. **No persistent storage** - Volumes are persistent storage for Fly apps, they allow AuthC to save its user data and the application can be restarted with that information in place. Please create a [volume](https://fly.io/docs/reference/volumes/) (the 3GB is free) to persist your users.
+1. **No persistent storage setup** - Volumes are persistent storage for Fly apps, they allow AuthC to save its user data and the application can be restarted with that information in place. Please create a [volume](https://fly.io/docs/reference/volumes/) (the 3GB is free) to persist your users.
    
-2. **No outbound email** - When a user requests to have their passwords reset, AuthC requires an SMTP connection to send that mail. In this example, we have not provided an SMTP connection to AuthC (users will not recieve a password reset email until one is provided).
-
-3. **Custom Domain** - this example uses the fly.dev domain but, you can set your own custom domain through these [instructions](https://fly.io/blog/how-to-custom-domains-with-fly/). Make sure to change the settings in your `fly.toml` file and redeploy!
-   :::
+2. **No outbound email setup** - When a user requests to have their passwords reset, AuthC requires an SMTP connection to send that mail. In this example, we have not provided an SMTP connection to AuthC (users will not recieve a password reset email until one is provided).
+:::
 
 Easy right? If you have trouble - make sure [to get help](../contributing/gettinghelp.md)!

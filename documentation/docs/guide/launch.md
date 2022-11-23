@@ -118,6 +118,8 @@ Next update your environment variables to reflect the new URL:
   APPLICATION_ORIGIN="https://auth.example.com/v1/web/home"
 ```
 
+- Run `flyctl deploy` to restart your application with the new settings 
+
 Connect to https://auth.example.com and use your application with auto-renewing Let's Encrypt TLS certificates, edge TLS.
 
 ## Step 5 - Persistent Storage
@@ -151,6 +153,7 @@ Also update the [env] section of your `fly.toml` to persist the server key and d
   KEY_PATH="/data/keyfile"
   DB_PATH="/data/authcompanion_users.db"
 ```
+- Run `flyctl deploy` to restart your application with the new settings. 
 
 Easy right? If you have trouble - make sure [to get help](../contributing/gettinghelp.md)!
 

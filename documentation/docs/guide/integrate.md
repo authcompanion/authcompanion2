@@ -2,12 +2,14 @@
 
 ## With Backend Web Services
 
-When you start the AuthC server a secret key is generated on `KEY_PATH=./keyfile` (in the JSON Web Key format). Through an environment variable or by reading the key from a file, your web service requires access to the JWK. This key is used to verify the JWT token received by your web services.
+When you start the AuthC server a secret key is generated on `KEY_PATH=./keyfile` in the JSON Web Key format. Making the key available via an environment variable or by reading the key from a file, your web service requires access to the JWK. 
 
-Example ./keyfile that the web service will use. This key is provided to you by AuthC when turned on. Both the key on the AuthC user management server and your web service must match, even if they live on different servers. 
+This key is used to verify the JWT token received by your web services was issued by AuthC.
+
+The example key below is provided to you by AuthC on first start (and uses an existing keyfile if one is available). Both the key on the AuthC server and your web service must match, even if they live on different servers. 
 
 ```javascript
-// ./keyfile
+// example ./keyfile in JWK
 {
   "key_ops": [
     "sign",
@@ -74,6 +76,8 @@ Passing the verification step allows the request to access the API resources - a
 ## With Frontend Clients
 
 After a user's successful account registration or login, AuthC will save the users JWT in local storage and Refresh token as a cookie, then redirect the user to your frontend application.
+
+Let' AuthC know where to redirect a user by setting the config `APPLICATION_ORIGIN=http://localhost:3002/v1/web/home` - right now it defaults to AuthC's temporary home page. 
 
 With the token your web application can now:
 - Retrieve the token from local storage and add it as a Bearer HTTP `authentication` header with JavaScript when calling backend APIs/services.

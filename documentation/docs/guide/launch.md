@@ -95,7 +95,7 @@ $ flyctl deploy
 
 Once deployment has completed - navigate to `https://cold-glitter-1600.fly.dev/v1/web/login` and try it out (replace the URL name with your generated name)!
 
-## Step 4 - DNS Name
+## Step 4 - Domain Name
 
 In this example we'll use the app name from `fly.toml` that was generated as `cold-glitter-1600` and replace it with our example domain of `auth.example.com`.
 

@@ -6,7 +6,7 @@ When you start the AuthC server a secret key is generated on `KEY_PATH=./keyfile
 
 This key is used to verify the JWT token received by your web services was issued by AuthC.
 
-The example key below is provided to you by AuthC on first start (and uses an existing keyfile if one is available). Both the key on the AuthC server and your web service must match, even if they live on different servers. 
+The example key below is provided to you by AuthC on first start (and uses an existing keyfile if one is available). Both the key on the AuthC server and your web service must match, even if they live on different servers.
 
 ```javascript
 // example ./keyfile in JWK
@@ -21,7 +21,8 @@ The example key below is provided to you by AuthC on first start (and uses an ex
   "alg": "HS256"
 }
 ```
-Next, import the JWK for use in verifying tokens received by your API server. 
+
+Next, import the JWK for use in verifying tokens received by your API server.
 
 ```javascript
 // ./key.js
@@ -52,7 +53,8 @@ export async function importKey() {
   }
 }
 ```
-With the key imported, you can use a library like https://github.com/panva/jose to both verify the JWT (using the secret key) and access the payload contents to learn more about the user who wants to authenticate with your API. 
+
+With the key imported, you can use a library like https://github.com/panva/jose to both verify the JWT (using the secret key) and access the payload contents to learn more about the user who wants to authenticate with your API.
 
 ```javascript
 // jwt.js
@@ -68,22 +70,78 @@ export async function validateJWT(jwt) {
 
     return payload;
   } catch (error) {
-    throw { statusCode: error.statusCode, message: "Server Error, Token Validation Failed" };
+    throw {
+      statusCode: 401,
+      message: "Server Error, Token Validation Failed",
+    };
   }
 }
 ```
-Passing the verification step allows the request to access the API resources - any errors should deny the request. 
+
+Passing the verification step allows the request to access the API resources - any errors should deny the request.
 
 ## With Frontend Clients
 
 After a user's successful account registration or login, AuthC will save the users JWT in local storage and Refresh token as a cookie, then redirect the user to your frontend application.
 
-Let AuthC know where to redirect a user by setting the config `APPLICATION_ORIGIN=http://localhost:3002/v1/web/home` - right now it defaults to AuthC's temporary home page. 
+Let AuthC know where to redirect a user by setting the config `APPLICATION_ORIGIN=http://localhost:3002/v1/web/home` - it defaults to AuthC's temporary home page.
 
 With the token your web application can now:
-- Check if a user is logged in by seeing if the JWT variable is set. If it isn't redirect the user to the login page. 
+
+- Check if a user is logged in by seeing if the JWT variable is set. If it isn't redirect the user to the login page.
+```javascript
+if (!localStorage.getItem('ACCESS_TOKEN')) {
+    window.location.href = "http://auth.example.com";
+}
+```
 - Retrieve the token from local storage and add it as a Bearer HTTP `authentication` header when calling backend APIs/services.
-- Decode the JWT on the client to access data in the payload - which provides more information about the user. 
-- Logout a user by simply deleting the token on the client side, so that it can't be used for subsequent API calls. 
+
+```javascript
+const token = localStorage.getItem('ACCESS_TOKEN')
+
+const response = await fetch(apiURL, {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json',
+            'Authorization': `Bearer ${token}`, // notice the Bearer before your token
+        },
+        body: JSON.stringify(yourData)
+    })
+
+const result = await response.json();
+console.log(result);
+```
+- Decode the JWT on the client to access data in the payload - which provides more information about the user.
+```javascript
+import jwtDecode from "https://cdn.skypack.dev/jwt-decode";
+
+const token = localStorage.getItem('ACCESS_TOKEN')
+
+let decodedClaims = jwtDecode(token);
+console.log(decodedClaims);
+
+/* prints:
+* {
+*   "userid": "2e9327c3-1e1d-4bab-8581-6f0a0310729b",
+*   "name": "AuthyPerson",
+*   "email": "hello@authcompanion.com",
+*   "iat": 1669173749,
+*   "exp": 1669177349
+* }
+ */
+ 
+```
+- Logout a user by simply deleting the token on the client side, so that it can't be used for subsequent API calls.
+```javascript
+function LogoutUser() {
+  localStorage.removeItem('ACCESS_TOKEN');
+}
+```  
 - Redirect the user to login again if an API response comes back with a validitation error that a token is expired/invalid.
+```javascript
+if (response.status === 401) {
+  LogoutUser();
+  window.location.href = "http://auth.example.com";
+}
+``` 
 - Refresh the token, should it expire, using the Refresh Token cookie set by AuthCompanion without having the user login again ("silent refresh")

@@ -26,6 +26,10 @@ export default defineUserConfig({
         text: "License",
         link: "/guide/licenseoverview.md",
       },
+      {
+        text: "Demo",
+        link: "https://demo.authcompanion.com/v1/web/register",
+      },
     ],
     // sidebar object
     // pages under different sub paths will use different sidebar

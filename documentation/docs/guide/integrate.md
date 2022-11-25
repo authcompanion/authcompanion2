@@ -2,7 +2,7 @@
 
 ## With Backend Web Services
 
-When you start the AuthC server a secret key is generated on `KEY_PATH=./keyfile` in the JSON Web Key format. Making the key available via an environment variable or by reading the key from a file, your web service requires access to the JWK. 
+When you start the AuthC server a secret key is generated on `KEY_PATH=./keyfile` in the JSON Web Key format. Your web service requires access to the JWK via an environment variable or by reading the key from a file.
 
 This key is used to verify the JWT token received by your web services was issued by AuthC.
 
@@ -61,13 +61,14 @@ import { importKey } from "./key.js";
 
 export async function validateJWT(jwt) {
   try {
+    // Or import the key earlier
     const secretKey = await importKey();
 
     const { payload } = await jose.jwtVerify(jwt, secretKey);
 
     return payload;
   } catch (error) {
-    throw { statusCode: error.statusCode, message: "Server Error" };
+    throw { statusCode: error.statusCode, message: "Server Error, Token Validation Failed" };
   }
 }
 ```
@@ -77,12 +78,12 @@ Passing the verification step allows the request to access the API resources - a
 
 After a user's successful account registration or login, AuthC will save the users JWT in local storage and Refresh token as a cookie, then redirect the user to your frontend application.
 
-Let' AuthC know where to redirect a user by setting the config `APPLICATION_ORIGIN=http://localhost:3002/v1/web/home` - right now it defaults to AuthC's temporary home page. 
+Let AuthC know where to redirect a user by setting the config `APPLICATION_ORIGIN=http://localhost:3002/v1/web/home` - right now it defaults to AuthC's temporary home page. 
 
 With the token your web application can now:
-- Retrieve the token from local storage and add it as a Bearer HTTP `authentication` header with JavaScript when calling backend APIs/services.
 - Check if a user is logged in by seeing if the JWT variable is set. If it isn't redirect the user to the login page. 
+- Retrieve the token from local storage and add it as a Bearer HTTP `authentication` header when calling backend APIs/services.
 - Decode the JWT on the client to access data in the payload - which provides more information about the user. 
 - Logout a user by simply deleting the token on the client side, so that it can't be used for subsequent API calls. 
-- Trigger a logout and redirect the user to login again if an API response comes back with a validitation error that a token is expired/invalid.
-- Refresh the token, should it expire, using the Refresh Token cookie set by AuthCompanion. 
+- Redirect the user to login again if an API response comes back with a validitation error that a token is expired/invalid.
+- Refresh the token, should it expire, using the Refresh Token cookie set by AuthCompanion without having the user login again ("silent refresh")

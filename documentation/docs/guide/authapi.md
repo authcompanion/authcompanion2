@@ -10,8 +10,6 @@ help cover your use cases.
 
 http://localhost:3002/v1/
 
-### Path
-
 Returns Content-Type: application/json
 
 ## Endpoints

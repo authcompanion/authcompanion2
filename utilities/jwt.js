@@ -30,7 +30,7 @@ export async function makeAccesstoken(userObj) {
 
     return { token: jwt, expiration: payload.exp };
   } catch (error) {
-    throw { statusCode: error.statusCode, message: "Server Error" };
+    throw { statusCode: 500, message: "Server Error1" };
   }
 }
 
@@ -73,7 +73,7 @@ export async function makeRefreshtoken(
 
     return { token: jwt, expiration: payload.exp };
   } catch (error) {
-    throw { statusCode: error.statusCode, message: "Server Error" };
+    throw { statusCode: 500, message: "Server Error" };
   }
 }
 
@@ -85,7 +85,7 @@ export async function validateJWT(jwt) {
 
     return payload;
   } catch (error) {
-    throw { statusCode: error.statusCode, message: "Server Error" };
+    throw { statusCode: 500, message: "Server Error" };
   }
 }
 // const jwtPlugin = async function (fastify, opts, done) {

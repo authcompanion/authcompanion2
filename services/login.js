@@ -35,7 +35,7 @@ export const loginHandler = async (request, reply) => {
 
     // Check if user has the correct password
     if (!passwordCheckResult) {
-      request.log.info("User successfully logged into accont ");
+      request.log.info("User successfully logged into account");
 
       throw { statusCode: 400, message: "Login Failed" };
     }

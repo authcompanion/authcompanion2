@@ -30,7 +30,7 @@ export async function makeAccesstoken(userObj) {
 
     return { token: jwt, expiration: payload.exp };
   } catch (error) {
-    throw { statusCode: 500, message: "Server Error1" };
+    throw { statusCode: 500, message: "Server Error" };
   }
 }
 

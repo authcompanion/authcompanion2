@@ -9,10 +9,10 @@ const DBPATH = process.env.DB_PATH || "./authcompanion_users.db";
 const KEYPATH = process.env.KEY_PATH || "./keyfile";
 const WEBMODE = process.env.WEB_MODE || "true";
 const APPLICATIONORIGIN = process.env.APPLICATION_ORIGIN || "/v1/web/home";
-const SMTPHOSTNAME = process.env.SMTP_HOSTNAME || "smtp.mailtrap.io";
+const SMTPHOSTNAME = process.env.SMTP_HOSTNAME || "";
 const SMTPPORT = process.env.SMTP_PORT || "2525";
-const SMTPUSER = process.env.SMTP_USERNAME || "b22fdacb75ffcd";
-const SMTPPASSWORD = process.env.SMTP_PASSWORD || "2ac28946d21548";
+const SMTPUSER = process.env.SMTP_USERNAME || "";
+const SMTPPASSWORD = process.env.SMTP_PASSWORD || "";
 const FROMADDRESS = process.env.FROM_ADDRESS || "no_reply@example.com";
 
 export default {

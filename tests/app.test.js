@@ -1,7 +1,6 @@
 import buildApp from "../app.js";
 import test from "ava";
 import { unlink } from "node:fs/promises";
-import config from "./config.js";
 
 // There are two main ways you can use to test your application,
 // one is to test with a running server, which means that inside

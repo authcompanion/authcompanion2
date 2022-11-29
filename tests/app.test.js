@@ -1,6 +1,7 @@
 import buildApp from "../app.js";
 import test from "ava";
 import { unlink } from "node:fs/promises";
+import config from "./config.js";
 
 // There are two main ways you can use to test your application,
 // one is to test with a running server, which means that inside
@@ -99,18 +100,18 @@ test.serial("API Endpoint Test: /auth/refresh", async (t) => {
   }
 });
 
-test.serial("API Endpoint Test: /auth/recovery", async (t) => {
-  try {
-    const response = await t.context.app.inject({
-      method: "POST",
-      url: "/v1/auth/recovery",
-      payload: {
-        email: "hello1@authc.com",
-      },
-    });
+// test.serial("API Endpoint Test: /auth/recovery", async (t) => {
+//   try {
+//     const response = await t.context.app.inject({
+//       method: "POST",
+//       url: "/v1/auth/recovery",
+//       payload: {
+//         email: "hello1@authc.com",
+//       },
+//     });
 
-    t.is(response.statusCode, 200, "API - Status Code Incorrect");
-  } catch (error) {
-    console.log(error);
-  }
-});
+//     t.is(response.statusCode, 200, "API - Status Code Incorrect");
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });

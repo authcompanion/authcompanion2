@@ -3,12 +3,13 @@ dotenv.config();
 
 const AUTHPORT = process.env.PORT || "3002";
 const ORIGIN = process.env.ORIGIN || "http://localhost:3002";
-const RECOVERYURL =
-  process.env.RECOVERY_REDIRECT_URL || "http://localhost:3002/v1/web/home";
+const APPLICATIONORIGIN =
+  process.env.APPLICATION_ORIGIN || "http://localhost:3002/v1/web/home";
 const DBPATH = process.env.DB_PATH || "./authcompanion_users.db";
 const KEYPATH = process.env.KEY_PATH || "./keyfile";
 const WEBMODE = process.env.WEB_MODE || "true";
-const APPLICATIONORIGIN = process.env.APPLICATION_ORIGIN || "/v1/web/profile";
+const RECOVERYURL =
+  process.env.RECOVERY_REDIRECT_URL || "http://localhost:3002/v1/web/profile";
 const SMTPHOSTNAME = process.env.SMTP_HOSTNAME || "";
 const SMTPPORT = process.env.SMTP_PORT || "2525";
 const SMTPUSER = process.env.SMTP_USERNAME || "";

@@ -9,7 +9,7 @@ export const profileRecoveryHandler = async (request, reply) => {
     password: config.SMTPPASSWORD,
     host: config.SMTPHOSTNAME,
     port: config.SMTPPORT,
-    ssl: true,
+    //ssl: true,
   });
   try {
     //Connect to the Database

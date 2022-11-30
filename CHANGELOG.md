@@ -1,3 +1,25 @@
+# [3.0.0-beta.4](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.3...3.0.0-beta.4) (2022-11-30)
+
+
+### Bug Fixes
+
+* enable SSL on SMTP connection and set better config defaults ([68caee7](https://github.com/authcompanion/authcompanion2/commit/68caee7f3206048950fb36faf25778d68c193ac7))
+* improved config default for application origin ([83d3724](https://github.com/authcompanion/authcompanion2/commit/83d37240ef2b67bc07f05de178e40d6d3a24aa79))
+* throw proper error code on error ([14b041e](https://github.com/authcompanion/authcompanion2/commit/14b041ec455b618590b94bb7af414304857dfb84))
+* typo in error and log msgs ([62cc615](https://github.com/authcompanion/authcompanion2/commit/62cc615a3ce44bd903306d51bb990d95b8c084e6))
+
+
+### Features
+
+* AuthC's profile web form can now be used with the account recovery flow ([4ab917f](https://github.com/authcompanion/authcompanion2/commit/4ab917fe7ac87ad86873a98cb1d493f4afe87998))
+
+
+### Documentation
+
+* New Integrating with AuthC Guide: [https://docs.authcompanion.com/guide/integrate.html](https://docs.authcompanion.com/guide/integrate.html)
+* New Launch AuthC into PROD Guide: [https://docs.authcompanion.com/guide/launch.html](https://docs.authcompanion.com/guide/launch.html)
+
+
 # [3.0.0-beta.3](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.2...3.0.0-beta.3) (2022-09-15)
 
 

@@ -119,17 +119,40 @@
           let errorDetail = ref(null);
 
           const token = computed(() => {
-            return localStorage.getItem("ACCESS_TOKEN");
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+
+            if (urlParams.has("token")) {
+              const tokenParam = urlParams.get("token");
+              return tokenParam;
+            } else {
+              return localStorage.getItem("ACCESS_TOKEN");
+            }
           });
 
           try {
             var decoded = jwtDecode(token.value);
-            console.log(decoded);
-
             email.value = decoded.email;
             name.value = decoded.name;
           } catch (e) {
             console.log(e);
+          }
+          async function updateUser() {
+            //make an API request to your web service. Include the ACCESS_TOKEN.
+            const response = await fetch("/v1/auth/users/me", {
+              method: "POST",
+              headers: {
+                "Content-type": "application/json",
+                Authorization: `Bearer ${token.value}`,
+              },
+              body: JSON.stringify({
+                name: name.value,
+                email: email.value,
+                password: password.value,
+              }),
+            });
+
+            return response;
           }
 
           const submit = async () => {
@@ -140,72 +163,62 @@
                 errorDetail.value = "Passwords do not match, please try again";
                 return;
               }
-              let response = await fetchRefresh("/v1/auth/users/me", {
-                method: "POST",
-                body: JSON.stringify({
-                  name: name.value,
-                  email: email.value,
-                  password: password.value,
-                }),
-                headers: {
-                  Authorization: `Bearer ${token.value}`,
-                  "content-type": "application/json",
-                },
-              });
+              //make a normal request to your web service
+              const response = await updateUser();
 
-              const resbody = await response.json();
-              console.log(resbody);
+              const webserviceResponse = await response.json();
+
+              //if the response comes back as unauthorized (the access_token was expired), let's fetch from AuthC a new ACCESS_TOKEN
+              if (response.status === 401) {
+                //AuthC's refresh endpoint requires the Refresh Token (set by AuthC as a cookie when user logs in) in order to provide you a new ACCESS_TOKEN
+                const refreshResponse = await fetch("/v1/auth/refresh", {
+                  method: "POST",
+                  headers: {
+                    "Content-type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                  },
+                  body: "",
+                });
+                //AuthC will store the ACCESS_TOKEN in local storage or you can access it from the response itself!
+                const refreshBody = await refreshResponse.json();
+
+                if (refreshResponse.ok) {
+                  window.localStorage.setItem(
+                    "ACCESS_TOKEN",
+                    refreshBody.data.attributes.access_token
+                  );
+                  //make another request to your web service, this time with a new ACCESS_TOKEN
+                  const updatedResponse = await updateUser();
+
+                  errorTitle.value = "Success";
+                  errorDetail.value =
+                    "Your account has been updated, thank you!";
+                  showError.value = true;
+                } else {
+                  showError.value = true;
+                  errorTitle.value = "Error";
+                  errorDetail.value =
+                    "There was an issue connecting to authcompanion";
+                }
+              }
 
               if (response.ok) {
                 window.localStorage.setItem(
                   "ACCESS_TOKEN",
-                  resbody.data.attributes.access_token
+                  webserviceResponse.data.attributes.access_token
                 );
                 errorTitle.value = "Success";
                 errorDetail.value = "Your account has been updated, thank you!";
                 showError.value = true;
-              } else {
-                showError.value = true;
-                errorTitle.value = resbody.errors[0].title;
-                errorDetail.value = resbody.errors[0].detail;
               }
-            } catch (e) {
-              console.log(e);
+            } catch (error) {
+              //catch any errors
+              console.error(error);
               showError.value = true;
               errorTitle.value = "Error";
               errorDetail.value =
                 "There was an issue connecting to authcompanion";
             }
-          };
-
-          const fetchRefresh = async (url, options = {}, retries = 1) => {
-            return fetch(url, options).then(async (res) => {
-              if (res.ok) {
-                return res;
-              }
-              if (res.status === 401) {
-                console.log("refreshing token");
-                let response = await fetch("/v1/auth/refresh", {
-                  method: "POST",
-                  credentials: "include",
-                });
-                if (!response.ok) {
-                  return res;
-                }
-                const resbody = await response.json();
-                console.log(resbody);
-                window.localStorage.setItem(
-                  "ACCESS_TOKEN",
-                  resbody.data.attributes.access_token
-                );
-                options.headers.Authorization = `Bearer ${resbody.data.attributes.access_token}`;
-                return fetchRefresh(url, options, retries - 1);
-              }
-              if (retries > 0) {
-                return fetchRefresh(url, options, retries - 1);
-              }
-              return res;
-            });
           };
 
           // expose to template

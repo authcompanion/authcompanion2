@@ -175,7 +175,7 @@ async function callBackend() {
 
 try {
   //make a normal request to your web service
-  const response = callBackend();
+  const response = await callBackend();
 
   const webserviceResponse = await response.json();
 
@@ -190,11 +190,16 @@ try {
       },
       body: "",
     });
-    //AuthC will store the ACCESS_TOKEN in local storage or you can access it from the response itself!
+    //AuthC will provide the ACCESS_TOKEN in the response
     const refreshResponse = await response.json();
 
+    window.localStorage.setItem(
+      "ACCESS_TOKEN",
+      refreshResponse.data.attributes.access_token
+    );
+
     //make another request to your web service, this time with a new ACCESS_TOKEN
-    const response = callBackend();
+    const response = await callBackend();
   }
 } catch (error) {
   //catch any errors

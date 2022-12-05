@@ -9,7 +9,7 @@
       rel="stylesheet"
       href="https://unpkg.com/@tailwindcss/forms@0.4.0/dist/forms.min.css"
     />
-    <script type="module" src="https://cdn.skypack.dev/twind/shim"></script>
+    <script type="module" src="https://cdn.skypack.dev/pin/twind@v0.16.18-L1gmw2lgW1dNuzP8s14r/mode=imports,min/optimized/twind/shim.js"></script>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     <style>
       html {
@@ -22,9 +22,9 @@
   <body class="flex flex-col h-full bg-gray-50">
     <div id="app" class="">
       <div
-        class="w-full max-w-md px-8 py-6 mx-auto mt-20 bg-white rounded shadow-md"
+        class="w-full max-w-md px-8 py-6 mx-auto mt-5 bg-white rounded shadow-md md:mt-20"
       >
-        <div class="px-4 sm:px-0">
+        <div class="px-0 md:px-4">
           <div class="text-gray-400 rounded-lg">
             <!-- Toast Notification -->
             <div v-if="showError">
@@ -64,7 +64,7 @@
               </div>
             </div>
             <!-- Form -->
-            <div class="grid max-w-md grid-cols-1 gap-6">
+            <div class="grid max-w-md grid-cols-1 gap-4 md:gap-6">
               <label class="block">
                 <span class="font-bold text-gray-700">Name</span>
                 <input

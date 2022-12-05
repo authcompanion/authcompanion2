@@ -21,22 +21,8 @@
 
   <body class="flex flex-col h-full bg-gray-50">
     <div id="app" class="">
-      <div class="w-full my-8 text-center">
-        <p>COMPANY LOGO</p>
-      </div>
-      <div class="w-full my-8 text-center">
-        <p class="py-3 text-2xl font-semibold text-gray-700">
-          Register Your Account
-        </p>
-        <p class="py-3 text-sm font-semibold text-gray-700">
-          Or if you have one, please
-          <span class="text-blue-700 underline">
-            <a href="login">Login</a></span
-          >
-        </p>
-      </div>
       <div
-        class="w-full max-w-md px-8 py-6 mx-auto mt-8 bg-white rounded shadow-md"
+        class="w-full max-w-md px-8 py-6 mx-auto mt-20 bg-white rounded shadow-md"
       >
         <div class="px-4 sm:px-0">
           <div class="text-gray-400 rounded-lg">
@@ -50,10 +36,37 @@
                 </div>
               </div>
             </div>
+            <!-- Navigation -->
+            <div class="flex flex-row justify-between mb-6">
+              <div class="flex flex-row text-xl font-semibold text-gray-700">
+                <span class="mt-1 mr-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
+                    />
+                  </svg>
+                </span>
+                Register
+              </div>
+              <div
+                class="flex justify-end text-base font-semibold text-blue-700 underline"
+              >
+                <a href="login">Login</a>
+              </div>
+            </div>
             <!-- Form -->
             <div class="grid max-w-md grid-cols-1 gap-6">
               <label class="block">
-                <span class="text-gray-700">Name</span>
+                <span class="font-bold text-gray-700">Name</span>
                 <input
                   type="text"
                   v-model="name"
@@ -62,7 +75,7 @@
                 />
               </label>
               <label class="block">
-                <span class="text-gray-700">Email</span>
+                <span class="font-bold text-gray-700">Email</span>
                 <input
                   type="email"
                   v-model="email"
@@ -71,7 +84,7 @@
                 />
               </label>
               <label class="block">
-                <span class="text-gray-700"> Password</span>
+                <span class="font-bold text-gray-700"> Password</span>
                 <input
                   type="password"
                   v-model="password"
@@ -80,7 +93,7 @@
                 />
               </label>
               <label class="block">
-                <span class="text-gray-700"> Confirm Password</span>
+                <span class="font-bold text-gray-700"> Confirm Password</span>
                 <input
                   v-model="confirmPassword"
                   type="password"
@@ -90,11 +103,11 @@
               </label>
               <button
                 @click="submit"
-                class="block w-full px-6 py-3 mt-3 text-sm font-semibold text-white bg-gray-800 rounded-lg shadow-xl hover:text-white hover:bg-black"
+                class="block w-full px-6 py-3 mt-3 font-semibold text-white bg-gray-800 rounded-lg shadow-xl hover:text-white hover:bg-black"
               >
                 <span class="absolute flex items-center">
                   <svg
-                    class="h-5 w-5 text-white group-hover:text-indigo-400"
+                    class="w-5 h-5 text-white group-hover:text-indigo-400"
                     x-description="Heroicon name: mini/lock-closed"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
@@ -111,7 +124,7 @@
                 Register
               </button>
 
-              <div class="relative flex py-2 items-center">
+              <div class="relative flex items-center py-2">
                 <div class="flex-grow border-t border-gray-400"></div>
                 <span class="flex-shrink mx-4 text-gray-700">Or</span>
                 <div class="flex-grow border-t border-gray-400"></div>
@@ -119,7 +132,7 @@
 
               <button
                 type="button"
-                class="block w-full px-6 py-3 text-sm font-semibold text-white bg-gray-800 rounded-lg shadow-xl hover:text-white hover:bg-gray-900"
+                class="block w-full px-6 py-3 mb-8 font-semibold text-white bg-gray-800 rounded-lg shadow-xl hover:text-white hover:bg-gray-900"
                 @click="passkeySubmit"
               >
                 <span class="absolute flex items-center">
@@ -144,7 +157,7 @@
           </div>
         </div>
       </div>
-      <div class="flex justify-end">
+      <div class="fixed inset-x-0 bottom-0">
         <div class="m-4 text-xs text-gray-400">
           Powered by
           <span class="underline">

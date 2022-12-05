@@ -20,16 +20,8 @@
 
   <body class="flex flex-col h-full bg-gray-50">
     <div id="app" class="">
-      <div class="w-full my-8 text-center">
-        <p>COMPANY LOGO</p>
-      </div>
-      <div class="w-full my-8 text-center">
-        <p class="py-3 text-2xl font-semibold text-gray-700">
-          Please Update Your Account
-        </p>
-      </div>
       <div
-        class="w-full max-w-md px-8 py-6 mx-auto mt-8 bg-white rounded shadow-md"
+        class="w-full max-w-md px-8 py-6 mx-auto mt-20 bg-white rounded shadow-md"
       >
         <div class="px-4 sm:px-0">
           <div class="text-gray-400 rounded-lg">
@@ -43,10 +35,32 @@
                 </div>
               </div>
             </div>
+            <!-- Navigation -->
+            <div class="flex flex-row justify-between mb-6">
+              <div class="flex flex-row text-xl font-semibold text-gray-700">
+                <span class="mt-1 mr-1 -rotate-90">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
+                    />
+                  </svg>
+                </span>
+                Profile
+              </div>
+            </div>
             <!-- Form -->
             <div class="grid max-w-md grid-cols-1 gap-6">
               <label class="block">
-                <span class="text-gray-700">Full Name</span>
+                <span class="font-bold text-gray-700">Full Name</span>
                 <input
                   type="text"
                   v-model="name"
@@ -55,7 +69,7 @@
                 />
               </label>
               <label class="block">
-                <span class="text-gray-700">Email</span>
+                <span class="font-bold text-gray-700">Email</span>
                 <input
                   type="text"
                   v-model="email"
@@ -64,7 +78,7 @@
                 />
               </label>
               <label class="block">
-                <span class="text-gray-700"> New Password</span>
+                <span class="font-bold text-gray-700"> New Password</span>
                 <input
                   type="password"
                   v-model="password"
@@ -73,7 +87,7 @@
                 />
               </label>
               <label class="block">
-                <span class="text-gray-700"> Confirm Password</span>
+                <span class="font-bold text-gray-700"> Confirm Password</span>
                 <input
                   v-model="confirmPassword"
                   type="password"
@@ -82,16 +96,33 @@
                 />
               </label>
               <button
+                type="button"
+                class="block w-full px-6 py-3 mt-3 font-semibold text-white bg-gray-800 rounded-lg shadow-xl hover:text-white hover:bg-black"
                 @click="submit"
-                class="block w-full px-6 py-3 mt-3 text-sm font-semibold text-white bg-gray-800 rounded-lg shadow-xl hover:text-white hover:bg-black"
               >
-                > Update User
+                <span class="absolute flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
+                    />
+                  </svg>
+                </span>
+                Update Account
               </button>
             </div>
           </div>
         </div>
       </div>
-      <div class="flex justify-end">
+      <div class="fixed inset-x-0 bottom-0">
         <div class="m-4 text-xs text-gray-400">
           Powered by
           <span class="underline">

@@ -6,7 +6,7 @@ export default defineUserConfig({
   title: "AuthCompanion 2",
   description:
     "Documenation Site for AuthCompanion - An effortless, open source, token-based user management server - well suited for modern web projects.",
-  // head: [['script', { defer: true, src: 'https://t.jitsu.com/s/lib.js', 'data-key': 'js.70qf40hrc3y266v4uud9dh.fub39cgaa9a45y8iqpteqq', 'data-tracking-host': 'https://young-thunder-2379.fly.dev/' }]],
+  head: [['script', { async: true, defer: true, src: 'https://scripts.withcabin.com/hello.js' }]],
   theme: defaultTheme({
     logo: "",
     darkMode: true,

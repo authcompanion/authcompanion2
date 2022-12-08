@@ -37,16 +37,15 @@ AuthCompanion aims to satisfy the most common authentication and user management
 With AuthC you can:
 
 - Securely handle the registration, login, logout, and account recovery of user accounts.
-- Generate and validate [JWTs](https://jwt.io/introduction), a token used for your user's session and authenticating them into your web application's backend APIs
+- Generate and verify [JWTs](https://jwt.io/introduction), a token used for your user's session and authenticating them into your web application's backend APIs.
 - Confidently store and own your web application's user accounts
-- Support users registering and logining in with a passkey on their mobile device (aka passwordless) or with traditional username/passwords instead
+- Help users create accounts and login with a passkey on their mobile device (aka passwordless) or by using traditional username/passwords instead
 
 ## Try it
 
-The instructions below will launch the default server for integration purposes.
+The instructions below will launch the default server for exploration.
 
-Please see the env.example file for more details on the server configuration
-options as you move AuthC into production.
+When ready, read the [Launch Guide](https://docs.authcompanion.com/guide/launch.html) for more information on setting up AuthC in production environments.
 
 ### With Docker
 
@@ -85,16 +84,24 @@ When you're ready, start the server with the default settings!
 $ npm run start
 ```
 
+### Configurations
+
+If you're just trying AuthC out for the first time, the default configuration will work so you can poke around. See the [Configuration Guide](https://docs.authcompanion.com/guide/configuration.html) for a closer look at how to configure the server.
+
 ---
 
 ## Explore
+
+The best way to learn is by doing; here's a couple ways to get started.
+
+You can either use the publicly available demo at [demo.authcompanion.com](https://demo.authcompanion.com/v1/web/login) or start the server locally.
 
 ### 1. Create a user
 
 AuthC comes with pre-built [Web Forms](#web-forms-for-authentication) to help
 you quickly integrate user auth alongside your web application.
 
-With the AuthC server running, start first by registering an account using this
+With the AuthC server running (in the prior steps), start first by registering an account using this
 web form: http://localhost:3002/v1/web/register
 
 ### 2. Login as the new user
@@ -103,11 +110,9 @@ Next, log in with the account you just created using your email and password at
 this web form: http://localhost:3002/v1/web/login. The server response includes
 an access token for use when authenticating to backend APIs and redirects the user to your application's home page.
 
-### 3. Examine the APIs
+### 3. Read the Integration Guide
 
-Lastly, have a read through the [Authentication API](#authentication-api) for
-information on how you can manage user authentication for your web app. Both the built-in Web Forms and Auth API work together to get up and running with user auth
-quickly.
+Have a look through the [Integration Guide](https://docs.authcompanion.com/guide/integrate.html) to understand how your frontend applications and backend web services interact with AuthC.
 
 ---
 
@@ -146,32 +151,17 @@ changes. 👍
 | ![Login](./.github/public/login.png) | ![Register](./.github/public/register.png) |
 |  http://localhost:3002/v1/web/login  |   http://localhost:3002/v1/web/register    |
 
-Also included in Authcompanion is the profile page (for updating user accounts),
-available at `/profile` and the forgot password page at `/recovery`.
+For a full list of AuthC's Web Forms, see the [Web Form Guide](https://docs.authcompanion.com/guide/webforms.html).
 
 ---
 
 ## Authentication API Docs
 
-The RESTful Authentication API powers the Web Forms by which users authenticate into your web app. It's important to note that the web forms alone don't cover every auth flow for your users. For example: validating the magic URL in the forgot password flow or refreshing an expired access token would require the APIs.
+The RESTful Authentication API powers the Web Forms by which users authenticate into your web app. It's important to note that the web forms alone doesn't cover every auth flow for your users. For example: validating the magic URL in the forgot password flow or refreshing an expired access token would require interacting with AuthC's APIs.
 
 Using both the Auth API and Web Forms you can easily integrate and cover your auth use cases. For more information about the Authentication API check out the docs here: [https://docs.authcompanion.com/guide/authapi.html](https://docs.authcompanion.com/guide/authapi.html)
 
 ---
-
-## Reference Architecture
-
-![landscape](./.github/public/authcLandscape.png)
-
-## Related Readings
-
-Be sure to familiarize yourself with token-based authentication using JSON Web
-Tokens.
-
-- [The Ultimate Guide to handling JWTs on frontend
-  clients](https://hasura.io/blog/best-practices-of-using-jwt-with-graphql/)
-
-- [Web Authentication Method Comparison](https://testdriven.io/blog/web-authentication-methods/#token-based-authentication)
 
 ## License
 

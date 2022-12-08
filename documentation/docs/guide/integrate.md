@@ -206,3 +206,17 @@ try {
   console.error(error);
 }
 ```
+## Reference Architecture
+Roughly, your experience will look like this:
+
+![landscape](https://raw.githubusercontent.com/authcompanion/authcompanion2/main/.github/public/authcLandscape.png)
+
+## Related Readings
+
+Be sure to familiarize yourself with token-based authentication using JSON Web
+Tokens.
+
+- [The Ultimate Guide to handling JWTs on frontend
+  clients](https://hasura.io/blog/best-practices-of-using-jwt-with-graphql/)
+
+- [Web Authentication Method Comparison](https://testdriven.io/blog/web-authentication-methods/#token-based-authentication)

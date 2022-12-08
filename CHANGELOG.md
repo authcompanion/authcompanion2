@@ -1,3 +1,18 @@
+# [3.0.0-beta.5](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.4...3.0.0-beta.5) (2022-12-08)
+
+
+### Bug Fixes
+
+* responsive positioning of the web forms on mobile devices ([3dafeb5](https://github.com/authcompanion/authcompanion2/commit/3dafeb51c5ff052ec8a5a8131be45ff617fd201c))
+
+
+### Features
+
+* new and improved ui styling for web forms ([1af3562](https://github.com/authcompanion/authcompanion2/commit/1af356235297cfbb62ba71e42dd334eb34c1efbc))
+
+See screenshots of the new UI for the Webforms here: [docs.authcompanion.com/guide/webforms.html](https://docs.authcompanion.com/guide/webforms.html) or head over to the public demo at [demo.authcompanion.com/v1/web/login](https://demo.authcompanion.com/v1/web/login)
+
+
 # [3.0.0-beta.4](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.3...3.0.0-beta.4) (2022-11-30)
 
 

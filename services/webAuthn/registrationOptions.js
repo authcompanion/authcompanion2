@@ -1,15 +1,12 @@
-import Database from "better-sqlite3";
 import config from "../../config.js";
 import { randomUUID } from "crypto";
 import { generateRegistrationOptions } from "@simplewebauthn/server";
 
-export const registrationOptionsHandler = async (request, reply) => {
+export const registrationOptionsHandler = async function (request, reply) {
   try {
-    const db = new Database(config.DBPATH);
-
     //create a user.id for the new registration
     const userUUID = randomUUID();
-   
+
     //set the PR's ID value
     const appURL = new URL(config.ORIGIN);
     const rpID = appURL.hostname;
@@ -36,7 +33,7 @@ export const registrationOptionsHandler = async (request, reply) => {
     const jwtid = randomUUID();
     const generatedUniqueEmail = randomUUID();
 
-    const registerStmt = db.prepare(
+    const registerStmt = this.db.prepare(
       "INSERT INTO users (uuid, name, email, password, challenge, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, jwt_id, created_at, updated_at;"
     );
     const userObj = registerStmt.get(
@@ -48,7 +45,6 @@ export const registrationOptionsHandler = async (request, reply) => {
       "1",
       jwtid
     );
-
     //send the reply
     return generatedOptions;
   } catch (err) {

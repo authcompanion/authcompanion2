@@ -1,17 +1,11 @@
 import { hashPassword } from "../utilities/credential.js";
 import { makeAccesstoken, makeRefreshtoken } from "../utilities/jwt.js";
-import Database from "better-sqlite3";
 import config from "../config.js";
 
-export const userProfileHandler = async (request, reply) => {
+export const userProfileHandler = async function (request, reply) {
   try {
-    //Connect to the Database
-    //const db = this.connectdb();
-
-    const db = new Database(config.DBPATH);
-
     //Fetch user from Database
-    const stmt = db.prepare("SELECT * FROM users WHERE uuid = ?;");
+    const stmt = this.db.prepare("SELECT * FROM users WHERE uuid = ?;");
     const requestedAccount = await stmt.get(request.jwtRequestPayload.userid);
 
     //Check if the user exists already
@@ -27,7 +21,7 @@ export const userProfileHandler = async (request, reply) => {
     if (request.body.password) {
       const hashpwd = await hashPassword(request.body.password);
 
-      const registerStmt = db.prepare(
+      const registerStmt = this.db.prepare(
         "UPDATE users SET name = ?, email = ?, password = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ? RETURNING uuid, name, email, jwt_id, password, active, created_at, updated_at;"
       );
       userObj = registerStmt.get(
@@ -37,7 +31,7 @@ export const userProfileHandler = async (request, reply) => {
         request.jwtRequestPayload.userid
       );
     } else {
-      const registerStmt = db.prepare(
+      const registerStmt = this.db.prepare(
         "UPDATE users SET name = ?, email = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ? RETURNING uuid, name, email, jwt_id, password, active, created_at, updated_at;"
       );
       userObj = registerStmt.get(

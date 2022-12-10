@@ -1,15 +1,12 @@
 import { hashPassword } from "../utilities/credential.js";
 import { randomUUID } from "crypto";
 import { makeAccesstoken, makeRefreshtoken } from "../utilities/jwt.js";
-import Database from "better-sqlite3";
 import config from "../config.js";
 
-export const registrationHandler = async (request, reply) => {
+export const registrationHandler = async function (request, reply) {
   try {
-    const db = new Database(config.DBPATH);
-
     //Check if the user exists already
-    const stmt = db.prepare("SELECT * FROM users WHERE email = ?;");
+    const stmt = this.db.prepare("SELECT * FROM users WHERE email = ?;");
     const requestedAccount = await stmt.get(request.body.email);
 
     if (requestedAccount) {
@@ -22,7 +19,7 @@ export const registrationHandler = async (request, reply) => {
     const uuid = randomUUID();
     const jwtid = randomUUID();
 
-    const registerStmt = db.prepare(
+    const registerStmt = this.db.prepare(
       "INSERT INTO users (uuid, name, email, password, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, jwt_id, created_at, updated_at;"
     );
     const userObj = registerStmt.get(

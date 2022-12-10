@@ -1,16 +1,13 @@
-import Database from "better-sqlite3";
 import config from "../../config.js";
 import { parse } from "cookie";
 import { makeAccesstoken, makeRefreshtoken } from "../../utilities/jwt.js";
 import { verifyAuthenticationResponse } from "@simplewebauthn/server";
 
-export const loginVerificationHandler = async (request, reply) => {
+export const loginVerificationHandler = async function (request, reply) {
   try {
-    const db = new Database(config.DBPATH);
-
     //set the PR's ID value
     const appURL = new URL(config.ORIGIN);
-    
+
     const rpID = appURL.hostname;
     // The URL at which registrations and authentications should occur
     const origin = appURL.origin;
@@ -19,7 +16,7 @@ export const loginVerificationHandler = async (request, reply) => {
     const cookies = parse(request.headers.cookie);
 
     //retrieve the session's challenge from storage
-    const storageStmt = db.prepare(
+    const storageStmt = this.db.prepare(
       "SELECT data FROM storage WHERE sessionID = ?;"
     );
     const sessionChallenge = await storageStmt.get(cookies.sessionID);
@@ -28,7 +25,7 @@ export const loginVerificationHandler = async (request, reply) => {
     const userID = request.body.response.userHandle;
 
     //retrieve the user's authenticator
-    const stmt = db.prepare(
+    const stmt = this.db.prepare(
       "SELECT credentialPublicKey, credentialID, counter, transports FROM authenticator INNER JOIN users ON users.authenticator_id = authenticator.id WHERE users.uuid = ?;"
     );
     const userAuthenticator = await stmt.get(userID);
@@ -50,13 +47,15 @@ export const loginVerificationHandler = async (request, reply) => {
     }
 
     //session clean up in the storage
-    const deleteStmt = db.prepare("DELETE FROM storage WHERE sessionID = ?;");
+    const deleteStmt = this.db.prepare(
+      "DELETE FROM storage WHERE sessionID = ?;"
+    );
     await deleteStmt.run(cookies.sessionID);
 
     // All looks good! Let's prepare the reply
 
     // Fetch user from database
-    const userStmt = db.prepare(
+    const userStmt = this.db.prepare(
       "SELECT uuid, name, email, jwt_id, password, active, created_at, updated_at FROM users WHERE uuid = ?;"
     );
     const userObj = await userStmt.get(userID);

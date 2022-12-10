@@ -3,10 +3,10 @@ import Database from "better-sqlite3";
 import config from "../config.js";
 import fastifyPlugin from "fastify-plugin";
 
-const dbfunc = async function connectDB(fastify, options) {
+const dbPlugin = async function (fastify, options) {
   let db = {};
   try {
-    //create test database if just testing the application
+    //create test database to support CI
     if (options.testdb) {
       config.DBPATH = "./test.db";
       db = new Database(config.DBPATH);
@@ -43,10 +43,8 @@ const dbfunc = async function connectDB(fastify, options) {
       "There was an error setting and connecting up the Database, please try again!"
     );
   }
-  //make available the database across the server by calling "connectdb"
-  // fastify.decorate("connectdb", function () {
-  //   return new Database(config.DBPATH);
-  // });
+  //make available the database across the server by calling "db"
+  fastify.decorate("db", db);
 };
 //wrap the function with the fastly plugin to expose outside of the registered scope
-export default fastifyPlugin(dbfunc);
+export default fastifyPlugin(dbPlugin, { fastify: "4.x" });

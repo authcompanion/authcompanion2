@@ -3,15 +3,11 @@ import {
   makeRefreshtoken,
   validateJWT,
 } from "../utilities/jwt.js";
-import Database from "better-sqlite3";
 import config from "../config.js";
 import { parse } from "cookie";
 
-export const tokenRefreshHandler = async (request, reply) => {
+export const tokenRefreshHandler = async function (request, reply) {
   try {
-    //Connect to the Database
-    const db = new Database(config.DBPATH);
-
     let requestToken = {};
 
     //Check if the request includes a refresh token in the header or in the request body
@@ -30,7 +26,7 @@ export const tokenRefreshHandler = async (request, reply) => {
     const jwtClaims = await validateJWT(requestToken);
 
     //Fetch user from Database
-    const stmt = db.prepare(
+    const stmt = this.db.prepare(
       "SELECT uuid, name, email, jwt_id, created_at, updated_at FROM users WHERE jwt_id = ?;"
     );
     const userObj = await stmt.get(jwtClaims.jti);

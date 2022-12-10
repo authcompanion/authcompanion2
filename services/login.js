@@ -1,17 +1,11 @@
 import { verifyPasswordWithHash } from "../utilities/credential.js";
 import { makeAccesstoken, makeRefreshtoken } from "../utilities/jwt.js";
-import Database from "better-sqlite3";
 import config from "../config.js";
 
-export const loginHandler = async (request, reply) => {
+export const loginHandler = async function (request, reply) {
   try {
-    // Connect to the Database
-    //const db = await fastify.connectdb();
-
-    const db = new Database(config.DBPATH);
-
     // Fetch user from database
-    const stmt = db.prepare(
+    const stmt = this.db.prepare(
       "SELECT uuid, name, email, jwt_id, password, active, created_at, updated_at FROM users WHERE email = ?;"
     );
     const userObj = await stmt.get(request.body.email);

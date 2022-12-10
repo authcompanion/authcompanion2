@@ -1,9 +1,8 @@
 import { makeRefreshtoken } from "../utilities/jwt.js";
-import Database from "better-sqlite3";
 import config from "../config.js";
 import { SMTPClient } from "emailjs";
 
-export const profileRecoveryHandler = async (request, reply) => {
+export const profileRecoveryHandler = async function (request, reply) {
   const client = new SMTPClient({
     user: config.SMTPUSER,
     password: config.SMTPPASSWORD,
@@ -12,13 +11,8 @@ export const profileRecoveryHandler = async (request, reply) => {
     ssl: true,
   });
   try {
-    //Connect to the Database
-    //const db = await fastify.connectdb();
-
-    const db = new Database(config.DBPATH);
-
     //Fetch user from Database
-    const stmt = db.prepare("SELECT * FROM users WHERE email = ?;");
+    const stmt = this.db.prepare("SELECT * FROM users WHERE email = ?;");
     const userObj = await stmt.get(request.body.email);
 
     //Check if the user exists in the database, before issuing recovery token

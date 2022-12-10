@@ -1,14 +1,11 @@
-import Database from "better-sqlite3";
 import config from "../../config.js";
 import { makeAccesstoken, makeRefreshtoken } from "../../utilities/jwt.js";
 import { verifyRegistrationResponse } from "@simplewebauthn/server";
 
-export const registrationVerificationHandler = async (request, reply) => {
+export const registrationVerificationHandler = async function (request, reply) {
   try {
-    const db = new Database(config.DBPATH);
-
     //set the PR's ID value
-    const appURL = new URL(config.ORIGIN);    
+    const appURL = new URL(config.ORIGIN);
     const rpID = appURL.hostname;
     // The URL at which registrations and authentications should occur
     const origin = appURL.origin;
@@ -16,7 +13,7 @@ export const registrationVerificationHandler = async (request, reply) => {
     // Fetch user from database
     const requestedAccount = request.headers["x-authc-app-userid"];
 
-    const stmt = db.prepare("SELECT challenge FROM users WHERE UUID = ?;");
+    const stmt = this.db.prepare("SELECT challenge FROM users WHERE UUID = ?;");
     const { challenge } = await stmt.get(requestedAccount);
 
     //verify the request for registration
@@ -38,7 +35,7 @@ export const registrationVerificationHandler = async (request, reply) => {
     const { credentialPublicKey, credentialID, counter } =
       verification.registrationInfo;
 
-    const authenticatorStmt = db.prepare(
+    const authenticatorStmt = this.db.prepare(
       "INSERT INTO Authenticator (credentialID, credentialPublicKey, counter) VALUES (?,?,?) RETURNING *;"
     );
     const authenticatorObj = authenticatorStmt.get(
@@ -48,7 +45,7 @@ export const registrationVerificationHandler = async (request, reply) => {
     );
 
     //associate the authenticator to the user
-    const userStmt = db.prepare(
+    const userStmt = this.db.prepare(
       "UPDATE users SET authenticator_id = ? WHERE uuid = ? RETURNING uuid, name, email, jwt_id, created_at, updated_at;"
     );
 
@@ -81,6 +78,7 @@ export const registrationVerificationHandler = async (request, reply) => {
       },
     };
   } catch (err) {
+    console.log(err);
     throw { statusCode: err.statusCode, message: err.message };
   }
 };

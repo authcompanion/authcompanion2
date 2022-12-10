@@ -18,7 +18,7 @@ const authenticatePlugin = async (fastify, options) => {
         throw { statusCode: "401", message: "Unauthorized" };
       }
       //validate the token
-      const payload = await validateJWT(requestToken);
+      const payload = await validateJWT(requestToken, this.key);
 
       request.jwtRequestPayload = payload;
     } catch (error) {

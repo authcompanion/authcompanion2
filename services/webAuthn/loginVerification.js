@@ -60,8 +60,8 @@ export const loginVerificationHandler = async function (request, reply) {
     );
     const userObj = await userStmt.get(userID);
 
-    const userAccessToken = await makeAccesstoken(userObj);
-    const userRefreshToken = await makeRefreshtoken(userObj);
+    const userAccessToken = await makeAccesstoken(userObj, this.key);
+    const userRefreshToken = await makeRefreshtoken(userObj, this.key);
 
     const userAttributes = {
       name: userObj.name,

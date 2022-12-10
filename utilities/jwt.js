@@ -1,16 +1,13 @@
 import * as jose from "jose";
 import { webcrypto } from "crypto";
 import { randomUUID } from "crypto";
-import { importKey } from "./key.js";
 import Database from "better-sqlite3";
 import config from "../config.js";
 
 const { subtle } = webcrypto;
 
-export async function makeAccesstoken(userObj) {
+export async function makeAccesstoken(userObj, secretKey) {
   try {
-    const secretKey = await importKey();
-
     // set default expiration time of the jwt token
     let expirationTime = "1h";
 
@@ -37,12 +34,13 @@ export async function makeAccesstoken(userObj) {
 //https://datatracker.ietf.org/doc/html/draft-ietf-oauth-browser-based-apps-05#section-8
 export async function makeRefreshtoken(
   userObj,
+  secretKey,
   { recoveryToken = false } = {}
 ) {
   try {
     // set default expiration time of the jwt token
     let expirationTime = "7d";
-    const secretKey = await importKey();
+
     // If a "recovery token" is requested for account recovery route, return token with shorter expiration time
     if (recoveryToken) {
       expirationTime = "15m";
@@ -77,9 +75,8 @@ export async function makeRefreshtoken(
   }
 }
 
-export async function validateJWT(jwt) {
+export async function validateJWT(jwt, secretKey) {
   try {
-    const secretKey = await importKey();
 
     const { payload } = await jose.jwtVerify(jwt, secretKey);
 
@@ -88,14 +85,3 @@ export async function validateJWT(jwt) {
     throw { statusCode: 500, message: "Server Error" };
   }
 }
-// const jwtPlugin = async function (fastify, opts, done) {
-//   try {
-//     fastify.decorate("makeAccessToken", makeAccestoken());
-//     fastify.decorate("makeRefreshToken", makeRefreshtoken());
-
-//   } catch (error) {
-//     console.log(error);
-//   }
-//   done();
-// };
-// export default fastifyPlugin(jwtPlugin);

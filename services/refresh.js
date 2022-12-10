@@ -23,7 +23,7 @@ export const tokenRefreshHandler = async function (request, reply) {
       throw { statusCode: 400, message: "Refresh Token Failed" };
     }
     //Validate the refresh token
-    const jwtClaims = await validateJWT(requestToken);
+    const jwtClaims = await validateJWT(requestToken, this.key);
 
     //Fetch user from Database
     const stmt = this.db.prepare(
@@ -32,8 +32,8 @@ export const tokenRefreshHandler = async function (request, reply) {
     const userObj = await stmt.get(jwtClaims.jti);
 
     //Prepare the reply
-    const userAccessToken = await makeAccesstoken(userObj);
-    const userRefreshToken = await makeRefreshtoken(userObj);
+    const userAccessToken = await makeAccesstoken(userObj, this.key);
+    const userRefreshToken = await makeRefreshtoken(userObj, this.key);
 
     const userAttributes = {
       name: userObj.name,

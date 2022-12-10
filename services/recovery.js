@@ -24,7 +24,7 @@ export const profileRecoveryHandler = async function (request, reply) {
     }
 
     //Prepare & send the recovery email
-    const userRecoveryToken = await makeRefreshtoken(userObj, {
+    const userRecoveryToken = await makeRefreshtoken(userObj, this.key,  {
       recoveryToken: "true",
     });
 

@@ -52,8 +52,8 @@ export const registrationVerificationHandler = async function (request, reply) {
     const userObj = userStmt.get(authenticatorObj.id, requestedAccount);
 
     //Prepare the reply
-    const userAccessToken = await makeAccesstoken(userObj);
-    const userRefreshToken = await makeRefreshtoken(userObj);
+    const userAccessToken = await makeAccesstoken(userObj, this.key);
+    const userRefreshToken = await makeRefreshtoken(userObj, this.key);
 
     const userAttributes = {
       name: userObj.name,

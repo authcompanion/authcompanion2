@@ -1,3 +1,12 @@
+# [3.0.0-beta.6](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.5...3.0.0-beta.6) (2022-12-23)
+
+
+### Features
+
+* new email template for account recovery email ([7eb301e](https://github.com/authcompanion/authcompanion2/commit/7eb301ecf8beb7082a33036c21b8ff8ef8ef9c49))
+
+
+
 # [3.0.0-beta.5](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.4...3.0.0-beta.5) (2022-12-08)
 
 

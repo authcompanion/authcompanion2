@@ -2,9 +2,13 @@ name: Authc2 CI
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    branches:
+      - main
+    paths-ignore:
+      - 'documentation/**'
+    pull_request:
+      branches:
+        - main
 
 jobs:
   build:

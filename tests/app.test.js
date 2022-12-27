@@ -89,6 +89,7 @@ test.serial("API Endpoint Test: /auth/refresh", async (t) => {
     const response = await t.context.app.inject({
       method: "POST",
       url: "/v1/auth/refresh",
+      payload: {},
       headers: {
         Cookie: `${replyPayload.cookies[0].name}=${replyPayload.cookies[0].value}`,
       },

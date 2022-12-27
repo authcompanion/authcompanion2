@@ -11,7 +11,7 @@ import { profileRecoverySchema } from "../services/schemas/profileRecoverySchema
 import { profileRecoveryHandler } from "../services/recovery.js";
 
 import { tokenRefreshHandler } from "../services/refresh.js";
-//import { refreshSchema } from "../services/schemas/refreshSchema.js";
+import { refreshSchema } from "../services/schemas/refreshSchema.js";
 
 import { registrationOptionsHandler } from "../services/webAuthn/registrationOptions.js";
 import { registrationVerificationHandler } from "../services/webAuthn/registrationVerification.js";
@@ -28,7 +28,7 @@ const serverRoutes = async function (fastify, options) {
     userProfileHandler
   );
   fastify.post("/recovery", profileRecoverySchema, profileRecoveryHandler);
-  fastify.post("/refresh", tokenRefreshHandler);
+  fastify.post("/refresh", refreshSchema, tokenRefreshHandler);
 
   //webAuthn routes
   fastify.get("/registration-options", registrationOptionsHandler);

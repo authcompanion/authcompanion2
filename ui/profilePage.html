@@ -8,7 +8,10 @@
       rel="stylesheet"
       href="https://unpkg.com/@tailwindcss/forms@0.4.0/dist/forms.min.css"
     />
-    <script type="module" src="https://cdn.skypack.dev/pin/twind@v0.16.18-L1gmw2lgW1dNuzP8s14r/mode=imports,min/optimized/twind/shim.js"></script>
+    <script
+      type="module"
+      src="https://cdn.skypack.dev/pin/twind@v0.16.18-L1gmw2lgW1dNuzP8s14r/mode=imports,min/optimized/twind/shim.js"
+    ></script>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     <style>
       html {
@@ -208,7 +211,7 @@
                     "Content-type": "application/json",
                     Authorization: `Bearer ${token}`,
                   },
-                  body: "",
+                  body: "{}",
                 });
                 //AuthC will store the ACCESS_TOKEN in local storage or you can access it from the response itself!
                 const refreshBody = await refreshResponse.json();

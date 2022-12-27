@@ -194,7 +194,7 @@ try {
         "Content-type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: "",
+      body: "{}",
     });
     //AuthC will provide the ACCESS_TOKEN in the response
     const refreshResponse = await response.json();

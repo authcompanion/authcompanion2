@@ -165,7 +165,7 @@ OR If the request has a valid and short lived recovery token (issued from the
 recovery email), trade it for a new access token (on this same route), so the
 user can login. This completed the "Forgot Password" user flow!
 
-**POST** Request Body (optional, leave blank if cookie is available):
+**POST** Request Body (optional, leave blank obj if cookie is available):
 
 ```json
 { "token": "{user's recovery token here}" }

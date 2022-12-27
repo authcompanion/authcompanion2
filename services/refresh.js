@@ -11,7 +11,7 @@ export const tokenRefreshHandler = async function (request, reply) {
     let requestToken = {};
 
     //Check if the request includes a refresh token in the header or in the request body
-    if (request.body) {
+    if (Object.keys(request.body).length) {
       requestToken = request.body.token;
     } else if (request.headers.cookie) {
       const cookies = parse(request.headers.cookie);

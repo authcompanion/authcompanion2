@@ -3,7 +3,6 @@ import serverRoutes from "./routes/api.routes.js";
 import webRoutes from "./routes/ui.routes.js";
 import sqlite3 from "./db/db.js";
 import serverkey from "./utilities/key.js";
-import authenticate from "./utilities/authenticate.js";
 import config from "./config.js";
 
 export default async function buildApp(opts = {}) {
@@ -13,8 +12,6 @@ export default async function buildApp(opts = {}) {
   app.register(sqlite3, opts);
   //register the server key plugin
   app.register(serverkey);
-  //register plugin to authenticate users into api/ui
-  app.register(authenticate);
 
   //register the authentication api routes. set the prefix for all api routes globally
   app.register(serverRoutes, { prefix: "/v1/auth" });

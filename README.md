@@ -140,8 +140,9 @@ Have a look through the [Integration Guide](https://docs.authcompanion.com/guide
 
 ### Web Forms for Authentication
 
-The web forms are built using [Vue.js](https://v3.vuejs.org/) and
-[Tailwindcss](https://tailwindcss.com/) - making them easily customizable for
+Authcompanion provides built-in with web forms for user authentiation; helping you to integrate user management faster.
+
+The web forms are built using [Tailwindcss](https://tailwindcss.com/) - making them easily customizable for
 your specific branding and authentication needs. No build step required to make
 changes to the Web Form look and feel; just save and then view your style
 changes. 👍
@@ -150,6 +151,8 @@ changes. 👍
 | :----------------------------------: | :----------------------------------------: |
 | ![Login](./.github/public/login.png) | ![Register](./.github/public/register.png) |
 |  http://localhost:3002/v1/web/login  |   http://localhost:3002/v1/web/register    |
+
+After a user authenticates with AuthC's web forms, we pass them to your web application.
 
 For a full list of AuthC's Web Forms, see the [Web Form Guide](https://docs.authcompanion.com/guide/webforms.html).
 

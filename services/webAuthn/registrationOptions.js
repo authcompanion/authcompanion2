@@ -20,7 +20,7 @@ export const registrationOptionsHandler = async function (request, reply) {
       timeout: 60000,
       attestationType: "indirect",
       authenticatorSelection: {
-        userVerification: "required",
+        userVerification: "preferred",
         residentKey: "required",
       },
       supportedAlgorithmIDs: [-7, -257],

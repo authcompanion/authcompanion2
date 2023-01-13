@@ -18,7 +18,7 @@ export const registrationVerificationHandler = async function (request, reply) {
 
     //verify the request for registration
     const verification = await verifyRegistrationResponse({
-      credential: request.body,
+      response: request.body,
       expectedChallenge: challenge,
       expectedOrigin: origin,
       expectedRPID: rpID,

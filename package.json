@@ -14,7 +14,7 @@
   "author": "Paul Fischer",
   "license": "Big Time Public License",
   "dependencies": {
-    "@simplewebauthn/server": "^6.2.2",
+    "@simplewebauthn/server": "^7.0.0",
     "argon2": "^0.28.7",
     "better-sqlite3": "^7.6.2",
     "cookie": "^0.5.0",

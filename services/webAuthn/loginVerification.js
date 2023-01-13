@@ -32,7 +32,7 @@ export const loginVerificationHandler = async function (request, reply) {
 
     //verify the request for login with all the information gathered
     const verification = await verifyAuthenticationResponse({
-      credential: request.body,
+      response: request.body,
       expectedChallenge: sessionChallenge.data,
       expectedOrigin: origin,
       expectedRPID: rpID,

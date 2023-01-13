@@ -1,3 +1,17 @@
+# [3.0.0-beta.7](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.6...3.0.0-beta.7) (2023-01-13)
+
+
+### Bug Fixes
+
+* set webauthn verification as "preferred" + SimpleWebAuthn bump to v7 ([d26b765](https://github.com/authcompanion/authcompanion2/commit/d26b7656280731e201e8a8e2386927760cb08c53))
+
+
+### Features
+
+* /refresh endpoint now has JSON Schema validation ([a64a04a](https://github.com/authcompanion/authcompanion2/commit/a64a04a4483a24cfa43d2dfe061aad17595c0192))
+
+
+
 # [3.0.0-beta.6](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.5...3.0.0-beta.6) (2022-12-23)
 
 

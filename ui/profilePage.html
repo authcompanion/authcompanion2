@@ -1,21 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" hidden>
+<html lang="en" un-cloak>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://unpkg.com/vue@3.2.37/dist/vue.global.prod.js"></script>
     <link
       rel="stylesheet"
-      href="https://unpkg.com/@tailwindcss/forms@0.4.0/dist/forms.min.css"
+      href="https://cdn.jsdelivr.net/npm/@unocss/reset/tailwind.min.css"
     />
-    <script
-      type="module"
-      src="https://cdn.skypack.dev/pin/twind@v0.16.18-L1gmw2lgW1dNuzP8s14r/mode=imports,min/optimized/twind/shim.js"
-    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/uno.global.js"></script>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     <style>
       html {
         font-family: "Inter var", sans-serif;
+      }
+      [un-cloak] {
+        display: none;
       }
     </style>
     <title>Profile</title>
@@ -41,7 +40,7 @@
             <!-- Navigation -->
             <div class="flex flex-row justify-between mb-6">
               <div class="flex flex-row text-xl font-semibold text-gray-700">
-                <span class="mt-1 mr-1 -rotate-90">
+                <span class="mr-1 -rotate-90">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -67,7 +66,7 @@
                 <input
                   type="text"
                   v-model="name"
-                  class="block w-full mt-1 text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:border-gray-500 focus:bg-white focus:ring-0"
+                  class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
                   placeholder=""
                 />
               </label>
@@ -76,7 +75,7 @@
                 <input
                   type="text"
                   v-model="email"
-                  class="block w-full mt-1 text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:border-gray-500 focus:bg-white focus:ring-0"
+                  class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
                   placeholder="hello@example.com"
                 />
               </label>
@@ -85,7 +84,7 @@
                 <input
                   type="password"
                   v-model="password"
-                  class="block w-full mt-1 text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:border-gray-500 focus:bg-white focus:ring-0"
+                  class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
                   placeholder=""
                 />
               </label>
@@ -94,13 +93,13 @@
                 <input
                   v-model="confirmPassword"
                   type="password"
-                  class="block w-full mt-1 text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:border-gray-500 focus:bg-white focus:ring-0"
+                  class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
                   placeholder=""
                 />
               </label>
               <button
-                type="button"
-                class="block w-full px-6 py-3 mt-3 font-semibold text-white bg-gray-800 rounded-lg shadow-xl hover:text-white hover:bg-black"
+                type=""
+                class="block w-full px-6 py-3 text-base font-semibold text-white bg-gray-800 border rounded-lg shadow-xl hover:text-white hover:bg-gray-900"
                 @click="submit"
               >
                 <span class="absolute flex items-center">
@@ -138,10 +137,15 @@
     </div>
     <!-- scripts -->
     <script type="module">
+      import {
+        createApp,
+        ref,
+        computed,
+      } from "https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.prod.js";
+
       import jwtDecode from "https://cdn.skypack.dev/jwt-decode";
 
-      const { ref, computed } = Vue;
-      const app = Vue.createApp({
+      createApp({
         setup() {
           const name = ref("");
           const email = ref("");
@@ -267,8 +271,7 @@
             confirmPassword,
           };
         },
-      });
-      app.mount("#app");
+      }).mount("#app");
     </script>
   </body>
 </html>

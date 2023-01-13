@@ -140,12 +140,11 @@ Have a look through the [Integration Guide](https://docs.authcompanion.com/guide
 
 ### Web Forms for Authentication
 
-Authcompanion provides built-in with web forms for user authentiation; helping you to integrate user management faster.
+Authcompanion provides built-in web forms for user authentiation.
 
-The web forms are built using [Tailwindcss](https://tailwindcss.com/) - making them easily customizable for
+The web forms use CSS-in-JS - making them easily customizable for
 your specific branding and authentication needs. No build step required to make
-changes to the Web Form look and feel; just save and then view your style
-changes. 👍
+changes to the Web Form's look and feel.
 
 |             Login Screen             |            Registration Screen             |
 | :----------------------------------: | :----------------------------------------: |

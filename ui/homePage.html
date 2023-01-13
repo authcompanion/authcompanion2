@@ -1,18 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" hidden>
+<html lang="en" un-cloak>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://unpkg.com/vue@3.2.37/dist/vue.global.prod.js"></script>
     <link
       rel="stylesheet"
-      href="https://unpkg.com/@tailwindcss/forms@0.4.0/dist/forms.min.css"
+      href="https://cdn.jsdelivr.net/npm/@unocss/reset/tailwind.min.css"
     />
-    <script type="module" src="https://cdn.skypack.dev/twind/shim"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/uno.global.js"></script>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     <style>
       html {
         font-family: "Inter var", sans-serif;
+      }
+      [un-cloak] {
+        display: none;
       }
     </style>
     <title>Login</title>
@@ -21,7 +23,7 @@
   <body class="flex flex-col h-full bg-gray-50">
     <div id="app" class="">
       <div class="w-full my-8 text-center">
-        <p>Home Page</p>
+        <p>Placeholder Home Page</p>
       </div>
       <div class="w-full my-8 text-center">
         <p class="py-3 text-3xl italic font-semibold text-green-700">
@@ -98,9 +100,14 @@
       </div>
     </div>
     <!-- scripts -->
-    <script>
-      const { ref, computed } = Vue;
-      const app = Vue.createApp({
+    <script type="module">
+      import {
+        createApp,
+        ref,
+        computed,
+      } from "https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.prod.js";
+
+      createApp({
         setup() {
           const email = ref("");
           const password = ref("");
@@ -133,8 +140,7 @@
             jwtDebugUrl,
           };
         },
-      });
-      app.mount("#app");
+      }).mount("#app");
     </script>
   </body>
 </html>

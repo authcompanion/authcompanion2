@@ -17,7 +17,7 @@
      <img alt="GitHub stars" src="https://img.shields.io/github/stars/authcompanion/authcompanion2">
    </a>
    <a href="https://nodejs.org/en/">
-     <img src="https://img.shields.io/badge/node-v18.5.0-green?logo=node.js"/>
+     <img src="https://img.shields.io/badge/node-v18.13.0-green?logo=node.js"/>
    </a>
       <a href="https://github.com/authcompanion/authcompanion2/tags">
      <img src="https://img.shields.io/github/v/release/authcompanion/authcompanion2?color=purple&include_prereleases&style=flat-square"/>

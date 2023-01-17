@@ -5,7 +5,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "node --watch server.js",
     "test": "ava",
     "start": "node server.js",
     "release:changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
@@ -27,7 +27,10 @@
   "devDependencies": {
     "ava": "^4.3.3",
     "conventional-changelog-cli": "^2.2.2",
-    "nodemon": "^2.0.20",
-    "prettier": "^2.8.2"
+    "prettier": "^2.8.3"
+  },
+  "engines": {
+    "node": ">=18.13",
+    "pnpm": ">=7"
   }
 }

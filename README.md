@@ -45,13 +45,15 @@ With AuthC you can:
 
 The instructions below will launch the default server for exploration.
 
-When ready, read the [Launch Guide](https://docs.authcompanion.com/guide/launch.html) for more information on setting up AuthC in production environments.
-
 ### With Docker
 
 Make sure to have the
 [respository cloned](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
 Then from the main directory, build the AuthC server image:
+
+```bash
+$ git clone https://github.com/authcompanion/authcompanion2.git
+```
 
 ```bash
 $ docker build -t authc_server .
@@ -65,11 +67,13 @@ $ docker run --name authcompanion \
 authc_server
 ```
 
+When ready, read the [Launch Guide](https://docs.authcompanion.com/guide/launch.html) for more information on setting up AuthC in production environments.
+
 ### From Source
 
 Pre-requirement:
 
-- [Node.js](http://nodejs.org) **version 16+**
+- [Node.js](http://nodejs.org) **version >=18.13**
 
 Clone the repo if you haven't done so, and install dependencies using this
 command:
@@ -81,7 +85,7 @@ $ npm install
 When you're ready, start the server with the default settings!
 
 ```bash
-$ npm run start
+$ npm start
 ```
 
 ### Configurations

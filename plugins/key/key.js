@@ -1,4 +1,4 @@
-import config from "../config.js";
+import config from "../../config.js";
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import fastifyPlugin from "fastify-plugin";
 import { webcrypto } from "crypto";
@@ -61,7 +61,6 @@ const setupServerKey = async function (fastify, options) {
     fastify.decorate("key", key);
 
     console.log("Server key - READY");
-
   } catch (error) {
     console.log(error);
     throw new Error("Failed to import the required Server key");

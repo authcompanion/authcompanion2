@@ -44,6 +44,8 @@ temp/
 .envrc
 local.properties
 *.db
+*.db-shm
+*.db-wal
 
 # *.class
 

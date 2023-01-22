@@ -1,7 +1,7 @@
 import Fastify from "fastify";
 import serverRoutes from "./routes/api.routes.js";
 import webRoutes from "./routes/ui.routes.js";
-import sqlite3 from "./db/db.js";
+import sqlite3 from "./plugins/db/db.js";
 import serverkey from "./utilities/key.js";
 import config from "./config.js";
 

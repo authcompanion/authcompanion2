@@ -1,6 +1,6 @@
 import { readFileSync, existsSync } from "fs";
 import Database from "better-sqlite3";
-import config from "../config.js";
+import config from "../../config.js";
 import fastifyPlugin from "fastify-plugin";
 
 const dbPlugin = async function (fastify, options) {
@@ -11,22 +11,24 @@ const dbPlugin = async function (fastify, options) {
       config.DBPATH = "./test.db";
       db = new Database(config.DBPATH);
 
-      const migration = readFileSync("./db/1__main.sql", "utf8");
+      const migration = readFileSync("./plugins/db/1__main.sql", "utf8");
       db.exec(migration);
       console.log("Test database - CREATED");
     }
 
     //make sure the database is available
     if (!existsSync(config.DBPATH)) {
-      //create database if it does clearnot exist and migrate
+      //create database if it does not exist and migrate
       db = new Database(config.DBPATH);
+      db.pragma("journal_mode = WAL");
 
       console.log("Sqlite3 database - CREATED");
 
-      const migration = readFileSync("./db/1__main.sql", "utf8");
+      const migration = readFileSync("./plugins/db/1__main.sql", "utf8");
       db.exec(migration);
     } else {
       db = new Database(config.DBPATH);
+      db.pragma("journal_mode = WAL");
 
       //if the database is available, make sure it has the right schema
       const stmt = db.prepare("SELECT version from authc_version");

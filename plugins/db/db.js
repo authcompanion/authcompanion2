@@ -9,14 +9,10 @@ const dbPlugin = async function (fastify, options) {
     //create test database to support CI
     if (options.testdb) {
       config.DBPATH = "./test.db";
-      db = new Database(config.DBPATH);
-
-      const migration = readFileSync("./plugins/db/1__main.sql", "utf8");
-      db.exec(migration);
-      console.log("Test database - CREATED");
+      console.log("Test database - ENABLED");
     }
 
-    //make sure the database is available
+    //make sure the database is available, if not, create one
     if (!existsSync(config.DBPATH)) {
       //create database if it does not exist and migrate
       db = new Database(config.DBPATH);

@@ -21,7 +21,10 @@ test.before(async (t) => {
 
 test.after.always("cleanup tests", async (t) => {
   await unlink("./test.db");
-  console.log("Cleaning up tests - successfully deleted ./test.db");
+  await unlink("./test.db-shm");
+  await unlink("./test.db-wal");
+
+  console.log("Cleaning up tests - successfully deleted test db");
 });
 
 let replyPayload = {};

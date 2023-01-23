@@ -1,3 +1,13 @@
+# [3.0.0-beta.8](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.7...3.0.0-beta.8) (2023-01-23)
+
+
+### Bug Fixes
+
+* enable WAL mode on sqlite + version bump ([b3ead8e](https://github.com/authcompanion/authcompanion2/commit/b3ead8ebf32c7d833df286b8156e00f60562eb37))
+* improved graceful shutdown in containers ([df2fe0f](https://github.com/authcompanion/authcompanion2/commit/df2fe0f372d17573131960e00dce7a0de0345a09))
+
+
+
 # [3.0.0-beta.7](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.6...3.0.0-beta.7) (2023-01-13)
 
 

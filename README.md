@@ -5,7 +5,7 @@
 
 <h2 align="center"><b>AuthCompanion 2</b></h2>
 
-<p align="center"> An effortless, token-based user management server - well suited for modern web projects.
+<p align="center"> An effortless, user management server with JWTs - well suited for modern web projects
 </p>
 
 <div align="center">
@@ -25,7 +25,7 @@
 
 </div>
 <br />
-<p align="center">  <a href="https://docs.authcompanion.com/"> Documentation</a> | <a href="https://github.com/authcompanion/authcompanion2/blob/main/CHANGELOG.md"> CHANGELOG</a> | <a href="https://demo.authcompanion.com/v1/web/login"> Demo Site</a> | <a rel="me" href="https://hachyderm.io/@paulfish"> Follow on Mastodon</a>
+<p align="center"> Useful Links:  <a href="https://docs.authcompanion.com/"> Documentation</a> | <a href="https://github.com/authcompanion/authcompanion2/blob/main/CHANGELOG.md"> CHANGELOG</a> | <a href="https://demo.authcompanion.com/v1/web/login"> Demo Site</a> | <a rel="me" href="https://hachyderm.io/@paulfish"> Follow on Mastodon</a>
 </p>
 
 ---
@@ -43,7 +43,26 @@ With AuthC you can:
 
 ## Try it
 
-The instructions below will launch the default server for exploration.
+The instructions below will launch the default server for exploring the features.
+
+### From Source
+
+Pre-requirement:
+
+- [Node.js](http://nodejs.org) **version >=18.13**
+
+Clone the repo if you haven't done so, and install dependencies using this
+command:
+
+```bash
+$ npm install
+```
+
+When you're ready, start the server with the default settings!
+
+```bash
+$ npm start
+```
 
 ### With Docker
 
@@ -69,28 +88,50 @@ authc_server
 
 When ready, read the [Launch Guide](https://docs.authcompanion.com/guide/launch.html) for more information on setting up AuthC in production environments.
 
-### From Source
-
-Pre-requirement:
-
-- [Node.js](http://nodejs.org) **version >=18.13**
-
-Clone the repo if you haven't done so, and install dependencies using this
-command:
-
-```bash
-$ npm install
-```
-
-When you're ready, start the server with the default settings!
-
-```bash
-$ npm start
-```
-
 ### Configurations
 
 If you're just trying AuthC out for the first time, the default configuration will work so you can poke around. See the [Configuration Guide](https://docs.authcompanion.com/guide/configuration.html) for a closer look at how to configure the server.
+
+---
+
+## Features
+
+- [x] **Web Forms for User Authentication:** Use pre-built and customizable web
+      forms for your application users to: log in with their credentials,
+      register an account, update their profile, and issue forgotten passwords.
+
+- [x] **Manage User Profiles and JWTs:** Update the password and profile
+      information of your users - all account information is stored in a SQLite
+      database. Easily manage the life-cycle of your user's JWT used for
+      authentication.
+
+- [x] **User Account Recovery:** Restore a user's access to their account using
+      the **Forgot Password** flow which sends a special link via email for
+      helping users quickly recover their account.
+
+- [x] **Passwordless Flow:** Streamline your user's Login and Registration with Passkey,
+      and authenticate users with a mobile device, USB security key or computer.
+
+- [x] **Extensible Platform:** AuthC supports a
+      [plugin system](https://www.fastify.io/docs/latest/Reference/Plugins/) for
+      easily adding new functionality to cover more of your authentication needs.
+
+### Web Forms for Authentication
+
+Authcompanion provides built-in web forms for user authentiation.
+
+The web forms use CSS-in-JS - making them easily customizable for
+your specific branding and authentication needs. No build step required to make
+changes to the Web Form's look and feel.
+
+|             Login Screen             |            Registration Screen             |
+| :----------------------------------: | :----------------------------------------: |
+| ![Login](./.github/public/login.png) | ![Register](./.github/public/register.png) |
+|  http://localhost:3002/v1/web/login  |   http://localhost:3002/v1/web/register    |
+
+After a user authenticates with AuthC's web forms, we pass them to your web application.
+
+For a full list of AuthC's Web Forms, see the [Web Form Guide](https://docs.authcompanion.com/guide/webforms.html).
 
 ---
 
@@ -117,47 +158,6 @@ an access token for use when authenticating to backend APIs and redirects the us
 ### 3. Read the Integration Guide
 
 Have a look through the [Integration Guide](https://docs.authcompanion.com/guide/integrate.html) to understand how your frontend applications and backend web services interact with AuthC.
-
----
-
-## Features
-
-- [x] **Web Forms for User Authentication:** Use pre-built and customizable web
-      forms for your application users to: log in with their credentials,
-      register an account, update their profile, and issue forgotten passwords.
-
-- [x] **Manage User Profiles and JWTs:** Update the password and profile
-      information of your users - all account information is stored in a SQLite
-      database. Easily manage the life-cycle of your user's JWT used for
-      authentication.
-
-- [x] **User Account Recovery:** Restore a user's access to their account using
-      the **Forgot Password** flow which sends a special link via email for
-      helping users quickly recover their account.
-
-- [x] **Passwordless Flow:** Streamline your user's Login and Registration with Passkey,
-      and drop asking users username/password.
-
-- [x] **Extensible Platform:** AuthC supports a
-      [plugin system](https://www.fastify.io/docs/latest/Reference/Plugins/) for
-      easily adding new functionality to cover more of your authentication needs.
-
-### Web Forms for Authentication
-
-Authcompanion provides built-in web forms for user authentiation.
-
-The web forms use CSS-in-JS - making them easily customizable for
-your specific branding and authentication needs. No build step required to make
-changes to the Web Form's look and feel.
-
-|             Login Screen             |            Registration Screen             |
-| :----------------------------------: | :----------------------------------------: |
-| ![Login](./.github/public/login.png) | ![Register](./.github/public/register.png) |
-|  http://localhost:3002/v1/web/login  |   http://localhost:3002/v1/web/register    |
-
-After a user authenticates with AuthC's web forms, we pass them to your web application.
-
-For a full list of AuthC's Web Forms, see the [Web Form Guide](https://docs.authcompanion.com/guide/webforms.html).
 
 ---
 

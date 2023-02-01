@@ -1,6 +1,6 @@
-import { verifyPasswordWithHash } from "../utilities/credential.js";
-import { makeAccesstoken, makeRefreshtoken } from "../utilities/jwt.js";
-import config from "../config.js";
+import { verifyPasswordWithHash } from "../../utilities/credential.js";
+import { makeAccesstoken, makeRefreshtoken } from "../../utilities/jwt.js";
+import config from "../../config.js";
 
 export const loginHandler = async function (request, reply) {
   try {

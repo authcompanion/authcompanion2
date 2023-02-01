@@ -1,7 +1,7 @@
-import { hashPassword } from "../utilities/credential.js";
+import { hashPassword } from "../../utilities/credential.js";
 import { randomUUID } from "crypto";
-import { makeAccesstoken, makeRefreshtoken } from "../utilities/jwt.js";
-import config from "../config.js";
+import { makeAccesstoken, makeRefreshtoken } from "../../utilities/jwt.js";
+import config from "../../config.js";
 
 export const registrationHandler = async function (request, reply) {
   try {

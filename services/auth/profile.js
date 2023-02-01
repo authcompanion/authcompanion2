@@ -1,6 +1,6 @@
-import { hashPassword } from "../utilities/credential.js";
-import { makeAccesstoken, makeRefreshtoken } from "../utilities/jwt.js";
-import config from "../config.js";
+import { hashPassword } from "../../utilities/credential.js";
+import { makeAccesstoken, makeRefreshtoken } from "../../utilities/jwt.js";
+import config from "../../config.js";
 
 export const userProfileHandler = async function (request, reply) {
   try {

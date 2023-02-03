@@ -49,8 +49,8 @@ export const createUserHandler = async function (request, reply) {
     //Send the server reply
     return {
       data: {
-        id: user.uuid,
         type: "Users",
+        id: user.uuid,
         attributes: userAttributes,
       },
     };

@@ -9,7 +9,7 @@ export const listUsersHandler = async function (request, reply) {
     //For each user, prepare the server response
     const userAttributes = users.map((user) => {
       return {
-        type: "Users",
+        type: "users",
         id: user.uuid,
         attributes: {
           name: user.name,

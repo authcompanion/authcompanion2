@@ -4,7 +4,7 @@ import { randomUUID } from "crypto";
 export const createUserHandler = async function (request, reply) {
   try {
     //Check the request's type attibute is set to users
-    if (request.body.data.type !== "Users") {
+    if (request.body.data.type !== "users") {
       request.log.info(
         "Admin API: The request's type is not set to Users, creation failed"
       );
@@ -49,7 +49,7 @@ export const createUserHandler = async function (request, reply) {
     //Send the server reply
     return {
       data: {
-        type: "Users",
+        type: "users",
         id: user.uuid,
         attributes: userAttributes,
       },

@@ -42,14 +42,28 @@ export const updateUserHandler = async function (request, reply) {
       request.body.data.attributes.password = hashpwd;
     }
 
-    //If a request does not include all of the attributes for a resource, the server MUST interpret the missing attributes as if they were included with their current values. The server MUST NOT interpret missing attributes as null values.
+    //Check if the user's active status is being updated and if it is, check if the new status is a valid 1 or 0
+    if (request.body.data.attributes.active) {
+      if (
+        request.body.data.attributes.active !== 0 &&
+        request.body.data.attributes.active !== 1
+      ) {
+        request.log.info(
+          "Admin API: User's active status is not valid, update failed"
+        );
+        throw { statusCode: 400, message: "Invalid Active Status, Please use 1 for true and 0 for false" };
+      }
+    }
+
+    //Per json-api spec: If a request does not include all of the attributes for a resource, the server MUST interpret the missing attributes as if they were included with their current values. The server MUST NOT interpret missing attributes as null values.
     const updateStmt = this.db.prepare(
-      "UPDATE users SET name = coalesce(?, name), email = coalesce(?, email), password = coalesce(?, password), updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ? RETURNING uuid, name, email, created_at, updated_at;"
+      "UPDATE users SET name = coalesce(?, name), email = coalesce(?, email), password = coalesce(?, password), active = coalesce(?, active), updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ? RETURNING uuid, name, email, active, created_at, updated_at;"
     );
     const updatedUser = updateStmt.get(
       request.body.data.attributes.name,
       request.body.data.attributes.email,
       request.body.data.attributes.password,
+      request.body.data.attributes.active,
       request.params.uuid
     );
 
@@ -57,7 +71,9 @@ export const updateUserHandler = async function (request, reply) {
     const userAttributes = {
       name: updatedUser.name,
       email: updatedUser.email,
+      active: updatedUser.active,
       created: updatedUser.created_at,
+      updated: updatedUser.updated_at,
     };
 
     reply.statusCode = 200;

@@ -22,7 +22,7 @@ export const listUsersHandler = async function (request, reply) {
     });
 
     //Send the server reply
-    reply.statusCode = 201;
+    reply.statusCode = 200;
     return {
       data: userAttributes,
     };

@@ -15,8 +15,27 @@ import { unlink } from "node:fs/promises";
 
 // Setup Application
 test.before(async (t) => {
-  //build app with a test database
+  //build app with the test database
   t.context.app = await buildApp({ testdb: "true" });
+
+  //create a user to test with, and save the uuid to the context
+  const response = await t.context.app.inject({
+    method: "POST",
+    url: "/v1/admin/users",
+    payload: {
+      data: {
+        type: "users",
+        attributes: {
+          name: "Test User",
+          email: "testuser@authcompanion.com",
+          password: "supersecret",
+        },
+      },
+    },
+  });
+  // Get the data.id from the response and save it to the context
+  // so we can use it in the next test
+  t.context.uuid = response.json().data.id;
 });
 
 test.after.always("cleanup tests", async (t) => {
@@ -30,7 +49,7 @@ test.after.always("cleanup tests", async (t) => {
 let replyPayload = {};
 
 // Start Tests
-test.serial("API Endpoint Test: /auth/register", async (t) => {
+test.serial("Auth Endpoint Test: /auth/register", async (t) => {
   try {
     const response = await t.context.app.inject({
       method: "POST",
@@ -47,7 +66,7 @@ test.serial("API Endpoint Test: /auth/register", async (t) => {
   }
 });
 
-test.serial("API Endpoint Test: /auth/login", async (t) => {
+test.serial("Auth Endpoint Test: /auth/login", async (t) => {
   try {
     const response = await t.context.app.inject({
       method: "POST",
@@ -64,7 +83,7 @@ test.serial("API Endpoint Test: /auth/login", async (t) => {
   }
 });
 
-test.serial("API Endpoint Test: /auth/users/me", async (t) => {
+test.serial("Auth Endpoint Test: /auth/users/me", async (t) => {
   try {
     const replyObj = replyPayload.json();
 
@@ -87,7 +106,7 @@ test.serial("API Endpoint Test: /auth/users/me", async (t) => {
   }
 });
 
-test.serial("API Endpoint Test: /auth/refresh", async (t) => {
+test.serial("Auth Endpoint Test: /auth/refresh", async (t) => {
   try {
     const response = await t.context.app.inject({
       method: "POST",
@@ -103,18 +122,73 @@ test.serial("API Endpoint Test: /auth/refresh", async (t) => {
   }
 });
 
-// test.serial("API Endpoint Test: /auth/recovery", async (t) => {
-//   try {
-//     const response = await t.context.app.inject({
-//       method: "POST",
-//       url: "/v1/auth/recovery",
-//       payload: {
-//         email: "hello1@authc.com",
-//       },
-//     });
+test.serial.todo('API Endpoint Test: /auth/recovery');
 
-//     t.is(response.statusCode, 200, "API - Status Code Incorrect");
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
+test.serial("Admin Endpoint Test: GET /admin/users", async (t) => {
+  try {
+    const response = await t.context.app.inject({
+      method: "GET",
+      url: "/v1/admin/users",
+    });
+    t.is(response.statusCode, 200, "API - Status Code Incorrect");
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+test.serial("Admin Endpoint Test: POST /admin/users", async (t) => {
+  try {
+    const response = await t.context.app.inject({
+      method: "POST",
+      url: "/v1/admin/users",
+      payload: {
+        data: {
+          type: "users",
+          attributes: {
+            name: "Test User",
+            email: "mytestuser@authcompanion.com",
+            password: "supersecret",
+          },
+        },
+      },
+    });
+    t.is(response.statusCode, 201, "API - Status Code Incorrect");
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+test.serial("Admin Endpoint Test: PATCH /admin/users/:uuid", async (t) => {
+  try {
+    const response = await t.context.app.inject({
+      method: "PATCH",
+      url: `/v1/admin/users/${t.context.uuid}`,
+      payload: {
+        data: {
+          type: "users",
+          id: `${t.context.uuid}`,
+          attributes: {
+            name: "Test User",
+            email: "email@email.com",
+            active: 0,
+          },
+        },
+      },
+    });
+    t.is(response.statusCode, 200, "API - Status Code Incorrect");
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+test.serial("Admin Endpoint Test: DELETE /admin/users/:uuid", async (t) => {
+  try {
+    const response = await t.context.app.inject({
+      method: "DELETE",
+      url: `/v1/admin/users/${t.context.uuid}`,
+    });
+    t.is(response.statusCode, 204, "API - Status Code Incorrect");
+  } catch (error) {
+    console.log(error);
+  }
+});

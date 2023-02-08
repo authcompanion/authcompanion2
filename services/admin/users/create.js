@@ -27,7 +27,7 @@ export const createUserHandler = async function (request, reply) {
     const jwtid = randomUUID();
 
     const registerStmt = this.db.prepare(
-      "INSERT INTO users (uuid, name, email, password, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, jwt_id, created_at, updated_at;"
+      "INSERT INTO users (uuid, name, email, password, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, active, created_at, updated_at;"
     );
     const user = registerStmt.get(
       uuid,
@@ -41,7 +41,9 @@ export const createUserHandler = async function (request, reply) {
     const userAttributes = {
       name: user.name,
       email: user.email,
+      active: user.active,
       created: user.created_at,
+      updated: user.updated_at,
     };
 
     reply.statusCode = 201;

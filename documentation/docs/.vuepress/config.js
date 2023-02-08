@@ -50,6 +50,7 @@ export default defineUserConfig({
           text: "Reference",
           children: [
             "/guide/authapi.md",
+            "/guide/adminapi.md",
           ],
         },
       ],

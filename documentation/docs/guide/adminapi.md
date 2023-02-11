@@ -2,6 +2,11 @@
 
 The RESTful Admin API helps you to manage your Authcompanion Users for administrative purposes. And can be used to power an Authcompanion Admin Panel.
 
+## Bearer Token (Admin Access Token)
+All Admin API requests require a Bearer Token. This token is generated when you start the AuthComanion server and is available as a file on the path set in the `ADMIN_KEY_PATH=./adminkey` config via `.env.example`.
+
+The JWT itself has a expiration time of 1 hour. After that time, you will need to restart the AuthCompanion server to generate a new token - available in the same file.
+
 ## Server URL
 
 http://localhost:3002/v1/
@@ -13,6 +18,8 @@ Returns Content-Type: application/json
 ### admin/users
 
 Description: Returns a list of users from the Authcompanion database.
+
+Bearer Token Required: `Authorization: Bearer {admin access token}`
 
 **GET**
 
@@ -53,6 +60,8 @@ Response:
 
 Description: Creates a new user in the Authcompanion database.
 
+Bearer Token Required: `Authorization: Bearer {admin access token}`
+
 **POST** Request Body:
 
 ```json
@@ -91,6 +100,8 @@ Response:
 ### admin/users/:id
 
 Description: Updates a single user from the Authcompanion database with the user's ID. If a request does not include all of the attributes for a resource, the AuthCompanion interpret the missing attributes as if they were included with their current values. Authcompanion does not interpret missing attributes as null values.
+
+Bearer Token Required: `Authorization: Bearer {admin access token}`
 
 **PATCH** Request Body:
 
@@ -131,6 +142,8 @@ Response:
 ### admin/users/:id
 
 Description: Deletes a single user from the Authcompanion database using the user's ID. **This is a permanent delete.**
+
+Bearer Token Required: `Authorization: Bearer {admin access token}`
 
 **DELETE**
 

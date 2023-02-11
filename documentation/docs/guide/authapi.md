@@ -87,7 +87,7 @@ Response:
 Description: Update the user's record by changing their name, email and
 password.
 
-Authorization Header Required: `Authorization: Bearer {user's access token}`
+Bearer Token Required: `Authorization: Bearer {user's access token}`
 
 The password field in the request body is optional.
 

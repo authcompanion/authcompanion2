@@ -2,7 +2,7 @@
 
 ## With Backend Web Services
 
-When you start the AuthC server a secret key is generated on `KEY_PATH=./keyfile` in the JSON Web Key format.
+When you start the AuthC server a secret key is generated on `SERVER_KEY_PATH=./keyfile` in the JSON Web Key format.
 This key is used to verify that JWT tokens recieved by your web services/backend APIs are verified and trusted. 
 
 JWTs are frequently passed from your frontend application to your web service in order to authenticate users into your APIs.

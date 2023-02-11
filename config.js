@@ -6,7 +6,8 @@ const ORIGIN = process.env.ORIGIN || "http://localhost:3002";
 const APPLICATIONORIGIN =
   process.env.APPLICATION_ORIGIN || "http://localhost:3002/v1/web/home";
 const DBPATH = process.env.DB_PATH || "./authcompanion_users.db";
-const KEYPATH = process.env.KEY_PATH || "./keyfile";
+const KEYPATH = process.env.SERVER_KEY_PATH || "./serverkey";
+const ADMINKEYPATH = process.env.ADMIN_KEY_PATH || "./adminkey";
 const WEBMODE = process.env.WEB_MODE || "true";
 const RECOVERYURL =
   process.env.RECOVERY_REDIRECT_URL || "http://localhost:3002/v1/web/profile";
@@ -20,6 +21,7 @@ export default {
   AUTHPORT,
   ORIGIN,
   KEYPATH,
+  ADMINKEYPATH,
   SMTPHOSTNAME,
   SMTPPORT,
   SMTPUSER,

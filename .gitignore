@@ -3,7 +3,8 @@ node_modules
 *.db
 *.db-shm
 *.db-wal
-keyfile
+serverkey
+adminkey
 .DS_Store
 .vscode
 .idea

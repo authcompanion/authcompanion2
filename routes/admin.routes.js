@@ -12,10 +12,22 @@ import { authenticateRequest } from "../utilities/authenticate.js";
 
 const adminRoutes = async function (fastify, options) {
   //admin API routes
-  fastify.post("/users", createSchema, createUserHandler);
-  fastify.get("/users", listUsersHandler);
-  fastify.delete("/users/:uuid", deleteUserHandler);
-  fastify.patch("/users/:uuid", updateSchema, updateUserHandler);
+  fastify.post(
+    "/users",
+    { onRequest: [authenticateRequest], ...createSchema },
+    createUserHandler
+  );
+  fastify.get("/users", { onRequest: [authenticateRequest] }, listUsersHandler);
+  fastify.delete(
+    "/users/:uuid",
+    { onRequest: [authenticateRequest] },
+    deleteUserHandler
+  );
+  fastify.patch(
+    "/users/:uuid",
+    { onRequest: [authenticateRequest], ...updateSchema },
+    updateUserHandler
+  );
 };
 
 export default adminRoutes;

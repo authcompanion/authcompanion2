@@ -51,7 +51,11 @@ export const updateUserHandler = async function (request, reply) {
         request.log.info(
           "Admin API: User's active status is not valid, update failed"
         );
-        throw { statusCode: 400, message: "Invalid Active Status, Please use 1 for true and 0 for false" };
+        throw {
+          statusCode: 400,
+          message:
+            "Invalid Active Status, Please use 1 for true and 0 for false",
+        };
       }
     }
 

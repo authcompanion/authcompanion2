@@ -16,7 +16,6 @@ const setupAdminKey = async function (fastify) {
 
     //export access token to file
     writeFileSync(config.ADMINKEYPATH, adminAccessToken.token);
-    
   } catch (error) {
     console.log(error);
     throw new Error("Failed to export the admin key");

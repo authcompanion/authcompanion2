@@ -15,27 +15,27 @@ import { unlink } from "node:fs/promises";
 
 // Setup Application
 test.before(async (t) => {
-  //build app with the test database
-  t.context.app = await buildApp({ testdb: "true" });
+  try {
+    //build app with the test database
+    t.context.app = await buildApp({ testdb: "true" });
 
-  //create a user to test with, and save the uuid to the context
-  const response = await t.context.app.inject({
-    method: "POST",
-    url: "/v1/admin/users",
-    payload: {
-      data: {
-        type: "users",
-        attributes: {
-          name: "Test User",
-          email: "testuser@authcompanion.com",
-          password: "supersecret",
-        },
+    //create a user to test with, and save the uuid to the context
+    const response = await t.context.app.inject({
+      method: "POST",
+      url: "/v1/auth/register",
+      payload: {
+        name: "Test User",
+        email: "testuser@authcompanion.com",
+        password: "supersecret",
       },
-    },
-  });
-  // Get the data.id from the response and save it to the context
-  // so we can use it in the next test
-  t.context.uuid = response.json().data.id;
+    });
+    // Get the data.id from the response and save it to the context
+    // so we can use it in the next test
+    t.context.uuid = response.json().data.id;
+    t.context.jwt = response.json().data.attributes.access_token;
+  } catch (error) {
+    throw new Error("Failed to setup test");
+  }
 });
 
 test.after.always("cleanup tests", async (t) => {
@@ -122,13 +122,16 @@ test.serial("Auth Endpoint Test: /auth/refresh", async (t) => {
   }
 });
 
-test.serial.todo('API Endpoint Test: /auth/recovery');
+test.serial.todo("API Endpoint Test: /auth/recovery");
 
 test.serial("Admin Endpoint Test: GET /admin/users", async (t) => {
   try {
     const response = await t.context.app.inject({
       method: "GET",
       url: "/v1/admin/users",
+      headers: {
+        Authorization: `Bearer ${t.context.jwt}`,
+      },
     });
     t.is(response.statusCode, 200, "API - Status Code Incorrect");
   } catch (error) {
@@ -150,6 +153,9 @@ test.serial("Admin Endpoint Test: POST /admin/users", async (t) => {
             password: "supersecret",
           },
         },
+      },
+      headers: {
+        Authorization: `Bearer ${t.context.jwt}`,
       },
     });
     t.is(response.statusCode, 201, "API - Status Code Incorrect");
@@ -174,6 +180,9 @@ test.serial("Admin Endpoint Test: PATCH /admin/users/:uuid", async (t) => {
           },
         },
       },
+      headers: {
+        Authorization: `Bearer ${t.context.jwt}`,
+      },
     });
     t.is(response.statusCode, 200, "API - Status Code Incorrect");
   } catch (error) {
@@ -186,6 +195,9 @@ test.serial("Admin Endpoint Test: DELETE /admin/users/:uuid", async (t) => {
     const response = await t.context.app.inject({
       method: "DELETE",
       url: `/v1/admin/users/${t.context.uuid}`,
+      headers: {
+        Authorization: `Bearer ${t.context.jwt}`,
+      },
     });
     t.is(response.statusCode, 204, "API - Status Code Incorrect");
   } catch (error) {

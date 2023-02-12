@@ -2,8 +2,9 @@
 
 The RESTful Admin API helps you to manage your Authcompanion Users for administrative purposes. And can be used to power an Authcompanion Admin Panel.
 
-## Bearer Token (Admin Access Token)
-All Admin API requests require a Bearer Token. This token is generated when you start the AuthComanion server and is available as a file on the path set in the `ADMIN_KEY_PATH=./adminkey` config via `.env.example`.
+## Admin Access Token (Bearer Token)
+
+All Admin API requests require a Bearer Token in the request's header. This token is generated when you start the AuthComanion server and is available as a file on the path set in the `ADMIN_KEY_PATH=./adminkey` config (via `.env.example`).
 
 The JWT itself has a expiration time of 1 hour. After that time, you will need to restart the AuthCompanion server to generate a new token - available in the same file.
 
@@ -147,7 +148,7 @@ Bearer Token Required: `Authorization: Bearer {admin access token}`
 
 **DELETE**
 
-Response: 204 No Content 
+Response: 204 No Content
 
 or 404 Not Found if no user is found.
 

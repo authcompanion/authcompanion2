@@ -8,8 +8,8 @@ processes = []
 [env]
 ORIGIN="https://demo.authcompanion.com"
 APPLICATION_ORIGIN="https://demo.authcompanion.com/v1/web/home"
-SERVER_KEY_PATH=/data/serverkey
-ADMIN_KEY_PATH=/data/adminkey
+SERVER_KEY_PATH="/data/serverkey"
+ADMIN_KEY_PATH="/data/adminkey"
 DB_PATH="/data/authcompanion_users.db"
 RECOVERY_REDIRECT_URL="https://demo.authcompanion.com/v1/web/profile"
 SMTP_HOSTNAME="smtp.migadu.com"	

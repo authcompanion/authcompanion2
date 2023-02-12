@@ -2,8 +2,8 @@ import {
   makeAccesstoken,
   makeRefreshtoken,
   validateJWT,
-} from "../utilities/jwt.js";
-import config from "../config.js";
+} from "../../utilities/jwt.js";
+import config from "../../config.js";
 import { parse } from "cookie";
 
 export const tokenRefreshHandler = async function (request, reply) {

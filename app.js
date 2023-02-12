@@ -1,8 +1,10 @@
 import Fastify from "fastify";
-import serverRoutes from "./routes/api.routes.js";
+import authRoutes from "./routes/auth.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 import webRoutes from "./routes/ui.routes.js";
 import sqlite3 from "./plugins/db/db.js";
-import serverkey from "./plugins/key/key.js";
+import serverkey from "./plugins/key/server.key.js";
+import adminkey from "./plugins/key/admin.key.js";
 import config from "./config.js";
 
 const buildApp = async function (opts) {
@@ -12,10 +14,14 @@ const buildApp = async function (opts) {
   app.register(sqlite3, opts);
   //register the server key plugin
   app.register(serverkey);
+  //register the admin key plugin
+  app.register(adminkey);
 
-  //register the authentication api routes. set the prefix for all api routes globally
-  await app.register(serverRoutes, { prefix: "/v1/auth" });
-  //register the frontend routes used for the UI if true in .env
+  //register the admin api routes
+  await app.register(adminRoutes, { prefix: "/v1/admin" });
+  //register the authentication api routes
+  await app.register(authRoutes, { prefix: "/v1/auth" });
+  //register the frontend routes used for the UI. This is optional
   if (config.WEBMODE == "true") {
     await app.register(webRoutes, { prefix: "/v1/web" });
   }

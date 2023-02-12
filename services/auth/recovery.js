@@ -1,5 +1,5 @@
-import { makeRefreshtoken } from "../utilities/jwt.js";
-import config from "../config.js";
+import { makeRefreshtoken } from "../../utilities/jwt.js";
+import config from "../../config.js";
 import { SMTPClient } from "emailjs";
 
 export const profileRecoveryHandler = async function (request, reply) {

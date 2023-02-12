@@ -150,7 +150,7 @@ Also update the [env] section of your `fly.toml` to persist the server key and d
   # redirect the user to your main application UI using
   # the supplied URL below.
   APPLICATION_ORIGIN="https://auth.example.com/v1/web/home"
-  KEY_PATH="/data/keyfile"
+  SERVER_KEY_PATH="/data/keyfile"
   DB_PATH="/data/authcompanion_users.db"
 ```
 - Run `flyctl deploy` to restart your application with the new settings. 

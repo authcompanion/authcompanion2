@@ -8,17 +8,15 @@ processes = []
 [env]
 ORIGIN="https://demo.authcompanion.com"
 APPLICATION_ORIGIN="https://demo.authcompanion.com/v1/web/home"
-KEY_PATH="/data/keyfile"
+SERVER_KEY_PATH=/data/serverkey
+ADMIN_KEY_PATH=/data/adminkey
 DB_PATH="/data/authcompanion_users.db"
-
 RECOVERY_REDIRECT_URL="https://demo.authcompanion.com/v1/web/profile"
-
 SMTP_HOSTNAME="smtp.migadu.com"	
 SMTP_PORT=465
 SMTP_USERNAME="hello@authcompanion.com"
 SMTP_PASSWORD="$SMTP_PASSWORD"
 FROM_ADDRESS="hello@authcompanion.com"
-
 
 [experimental]
   allowed_public_ports = []

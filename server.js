@@ -24,10 +24,10 @@ function startServer() {
   );
   console.log(`
       ###########################################################
-                The Authcompanion Server has started
-      🖥️   UI on: http://localhost:${config.AUTHPORT}/v1/web/login
-      🚀  Auth API on: http://localhost:${config.AUTHPORT}/v1/auth/
-      📕  Admin API on: http://localhost:${config.AUTHPORT}/v1/admin/
+                The AuthCompanion Server has started
+
+           🖥️   UI on: http://localhost:${config.AUTHPORT}/v1/web/login
+
       ###########################################################
       `);
   console.log("Use CTRL-C to shutdown AuthCompanion");

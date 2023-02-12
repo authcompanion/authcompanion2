@@ -1,3 +1,12 @@
+# [3.0.0-beta.9](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.8...3.0.0-beta.9) (2023-02-12)
+
+
+### Features
+
+* New Admin API helps you to manage your Authcompanion Users for administrative purposes. ([#9](https://github.com/authcompanion/authcompanion2/issues/9)) ([29d7033](https://github.com/authcompanion/authcompanion2/commit/29d70330d3eed17fb941b6085e2825614236d9bc))
+
+
+
 # [3.0.0-beta.8](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.7...3.0.0-beta.8) (2023-01-23)
 
 

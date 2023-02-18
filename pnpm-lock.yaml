@@ -11,7 +11,7 @@ specifiers:
   emailjs: ^4.0.1
   fastify: ^4.13.0
   fastify-plugin: ^3.0.1
-  jose: ^4.11.4
+  jose: ^4.12.0
   prettier: ^2.8.4
 
 dependencies:
@@ -23,7 +23,7 @@ dependencies:
   emailjs: 4.0.1
   fastify: 4.13.0
   fastify-plugin: 3.0.1
-  jose: 4.11.4
+  jose: 4.12.0
 
 devDependencies:
   ava: 4.3.3
@@ -500,7 +500,7 @@ packages:
       supertap: 3.0.1
       temp-dir: 2.0.0
       write-file-atomic: 4.0.2
-      yargs: 17.6.2
+      yargs: 17.7.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -1218,7 +1218,7 @@ packages:
       avvio: 8.2.1
       fast-content-type-parse: 1.0.0
       find-my-way: 7.4.0
-      light-my-request: 5.8.0
+      light-my-request: 5.9.1
       pino: 8.10.0
       process-warning: 2.1.0
       proxy-addr: 2.0.7
@@ -1634,8 +1634,8 @@ packages:
     resolution: {integrity: sha512-VLghIWNM6ELQzo7zwmcg0NmTVyWKYjvIeM83yjp0wRDTmUnrM678fQbcKBo6n2CJEF0szoG//ytg+TKla89ALQ==}
     dev: true
 
-  /jose/4.11.4:
-    resolution: {integrity: sha512-94FdcR8felat4vaTJyL/WVdtlWLlsnLMZP8v+A0Vru18K3bQ22vn7TtpVh3JlgBFNIlYOUlGqwp/MjRPOnIyCQ==}
+  /jose/4.12.0:
+    resolution: {integrity: sha512-wW1u3cK81b+SFcHjGC8zw87yuyUweEFe0UJirrXEw1NasW00eF7sZjeG3SLBGz001ozxQ46Y9sofDvhBmWFtXQ==}
     dev: false
 
   /js-string-escape/1.0.1:
@@ -1681,8 +1681,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /light-my-request/5.8.0:
-    resolution: {integrity: sha512-4BtD5C+VmyTpzlDPCZbsatZMJVgUIciSOwYhJDCbLffPZ35KoDkDj4zubLeHDEb35b4kkPeEv5imbh+RJxK/Pg==}
+  /light-my-request/5.9.1:
+    resolution: {integrity: sha512-UT7pUk8jNCR1wR7w3iWfIjx32DiB2f3hFdQSOwy3/EPQ3n3VocyipUxcyRZR0ahoev+fky69uA+GejPa9KuHKg==}
     dependencies:
       cookie: 0.5.0
       process-warning: 2.1.0
@@ -2916,8 +2916,8 @@ packages:
       yargs-parser: 20.2.9
     dev: true
 
-  /yargs/17.6.2:
-    resolution: {integrity: sha512-1/9UrdHjDZc0eOU0HxOHoS78C69UD3JRMvzlJ7S79S2nTaWRA/whGCTV8o9e/N/1Va9YIV7Q4sOxD8VV4pCWOw==}
+  /yargs/17.7.0:
+    resolution: {integrity: sha512-dwqOPg5trmrre9+v8SUo2q/hAwyKoVfu8OC1xPHKJGNdxAvPl4sKxL4vBnh3bQz/ZvvGAFeA5H3ou2kcOY8sQQ==}
     engines: {node: '>=12'}
     dependencies:
       cliui: 8.0.1

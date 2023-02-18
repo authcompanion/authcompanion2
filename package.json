@@ -22,7 +22,7 @@
     "emailjs": "^4.0.1",
     "fastify": "^4.13.0",
     "fastify-plugin": "^3.0.1",
-    "jose": "^4.11.4"
+    "jose": "^4.12.0"
   },
   "devDependencies": {
     "ava": "^4.3.3",

@@ -20,7 +20,8 @@ export const profileRecoveryHandler = async function (request, reply) {
       request.log.info(
         "User was not found in the Database - Profile Recovery failed"
       );
-      throw { statusCode: 400, message: "Profile Resovery Failed" };
+      // send a request to the client
+      reply.code(200).send({ statusCode: 200, message: "Recovery email sent" });
     }
 
     //Prepare & send the recovery email
@@ -213,7 +214,7 @@ export const profileRecoveryHandler = async function (request, reply) {
       data: {
         type: "Profile Recovery",
         detail:
-          "An email containing a recovery link has been sent to the email address provided",
+          "Recovery email sent",
       },
     };
   } catch (err) {

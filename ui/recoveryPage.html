@@ -131,6 +131,15 @@
 
           const submit = async () => {
             try {
+
+              //check if input field is empty
+              if (email.value == "") {
+                showError.value = true;
+                errorTitle.value = "Error";
+                errorDetail.value = "Please enter an email address";
+                return;
+              }
+
               let response = await fetch("/v1/auth/recovery", {
                 method: "POST",
                 credentials: "include",
@@ -156,7 +165,7 @@
 
               errorTitle.value = "Error";
               errorDetail.value =
-                "There was an issue connecting to authcompanion";
+                "There was an issue with the request. Please try again later.";
             }
           };
           // expose to template

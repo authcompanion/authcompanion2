@@ -6,7 +6,6 @@ export const updateSchema = {
         data: {
           type: "object",
           properties: {
-            name: { type: "string" },
             attributes: {
               type: "object",
               properties: {

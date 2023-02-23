@@ -1,3 +1,25 @@
+# [3.0.0-beta.10](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.9...3.0.0-beta.10) (2023-02-23)
+
+
+### Bug Fixes
+
+* corrected admin api schemas ([1c12935](https://github.com/authcompanion/authcompanion2/commit/1c129359f1800d949d5eb45cb712d6bff6667ae6))
+* format error in deployment script ([d57a4af](https://github.com/authcompanion/authcompanion2/commit/d57a4af5d923625469a36a6411097c6b6b08615d))
+* improved error messages on web forms ([f3ba6f7](https://github.com/authcompanion/authcompanion2/commit/f3ba6f70c81f6427a35a078fcab00522de7b4f2b))
+* readable config default path for db ([a40aaa2](https://github.com/authcompanion/authcompanion2/commit/a40aaa2e2998e04425e9dbdeb4de716e3f7dc050))
+
+
+### Features
+
+* simplfied, refactored Auth API ([288f906](https://github.com/authcompanion/authcompanion2/commit/288f906114796fc7a526cefaf4ac9a8b88108658))
+
+
+### BREAKING CHANGES
+
+* Interacting with Authentication API endpoints has changed significantly: see docs for latest https://docs.authcompanion.com/guide/authapi.html.
+* Config defaults in `env.example` has changed significantly. Please update your config accordingly.
+
+
 # [3.0.0-beta.9](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.8...3.0.0-beta.9) (2023-02-12)
 
 

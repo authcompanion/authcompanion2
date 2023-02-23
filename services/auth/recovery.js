@@ -3,6 +3,8 @@ import config from "../../config.js";
 import { SMTPClient } from "emailjs";
 
 export const profileRecoveryHandler = async function (request, reply) {
+
+  //Create the SMTP client
   const client = new SMTPClient({
     user: config.SMTPUSER,
     password: config.SMTPPASSWORD,
@@ -10,6 +12,7 @@ export const profileRecoveryHandler = async function (request, reply) {
     port: config.SMTPPORT,
     ssl: true,
   });
+
   try {
     //Fetch user from Database
     const stmt = this.db.prepare("SELECT * FROM users WHERE email = ?;");
@@ -21,7 +24,7 @@ export const profileRecoveryHandler = async function (request, reply) {
         "User was not found in the Database - Profile Recovery failed"
       );
       // send a request to the client
-      reply.code(200).send({ statusCode: 200, message: "Recovery email sent" });
+      reply.code(200).send({ statusCode: 200, message: "Recovery email issued" });
     }
 
     //Prepare & send the recovery email
@@ -136,7 +139,7 @@ export const profileRecoveryHandler = async function (request, reply) {
           </style>
             </head>
             <body style="background-color: #f6f6f6; font-family: sans-serif; -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.4; margin: 0; padding: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;">
-              <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">This is preheader text. Some clients will show this text as a preview.</span>
+              <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Recently requested password reset for account.</span>
               <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #f6f6f6; width: 100%;" width="100%" bgcolor="#f6f6f6">
                 <tr>
                   <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;" valign="top">&nbsp;</td>
@@ -186,7 +189,7 @@ export const profileRecoveryHandler = async function (request, reply) {
                         <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;" width="100%">
                           <tr>
                             <td class="content-block" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; color: #999999; font-size: 12px; text-align: center;" valign="top" align="center">
-                              <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">Company Inc, 3 Abbey Road, San Francisco CA 94102</span>
+                              <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">Company Inc, 3 Abbey Road, Alexandria Virginia 22305</span>
                             </td>
                           </tr>
                           <tr>
@@ -212,7 +215,7 @@ export const profileRecoveryHandler = async function (request, reply) {
 
     return {
       data: {
-        type: "Profile Recovery",
+        type: "users",
         detail:
           "Recovery email sent",
       },

@@ -4,42 +4,42 @@ import config from "../../config.js";
 
 export const userProfileHandler = async function (request, reply) {
   try {
+    //Check the request's type attibute is set to users
+    if (request.body.data.type !== "users") {
+      request.log.info(
+        "Auth API: The request's type is not set to Users, update failed"
+      );
+      throw { statusCode: 400, message: "Invalid Type Attribute" };
+    }
+
     //Fetch user from Database
     const stmt = this.db.prepare("SELECT * FROM users WHERE uuid = ?;");
-    const requestedAccount = await stmt.get(request.jwtRequestPayload.userid);
+    const user = await stmt.get(request.jwtRequestPayload.userid);
 
     //Check if the user exists already
-    if (!requestedAccount) {
+    if (!user) {
       request.log.info(
-        "User was not found in the Database - Profile Update failed"
+        "Auth API: User does not exist in database, update failed"
       );
       throw { statusCode: 400, message: "Profile Update Failed" };
     }
 
-    //If user changes their password only - update the record
-    let userObj = {};
-    if (request.body.password) {
-      const hashpwd = await hashPassword(request.body.password);
-
-      const registerStmt = this.db.prepare(
-        "UPDATE users SET name = ?, email = ?, password = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ? RETURNING uuid, name, email, jwt_id, password, active, created_at, updated_at;"
-      );
-      userObj = registerStmt.get(
-        request.body.name,
-        request.body.email,
-        hashpwd,
-        request.jwtRequestPayload.userid
-      );
-    } else {
-      const registerStmt = this.db.prepare(
-        "UPDATE users SET name = ?, email = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ? RETURNING uuid, name, email, jwt_id, password, active, created_at, updated_at;"
-      );
-      userObj = registerStmt.get(
-        request.body.name,
-        request.body.email,
-        request.jwtRequestPayload.userid
-      );
+    //if the user's password is being updated, hash the new password
+    if (request.body.data.attributes.password) {
+      const hashpwd = await hashPassword(request.body.data.attributes.password);
+      request.body.data.attributes.password = hashpwd;
     }
+
+    //Per json-api spec: If a request does not include all of the attributes for a resource, the server MUST interpret the missing attributes as if they were included with their current values. The server MUST NOT interpret missing attributes as null values.
+    const updateStmt = this.db.prepare(
+      "UPDATE users SET name = coalesce(?, name), email = coalesce(?, email), password = coalesce(?, password), updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ? RETURNING uuid, name, email, jwt_id, active, created_at, updated_at;"
+    );
+    const userObj = updateStmt.get(
+      request.body.data.attributes.name,
+      request.body.data.attributes.email,
+      request.body.data.attributes.password,
+      request.jwtRequestPayload.userid
+    );
 
     //Prepare the reply
     const userAccessToken = await makeAccesstoken(userObj, this.key);
@@ -49,6 +49,7 @@ export const userProfileHandler = async function (request, reply) {
       name: userObj.name,
       email: userObj.email,
       created: userObj.created_at,
+      updated: userObj.updated_at,
       access_token: userAccessToken.token,
       access_token_expiry: userAccessToken.expiration,
     };
@@ -62,8 +63,8 @@ export const userProfileHandler = async function (request, reply) {
 
     return {
       data: {
+        type: "users",
         id: userObj.uuid,
-        type: "Register",
         attributes: userAttributes,
       },
     };

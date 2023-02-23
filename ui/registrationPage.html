@@ -204,9 +204,14 @@
                 method: "POST",
                 credentials: "include",
                 body: JSON.stringify({
-                  name: name.value,
-                  email: email.value,
-                  password: password.value,
+                  data: {
+                    type: "users",
+                    attributes: {
+                      name: name.value,
+                      email: email.value,
+                      password: password.value,
+                    },
+                  },
                 }),
                 headers: {
                   "content-type": "application/json",
@@ -297,7 +302,7 @@
 
               errorTitle.value = "Error";
               errorDetail.value =
-                "An issue with the registration occured, please try again";
+                "There was an issue connecting, please try again";
             }
           };
           // expose to template

@@ -3,17 +3,23 @@ export const registrationSchema = {
     body: {
       type: "object",
       properties: {
-        name: {
-          type: "string",
-        },
-        email: {
-          type: "string",
-        },
-        password: {
-          type: "string",
+        data: {
+          type: "object",
+          properties: {
+            attributes: {
+              type: "object",
+              properties: {
+                name: { type: "string" },
+                email: { type: "string" },
+                password: { type: "string" },
+              },
+              required: ["name", "email", "password"],
+            },
+          },
+          required: ["type", "attributes"],
         },
       },
-      required: ["name", "email", "password"],
+      required: ["data"],
     },
   },
 };

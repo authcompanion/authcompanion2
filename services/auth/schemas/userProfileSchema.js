@@ -3,17 +3,22 @@ export const userProfileSchema = {
     body: {
       type: "object",
       properties: {
-        name: {
-          type: "string",
-        },
-        email: {
-          type: "string",
-        },
-        password: {
-          type: "string",
+        data: {
+          type: "object",
+          properties: {
+            attributes: {
+              type: "object",
+              properties: {
+                name: { type: "string" },
+                email: { type: "string" },
+                password: { type: "string" },
+              },
+            },
+          },
+          required: ["type", "attributes"],
         },
       },
-      required: ["name", "email"],
+      required: ["data"],
     },
   },
 };

@@ -8,22 +8,19 @@ import { parse } from "cookie";
 
 export const tokenRefreshHandler = async function (request, reply) {
   try {
-    let requestToken = {};
-
-    //Check if the request includes a refresh token in the header or in the request body
-    if (Object.keys(request.body).length) {
-      requestToken = request.body.token;
-    } else if (request.headers.cookie) {
+    //Check if the request includes a refresh token in request cookie
+    if (request.headers.cookie) {
       const cookies = parse(request.headers.cookie);
-      requestToken = cookies.userRefreshToken;
+      request.refreshToken = cookies.userRefreshToken;
     } else {
       request.log.info(
-        "Request did not have cookie or token - Refresh Token Failed"
+        "Auth API: The request does not include a refresh token as cookie, refresh failed"
       );
       throw { statusCode: 400, message: "Refresh Token Failed" };
     }
+
     //Validate the refresh token
-    const jwtClaims = await validateJWT(requestToken, this.key);
+    const jwtClaims = await validateJWT(request.refreshToken, this.key);
 
     //Fetch user from Database
     const stmt = this.db.prepare(
@@ -53,7 +50,7 @@ export const tokenRefreshHandler = async function (request, reply) {
     return {
       data: {
         id: userObj.uuid,
-        type: "Refresh",
+        type: "users",
         attributes: userAttributes,
       },
     };

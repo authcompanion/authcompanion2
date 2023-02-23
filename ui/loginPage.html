@@ -187,8 +187,13 @@
                 method: "POST",
                 credentials: "include",
                 body: JSON.stringify({
-                  email: email.value,
-                  password: password.value,
+                  data: {
+                    type: "users",
+                    attributes: {
+                      email: email.value,
+                      password: password.value,
+                    },
+                  },
                 }),
                 headers: {
                   "content-type": "application/json",
@@ -268,7 +273,7 @@
 
                 errorTitle.value = "Error";
                 errorDetail.value =
-                  "Error occured, please try registering again";
+                  "There was an issue logging in, please try again";
               }
             } catch (e) {
               console.log(e);

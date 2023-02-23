@@ -5,17 +5,25 @@ import config from "../../config.js";
 
 export const registrationHandler = async function (request, reply) {
   try {
+    //Check the request's type attibute is set to users
+    if (request.body.data.type !== "users") {
+      request.log.info(
+        "Auth API: The request's type is not set to Users, registration failed"
+      );
+      throw { statusCode: 400, message: "Invalid Type Attribute" };
+    }
+
     //Check if the user exists already
     const stmt = this.db.prepare("SELECT * FROM users WHERE email = ?;");
-    const requestedAccount = await stmt.get(request.body.email);
+    const requestedAccount = await stmt.get(request.body.data.attributes.email);
 
     if (requestedAccount) {
-      request.log.info("User already exists in database, registration failed");
+      request.log.info("Auth API: User already exists in database, registration failed");
 
       throw { statusCode: 400, message: "Registration Failed" };
     }
     //Create the user in the Database
-    const hashpwd = await hashPassword(request.body.password);
+    const hashpwd = await hashPassword(request.body.data.attributes.password);
     const uuid = randomUUID();
     const jwtid = randomUUID();
 
@@ -24,8 +32,8 @@ export const registrationHandler = async function (request, reply) {
     );
     const userObj = registerStmt.get(
       uuid,
-      request.body.name,
-      request.body.email,
+      request.body.data.attributes.name,
+      request.body.data.attributes.email,
       hashpwd,
       "1",
       jwtid
@@ -49,10 +57,12 @@ export const registrationHandler = async function (request, reply) {
       "x-authc-app-origin": config.APPLICATIONORIGIN,
     });
 
+    reply.statusCode = 201;
+
     return {
       data: {
+        type: "users",
         id: userObj.uuid,
-        type: "Register",
         attributes: userAttributes,
       },
     };

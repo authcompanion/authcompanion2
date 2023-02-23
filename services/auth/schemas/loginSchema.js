@@ -3,14 +3,22 @@ export const loginSchema = {
     body: {
       type: "object",
       properties: {
-        email: {
-          type: "string",
-        },
-        password: {
-          type: "string",
+        data: {
+          type: "object",
+          properties: {
+            attributes: {
+              type: "object",
+              properties: {
+                email: { type: "string" },
+                password: { type: "string" },
+              },
+              required: ["email", "password"],
+            },
+          },
+          required: ["type", "attributes"],
         },
       },
-      required: ["email", "password"],
+      required: ["data"],
     },
   },
 };

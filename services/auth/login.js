@@ -4,33 +4,42 @@ import config from "../../config.js";
 
 export const loginHandler = async function (request, reply) {
   try {
+    // Check the request's type attibute is set to users
+    if (request.body.data.type !== "users") {
+      request.log.info(
+        "Auth API: The request's type is not set to Users, creation failed"
+      );
+      throw { statusCode: 400, message: "Invalid Type Attribute" };
+    }
+
     // Fetch user from database
     const stmt = this.db.prepare(
       "SELECT uuid, name, email, jwt_id, password, active, created_at, updated_at FROM users WHERE email = ?;"
     );
-    const userObj = await stmt.get(request.body.email);
+    const userObj = await stmt.get(request.body.data.attributes.email);
 
     // Check if user does not exist in the database
     if (!userObj) {
-      request.log.info("User was not found in the Database - Login failed");
+      request.log.info(
+        "Auth API: User does not exist in database, login failed"
+      );
       throw { statusCode: 400, message: "Login Failed" };
     }
 
     // Check if user has an 'active' account
     if (!userObj.active) {
-      request.log.info("User does not have an active account - Login failed ");
+      request.log.info("Auth API: User account is not active, login failed");
       throw { statusCode: 400, message: "Login Failed" };
     }
 
     const passwordCheckResult = await verifyPasswordWithHash(
-      request.body.password,
+      request.body.data.attributes.password,
       userObj.password
     );
 
     // Check if user has the correct password
     if (!passwordCheckResult) {
-      request.log.info("User successfully logged into account");
-
+      request.log.info("Auth API: User password is incorrect, login failed");
       throw { statusCode: 400, message: "Login Failed" };
     }
 
@@ -55,8 +64,8 @@ export const loginHandler = async function (request, reply) {
 
     return {
       data: {
+        type: "users",
         id: userObj.uuid,
-        type: "Login",
         attributes: userAttributes,
       },
     };

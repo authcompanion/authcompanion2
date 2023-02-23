@@ -1,6 +1,7 @@
 import buildApp from "../app.js";
 import test from "ava";
 import { unlink } from "node:fs/promises";
+import { parse } from "cookie";
 
 // There are two main ways you can use to test your application,
 // one is to test with a running server, which means that inside
@@ -13,7 +14,7 @@ import { unlink } from "node:fs/promises";
 // You can read more about testing and http injection at the following url:
 // https://www.fastify.io/docs/latest/Guides/Testing/
 
-// Setup Application
+// Setup Test
 test.before(async (t) => {
   try {
     //build app with the test database
@@ -24,20 +25,30 @@ test.before(async (t) => {
       method: "POST",
       url: "/v1/auth/register",
       payload: {
-        name: "Test User",
-        email: "testuser@authcompanion.com",
-        password: "supersecret",
+        data: {
+          type: "users",
+          attributes: {
+            name: "Authy Person",
+            email: "hello_test@authcompanion.com",
+            password: "mysecretpass",
+          },
+        },
       },
     });
-    // Get the data.id from the response and save it to the context
-    // so we can use it in the next test
+    //save the response to the context
+    //t.context.response = parse(response.headers);
+    const cookieValue = parse(Object.values(response.headers)[0]);
+    t.context.refreshToken = cookieValue.userRefreshToken;
+    //save the uuid to the context
     t.context.uuid = response.json().data.id;
+    //save the jwt to the context
     t.context.jwt = response.json().data.attributes.access_token;
   } catch (error) {
     throw new Error("Failed to setup test");
   }
 });
 
+// Cleanup Test
 test.after.always("cleanup tests", async (t) => {
   await unlink("./test.db");
   await unlink("./test.db-shm");
@@ -46,21 +57,41 @@ test.after.always("cleanup tests", async (t) => {
   console.log("Cleaning up tests - successfully deleted test db");
 });
 
-let replyPayload = {};
-
 // Start Tests
+
+test.serial("Auth Endpoint Test: /auth/refresh", async (t) => {
+  try {
+    const response = await t.context.app.inject({
+      method: "GET",
+      url: "/v1/auth/refresh",
+      payload: {},
+      headers: {
+        Cookie: `userRefreshToken=${t.context.refreshToken}`,
+      },
+    });
+    t.is(response.statusCode, 200, "API - Status Code Incorrect");
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 test.serial("Auth Endpoint Test: /auth/register", async (t) => {
   try {
     const response = await t.context.app.inject({
       method: "POST",
       url: "/v1/auth/register",
       payload: {
-        name: "Authy Person",
-        email: "hello@authc.com",
-        password: "supersecret",
+        data: {
+          type: "users",
+          attributes: {
+            name: "Authy Person",
+            email: "hello_test_register@authcompanion.com",
+            password: "mysecretpass",
+          },
+        },
       },
     });
-    t.is(response.statusCode, 200, "API - Status Code Incorrect");
+    t.is(response.statusCode, 201, "API - Status Code Incorrect");
   } catch (error) {
     console.log(error);
   }
@@ -72,11 +103,16 @@ test.serial("Auth Endpoint Test: /auth/login", async (t) => {
       method: "POST",
       url: "/v1/auth/login",
       payload: {
-        email: "hello@authc.com",
-        password: "supersecret",
+        data: {
+          type: "users",
+          attributes: {
+            name: "Authy Person",
+            email: "hello_test@authcompanion.com",
+            password: "mysecretpass",
+          },
+        },
       },
     });
-    replyPayload = response;
     t.is(response.statusCode, 200, "API - Status Code Incorrect");
   } catch (error) {
     console.log(error);
@@ -85,35 +121,21 @@ test.serial("Auth Endpoint Test: /auth/login", async (t) => {
 
 test.serial("Auth Endpoint Test: /auth/users/me", async (t) => {
   try {
-    const replyObj = replyPayload.json();
-
     const response = await t.context.app.inject({
       method: "POST",
       url: "/v1/auth/users/me",
       payload: {
-        name: "Authy Person1",
-        email: "hello1@authc.com",
-        password: "supersecret1",
+        data: {
+          type: "users",
+          attributes: {
+            name: "Authy Person_update",
+            email: "hello_updated@authcompanion.com",
+            password: "mysecretpass1",
+          },
+        },
       },
       headers: {
-        Authorization: `Bearer ${replyObj.data.attributes.access_token}`,
-      },
-    });
-    replyPayload = response;
-    t.is(response.statusCode, 200, "API - Status Code Incorrect");
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-test.serial("Auth Endpoint Test: /auth/refresh", async (t) => {
-  try {
-    const response = await t.context.app.inject({
-      method: "POST",
-      url: "/v1/auth/refresh",
-      payload: {},
-      headers: {
-        Cookie: `${replyPayload.cookies[0].name}=${replyPayload.cookies[0].value}`,
+        Authorization: `Bearer ${t.context.jwt}`,
       },
     });
     t.is(response.statusCode, 200, "API - Status Code Incorrect");

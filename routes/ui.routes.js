@@ -5,7 +5,7 @@ const webRoutes = async function (fastify, options) {
   fastify.get("/login", (request, reply) => {
     //create session id for tracking webauthn challenges used for verification. Send session id as cookie
     const sessionID = randomUUID();
-    const loginPage = readFileSync("./ui/loginPage.html");
+    const loginPage = readFileSync("./ui/auth/loginPage.html");
     reply.headers({
       "Content-Type": `text/html`,
       "set-cookie": `sessionID=${sessionID}; Path=/; SameSite=None; Secure; HttpOnly`,
@@ -15,7 +15,7 @@ const webRoutes = async function (fastify, options) {
   fastify.get("/register", (request, reply) => {
     //create session id for tracking webauthn challenges used for verification. Send session id as cookie
     const sessionID = randomUUID();
-    const registrationPage = readFileSync("./ui/registrationPage.html");
+    const registrationPage = readFileSync("./ui/auth/registrationPage.html");
     reply.headers({
       "Content-Type": `text/html`,
       "set-cookie": `sessionID=${sessionID}; Path=/; SameSite=None; Secure; HttpOnly`,
@@ -23,21 +23,21 @@ const webRoutes = async function (fastify, options) {
     return registrationPage;
   });
   fastify.get("/profile", (request, reply) => {
-    const profilePage = readFileSync("./ui/profilePage.html");
+    const profilePage = readFileSync("./ui/auth/profilePage.html");
     reply.headers({
       "Content-Type": `text/html`,
     });
     return profilePage;
   });
   fastify.get("/recovery", (request, reply) => {
-    const recoveryPage = readFileSync("./ui/recoveryPage.html");
+    const recoveryPage = readFileSync("./ui/auth/recoveryPage.html");
     reply.headers({
       "Content-Type": `text/html`,
     });
     return recoveryPage;
   });
   fastify.get("/home", (request, reply) => {
-    const homePage = readFileSync("./ui/homePage.html");
+    const homePage = readFileSync("./ui/auth/homePage.html");
     reply.headers({
       "Content-Type": `text/html`,
     });

@@ -1,3 +1,5 @@
+import { readFileSync } from "fs";
+
 import { createUserHandler } from "../services/admin/users/create.js";
 import { createSchema } from "../services/admin/users/schema/createSchema.js";
 
@@ -28,6 +30,15 @@ const adminRoutes = async function (fastify, options) {
     { onRequest: [authenticateRequest], ...updateSchema },
     updateUserHandler
   );
+
+  //admin web user interface routes
+  fastify.get("/dashboard", (request, reply) => {
+    const adminPage = readFileSync("./ui/admin/dashboardPage.html");
+    reply.headers({
+      "Content-Type": `text/html`,
+    });
+    return adminPage;
+  });
 };
 
 export default adminRoutes;

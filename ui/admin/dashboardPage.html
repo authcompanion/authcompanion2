@@ -540,7 +540,7 @@
                                     type="text"
                                     class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
                                     :value="selectedUser.attributes.name"
-                                    @input="event => selectedUser.attributes.name = event.target.value"
+                                    @input="event => userRecord.data.attributes.name = event.target.value"
                                   />
                                 </div>
                                 <!-- div containing the user's email -->
@@ -552,7 +552,7 @@
                                     type="email"
                                     class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
                                     :value="selectedUser.attributes.email"
-                                    @input="event => selectedUser.attributes.email = event.target.value"
+                                    @input="event => userRecord.data.attributes.email = event.target.value"
                                   />
                                 </div>
                                 <!-- div containing the user's active status -->
@@ -564,7 +564,7 @@
                                     type="text"
                                     class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
                                     :value="selectedUser.attributes.active"
-                                    @input="event => selectedUser.attributes.active = event.target.value"
+                                    @input="event => userRecord.data.attributes.active = event.target.value"
                                   />
                                 </div>
                                 <!-- div containing the user's created date -->
@@ -607,7 +607,7 @@
                           <button
                             type="submit"
                             class="inline-flex justify-center px-4 py-2 ml-4 text-sm font-medium text-gray-700 border border-gray-300 rounded-md shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-grey-500 hover:text-white focus:ring-offset-2"
-                            @click="updateUserRecord(selectedUser)"
+                            @click="updateUserRecord(selectedUser.id, userRecord)"
                           >
                             Save
                           </button>
@@ -641,13 +641,27 @@
           // User record to be edited
           let selectedUser = ref({});
 
+          // User record to be sent to the API
+          const userRecord = ref({
+            data: {
+              type: "users",
+              attributes: {
+                name: "",
+                email: "",
+                active: "",
+              },
+            },
+          });
+
           // Function to open the edit panel and populate the form with the user data
           const modifyRecord = (user) => {
-            console.log(user);
             // set the selected user to the user passed in the function
             selectedUser.value = user;
 
-            console.log(selectedUser.value);
+            // set the user record attributes to the user passed in the function
+            userRecord.value.data.attributes.name = user.attributes.name;
+            userRecord.value.data.attributes.email = user.attributes.email;
+            userRecord.value.data.attributes.active = user.attributes.active;
 
             // toggle the edit panel
             showEditPanel.value = !showEditPanel.value;
@@ -660,7 +674,7 @@
                 method: "GET",
                 headers: {
                   "Content-type": "application/json",
-                  Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWxob3N0IiwiaWF0IjoxNjc3ODA5MTQ2LCJleHAiOjE2Nzc4MTI3NDZ9.7t7dyzAmXm556PJ0cJpd-B6iWErNDO2JqfnkZwGWFVw`,
+                  Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWxob3N0IiwiaWF0IjoxNjc3ODE0NTE1LCJleHAiOjE2Nzc4MTgxMTV9.vaLOM4D3eHZNC9y8BC5qkXtcYTt1DX7G0HMmk3M3Y7A`,
                 },
               });
 
@@ -676,19 +690,19 @@
           fetchUsers();
 
           //Update the user record from the form data in the edit panel
-          const updateUserRecord = async (user) => {
+          const updateUserRecord = async (userID, user) => {
             console.log(user);
             try {
               let data = await fetch(
-                `http://localhost:3002/v1/admin/users/${user.id}`,
+                `http://localhost:3002/v1/admin/users/${userID}`,
                 {
                   method: "PATCH",
                   headers: {
                     "Content-type": "application/json",
-                    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWxob3N0IiwiaWF0IjoxNjc3ODA5MTQ2LCJleHAiOjE2Nzc4MTI3NDZ9.7t7dyzAmXm556PJ0cJpd-B6iWErNDO2JqfnkZwGWFVw`,
+                    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWxob3N0IiwiaWF0IjoxNjc3ODE0NTE1LCJleHAiOjE2Nzc4MTgxMTV9.vaLOM4D3eHZNC9y8BC5qkXtcYTt1DX7G0HMmk3M3Y7A`,
                   },
                   // wrap the user object in a data object
-                  body: JSON.stringify({ data: user }),
+                  body: JSON.stringify(user),
                 }
               );
             } catch (e) {
@@ -705,6 +719,7 @@
             modifyRecord,
             updateUserRecord,
             selectedUser,
+            userRecord,
           };
         },
       }).mount("#app");

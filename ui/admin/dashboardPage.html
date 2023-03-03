@@ -101,7 +101,7 @@
                         id="user-menu-button"
                         aria-expanded="false"
                         aria-haspopup="true"
-                        @click="show = !show"
+                        @click="showProfileMenu = !showProfileMenu"
                       >
                         <span class="sr-only">Open user menu</span>
                         <svg
@@ -131,7 +131,7 @@
                       leave-to-class="transform scale-95 opacity-0"
                     >
                       <div
-                        v-if="show"
+                        v-if="showProfileMenu"
                         class="absolute right-0 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                         role="menu"
                         aria-orientation="vertical"
@@ -322,13 +322,14 @@
         <header class="bg-white shadow-sm">
           <div class="px-4 py-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <h1 class="text-lg font-semibold leading-6 text-gray-900">
-              Admin Dashboard
+              User Administration
             </h1>
           </div>
         </header>
         <main>
           <div class="py-6 mx-auto max-w-fit sm:px-6 lg:px-8">
             <!-- Replace with your content -->
+
             <div class="flex flex-col">
               <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div
@@ -380,7 +381,7 @@
                             scope="col"
                             class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
                           >
-                            Options
+                            Action
                           </th>
 
                           <th scope="col" class="relative px-6 py-3">
@@ -411,7 +412,11 @@
                           <td
                             class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
                           >
-                            {{ user.attributes.active }}
+                            <span
+                              class="inline-flex items-center rounded-full bg-green-100 px-3 py-0.5 text-sm font-medium text-green-800"
+                            >
+                              {{ user.attributes.active }}
+                            </span>
                           </td>
                           <td
                             class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
@@ -428,8 +433,8 @@
                           >
                             <a
                               href="#"
-                              class="text-indigo-600 hover:text-indigo-900"
-                              @click="showEditPanel = !showEditPanel"
+                              class="underline text-sky-800 hover:text-sky-900"
+                              @click="modifyRecord(user)"
                               >Edit</a
                             >
                           </td>
@@ -442,7 +447,6 @@
             </div>
           </div>
           <!-- /End replace -->
-          
           <!-- Start of Modify Entry Slide-in -->
           <Transition
             un-cloak
@@ -461,7 +465,9 @@
               v-if="showEditPanel"
             >
               <!-- Background backdrop, show/hide based on slide-over state. -->
-              <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"></div>
+              <div
+                class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+              ></div>
               <div class="fixed inset-0 overflow-hidden">
                 <div class="absolute inset-0 overflow-hidden">
                   <div
@@ -480,7 +486,7 @@
                                 class="text-lg font-medium text-gray-900"
                                 id="slide-over-title"
                               >
-                                Panel title
+                                Modify Account
                               </h2>
                               <div class="flex items-center ml-3 h-7">
                                 <button
@@ -511,10 +517,82 @@
                           </div>
                           <div class="relative flex-1 px-4 mt-6 sm:px-6">
                             <!-- Replace with your content -->
-                            <div
-                              class="h-full border-2 border-gray-200 border-dashed"
-                              aria-hidden="true"
-                            ></div>
+                            <div class="h-full" aria-hidden="true">
+                              <form>
+                                <!-- div containing the user's id -->
+                                <div class="mt-3">
+                                  <span class="font-medium text-gray-700"
+                                    >ID</span
+                                  >
+                                  <input
+                                    disabled
+                                    type="text"
+                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none focus:bg-white"
+                                    :value="selectedUser.id"
+                                  />
+                                </div>
+                                <!-- div containing the user's name -->
+                                <div class="mt-3">
+                                  <span class="font-medium text-gray-700"
+                                    >Name</span
+                                  >
+                                  <input
+                                    type="text"
+                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
+                                    :value="selectedUser.attributes.name"
+                                    @input="event => selectedUser.attributes.name = event.target.value"
+                                  />
+                                </div>
+                                <!-- div containing the user's email -->
+                                <div class="mt-3">
+                                  <span class="font-medium text-gray-700"
+                                    >Email</span
+                                  >
+                                  <input
+                                    type="email"
+                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
+                                    :value="selectedUser.attributes.email"
+                                    @input="event => selectedUser.attributes.email = event.target.value"
+                                  />
+                                </div>
+                                <!-- div containing the user's active status -->
+                                <div class="mt-3">
+                                  <span class="font-medium text-gray-700"
+                                    >Active</span
+                                  >
+                                  <input
+                                    type="text"
+                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
+                                    :value="selectedUser.attributes.active"
+                                    @input="event => selectedUser.attributes.active = event.target.value"
+                                  />
+                                </div>
+                                <!-- div containing the user's created date -->
+                                <div class="mt-3">
+                                  <span class="font-medium text-gray-700"
+                                    >Created At</span
+                                  >
+                                  <input
+                                    disabled
+                                    type="text"
+                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none focus:bg-white"
+                                    :value="selectedUser.attributes.created"
+                                  />
+                                </div>
+                                <!-- div containing the user's updated at date -->
+                                <div class="mt-3">
+                                  <span class="font-medium text-gray-700"
+                                    >Updated At</span
+                                  >
+                                  <input
+                                    disabled
+                                    type="text"
+                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none focus:bg-white"
+                                    :value="selectedUser.attributes.updated"
+                                  />
+                                </div>
+                              </form>
+                            </div>
                             <!-- /End replace -->
                           </div>
                         </div>
@@ -528,7 +606,8 @@
                           </button>
                           <button
                             type="submit"
-                            class="inline-flex justify-center px-4 py-2 ml-4 text-sm font-medium text-gray-700 border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-grey-500 focus:ring-offset-2"
+                            class="inline-flex justify-center px-4 py-2 ml-4 text-sm font-medium text-gray-700 border border-gray-300 rounded-md shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-grey-500 hover:text-white focus:ring-offset-2"
+                            @click="updateUserRecord(selectedUser)"
                           >
                             Save
                           </button>
@@ -552,17 +631,36 @@
 
       createApp({
         setup() {
-          const users = ref([]);
-          let show = ref(false);
+          //Toggle the edit panel and profile menu
+          let showProfileMenu = ref(false);
           let showEditPanel = ref(false);
 
+          // Array of users to be displayed in the table
+          const users = ref([]);
+
+          // User record to be edited
+          let selectedUser = ref({});
+
+          // Function to open the edit panel and populate the form with the user data
+          const modifyRecord = (user) => {
+            console.log(user);
+            // set the selected user to the user passed in the function
+            selectedUser.value = user;
+
+            console.log(selectedUser.value);
+
+            // toggle the edit panel
+            showEditPanel.value = !showEditPanel.value;
+          };
+
+          // Fetch users from the API and store them in the users array
           const fetchUsers = async () => {
             try {
               let data = await fetch("http://localhost:3002/v1/admin/users", {
                 method: "GET",
                 headers: {
                   "Content-type": "application/json",
-                  Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWxob3N0IiwiaWF0IjoxNjc3NTU1Mzg0LCJleHAiOjE2Nzc1NTg5ODR9.Xw-B9FTK0HDCxAWARiP8a5H4UeTWTxOhksBkhGrklaA`,
+                  Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWxob3N0IiwiaWF0IjoxNjc3ODA5MTQ2LCJleHAiOjE2Nzc4MTI3NDZ9.7t7dyzAmXm556PJ0cJpd-B6iWErNDO2JqfnkZwGWFVw`,
                 },
               });
 
@@ -570,18 +668,43 @@
                 throw Error("Error occurs when loading data");
               }
               users.value = await data.json();
-              console.log(users.value);
             } catch (e) {
               console.log("Failed to load data");
             }
           };
+          // Call the fetchUsers function on page load
           fetchUsers();
+
+          //Update the user record from the form data in the edit panel
+          const updateUserRecord = async (user) => {
+            console.log(user);
+            try {
+              let data = await fetch(
+                `http://localhost:3002/v1/admin/users/${user.id}`,
+                {
+                  method: "PATCH",
+                  headers: {
+                    "Content-type": "application/json",
+                    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWxob3N0IiwiaWF0IjoxNjc3ODA5MTQ2LCJleHAiOjE2Nzc4MTI3NDZ9.7t7dyzAmXm556PJ0cJpd-B6iWErNDO2JqfnkZwGWFVw`,
+                  },
+                  // wrap the user object in a data object
+                  body: JSON.stringify({ data: user }),
+                }
+              );
+            } catch (e) {
+              console.log("Update User Failed");
+              console.log(e);
+            }
+          };
 
           // expose to the html template
           return {
             users,
-            show,
+            showProfileMenu,
             showEditPanel,
+            modifyRecord,
+            updateUserRecord,
+            selectedUser,
           };
         },
       }).mount("#app");

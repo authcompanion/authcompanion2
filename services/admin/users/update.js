@@ -21,18 +21,19 @@ export const updateUserHandler = async function (request, reply) {
       throw { statusCode: 404, message: "User Not Found" };
     }
 
-    //If the user's email is being updated, check if the new email exists already
-    if (request.body.data.attributes.email) {
-      const stmt = this.db.prepare("SELECT * FROM users WHERE email = ?;");
-      const duplicateAccount = await stmt.get(
-        request.body.data.attributes.email
-      );
+    //Check if the user's email is being updated and if its not the same email as the user's current email, check if the new email is already in use
+    if (
+      request.body.data.attributes.email &&
+      request.body.data.attributes.email !== user.email
+    ) {
+      const emailStmt = this.db.prepare("SELECT * FROM users WHERE email = ?;");
+      const email = await emailStmt.get(request.body.data.attributes.email);
 
-      if (duplicateAccount) {
+      if (email) {
         request.log.info(
-          "Admin API: User's email already exists in database, update failed"
+          "Admin API: User's email is already in use, update failed"
         );
-        throw { statusCode: 400, message: "Duplicate Email Address Exists" };
+        throw { statusCode: 400, message: "Email Already In Use" };
       }
     }
 

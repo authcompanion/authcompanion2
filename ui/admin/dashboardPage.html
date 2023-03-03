@@ -645,11 +645,7 @@
           const userRecord = ref({
             data: {
               type: "users",
-              attributes: {
-                name: "",
-                email: "",
-                active: "",
-              },
+              attributes: {},
             },
           });
 
@@ -657,11 +653,6 @@
           const modifyRecord = (user) => {
             // set the selected user to the user passed in the function
             selectedUser.value = user;
-
-            // set the user record attributes to the user passed in the function
-            userRecord.value.data.attributes.name = user.attributes.name;
-            userRecord.value.data.attributes.email = user.attributes.email;
-            userRecord.value.data.attributes.active = user.attributes.active;
 
             // toggle the edit panel
             showEditPanel.value = !showEditPanel.value;
@@ -674,7 +665,7 @@
                 method: "GET",
                 headers: {
                   "Content-type": "application/json",
-                  Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWxob3N0IiwiaWF0IjoxNjc3ODE0NTE1LCJleHAiOjE2Nzc4MTgxMTV9.vaLOM4D3eHZNC9y8BC5qkXtcYTt1DX7G0HMmk3M3Y7A`,
+                  Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWxob3N0IiwiaWF0IjoxNjc3ODE4MTU3LCJleHAiOjE2Nzc4MjE3NTd9.pfOETWqHzDl1nX0lB0_mJIpURW-cuDNiAth_eldKTNg`,
                 },
               });
 
@@ -682,6 +673,7 @@
                 throw Error("Error occurs when loading data");
               }
               users.value = await data.json();
+              console.log(users);
             } catch (e) {
               console.log("Failed to load data");
             }
@@ -699,7 +691,7 @@
                   method: "PATCH",
                   headers: {
                     "Content-type": "application/json",
-                    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWxob3N0IiwiaWF0IjoxNjc3ODE0NTE1LCJleHAiOjE2Nzc4MTgxMTV9.vaLOM4D3eHZNC9y8BC5qkXtcYTt1DX7G0HMmk3M3Y7A`,
+                    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWxob3N0IiwiaWF0IjoxNjc3ODE4MTU3LCJleHAiOjE2Nzc4MjE3NTd9.pfOETWqHzDl1nX0lB0_mJIpURW-cuDNiAth_eldKTNg`,
                   },
                   // wrap the user object in a data object
                   body: JSON.stringify(user),

@@ -43,6 +43,15 @@ export const updateUserHandler = async function (request, reply) {
       request.body.data.attributes.password = hashpwd;
     }
 
+    //If the user's active status is a string, convert it to a number
+    if (request.body.data.attributes.active) {
+      if (typeof request.body.data.attributes.active === "string") {
+        request.body.data.attributes.active = Number(
+          request.body.data.attributes.active
+        );
+      }
+    }
+
     //Check if the user's active status is being updated and if it is, check if the new status is a valid 1 or 0
     if (request.body.data.attributes.active) {
       if (

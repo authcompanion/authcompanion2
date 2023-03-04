@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en" un-cloak>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@unocss/reset/tailwind.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/uno.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@simplewebauthn/browser@7.0.0/dist/bundle/index.es5.umd.min.js"></script>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <style>
+      html {
+        font-family: "Inter var", sans-serif;
+      }
+      [un-cloak] {
+        display: none;
+      }
+    </style>
+
+    <title>Login</title>
+  </head>
+
+  <body class="flex flex-col h-full bg-gray-50">
+    <div id="app" class="">
+      <div
+        class="w-full max-w-md px-8 py-6 mx-auto mt-5 bg-white rounded shadow-md md:mt-20"
+      >
+        <div class="px-0 md:px-4">
+          <div class="text-gray-400 rounded-lg">
+            <!-- Toast Notification -->
+            <div v-if="showError">
+              <div class="pb-4">
+                <div
+                  class="inline-flex items-center p-2 text-sm leading-none text-red-600 bg-white rounded-full shadow"
+                >
+                  <span class="inline-flex px-2">{{ errorDetail }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="w-full my-8 text-center">
+              <p class="py-3 text-3xl italic font-semibold text-gray-700">
+                Admin Dashboard
+              </p>
+              <p class="py-3 text-sm font-semibold text-gray-700">
+                Please log in with your admin credentials to continue.
+              </p>
+            </div>
+            <!-- Navigation -->
+            <div class="flex flex-row justify-between mb-6">
+              <div class="flex flex-row text-xl font-semibold text-gray-700">
+                <span class="mr-1 -rotate-90">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
+                    />
+                  </svg>
+                </span>
+                Login
+              </div>
+              <div
+                class="flex justify-end text-base font-semibold text-blue-700 underline"
+              >
+                <a href="register">Register</a>
+              </div>
+            </div>
+            <!-- Form -->
+            <div class="grid max-w-md grid-cols-1 gap-4 md:gap-6">
+              <label class="block">
+                <span class="font-bold text-gray-700">Email</span>
+                <input
+                  type="email"
+                  v-model="email"
+                  class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
+                  placeholder="hello@example.com"
+                />
+              </label>
+              <label class="block">
+                <span class="font-bold text-gray-700"> Password</span>
+                <input
+                  type="password"
+                  v-model="password"
+                  class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
+                  placeholder="********"
+                />
+              </label>
+              <button
+                type=""
+                class="block w-full px-6 py-3 text-base font-semibold text-white bg-gray-800 border rounded-lg shadow-xl hover:text-white hover:bg-gray-900"
+                @click="submit"
+                @keyup.enter="submit"
+              >
+                <span class="absolute flex items-center">
+                  <svg
+                    class="w-5 h-5 text-white group-hover:text-indigo-400"
+                    x-description="Heroicon name: mini/lock-closed"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </span>
+                Login
+              </button>
+
+              <div class="relative flex items-center py-2">
+                <div class="flex-grow border-t border-gray-400"></div>
+                <span class="flex-shrink mx-4 text-gray-700">Or</span>
+                <div class="flex-grow border-t border-gray-400"></div>
+              </div>
+
+              <button
+                type=""
+                class="block w-full px-6 py-3 text-base font-semibold text-white bg-gray-800 border rounded-lg shadow-xl hover:text-white hover:bg-gray-900"
+                @click="passkeySubmit"
+              >
+                <span class="absolute flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M7.864 4.243A7.5 7.5 0 0119.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 004.5 10.5a7.464 7.464 0 01-1.15 3.993m1.989 3.559A11.209 11.209 0 008.25 10.5a3.75 3.75 0 117.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 01-3.6 9.75m6.633-4.596a18.666 18.666 0 01-2.485 5.33"
+                    />
+                  </svg>
+                </span>
+                Passkey
+              </button>
+              <a
+                href="#"
+                class="tracking-tighter text-blue-700 border-gray-200 cursor-pointer hover:border-gray-400"
+                @click="forgotPassword"
+              >
+                <span>Forgot Password?</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fixed inset-x-0 bottom-0">
+        <div class="m-4 text-xs text-gray-400">
+          Powered by
+          <span class="underline">
+            <a href="https://github.com/authcompanion/authcompanion2"
+              >AuthCompanion</a
+            >
+          </span>
+        </div>
+      </div>
+    </div>
+    <!-- scripts -->
+    <script type="module">
+      import {
+        createApp,
+        ref,
+        computed,
+      } from "https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.prod.js";
+
+      const { startAuthentication } = SimpleWebAuthnBrowser;
+
+      createApp({
+        setup() {
+          const email = ref("");
+          const password = ref("");
+
+          const showError = ref(false);
+          let errorTitle = ref(null);
+          let errorDetail = ref(null);
+
+          const submit = async () => {
+            try {
+              let response = await fetch("/v1/auth/login", {
+                method: "POST",
+                credentials: "include",
+                body: JSON.stringify({
+                  data: {
+                    type: "users",
+                    attributes: {
+                      email: email.value,
+                      password: password.value,
+                    },
+                  },
+                }),
+                headers: {
+                  "content-type": "application/json",
+                },
+              });
+              const appOrigin = await response.headers.get(
+                "x-authc-app-origin"
+              );
+              const resbody = await response.json();
+
+              if (response.ok) {
+                window.localStorage.setItem(
+                  "ACCESS_TOKEN",
+                  resbody.data.attributes.access_token
+                );
+
+                window.location.href = appOrigin;
+              } else {
+                errorTitle.value = resbody.errors[0].title;
+                errorDetail.value = resbody.errors[0].detail;
+
+                showError.value = true;
+              }
+            } catch (e) {
+              console.log(e);
+              showError.value = true;
+
+              errorTitle.value = "Error";
+              errorDetail.value =
+                "There was an issue logging in, please try again";
+            }
+          };
+
+          const forgotPassword = () => {
+            window.location.href = "recovery";
+          };
+
+          const passkeySubmit = async () => {
+            try {
+              let optionsResponse = await fetch("/v1/auth/login-options", {
+                method: "GET",
+                headers: {
+                  "content-type": "application/json",
+                },
+              });
+
+              if (optionsResponse.ok) {
+                const opts = await optionsResponse.json();
+
+                let attResp = await startAuthentication(opts);
+
+                let verificationResponse = await fetch(
+                  "/v1/auth/login-verification",
+                  {
+                    method: "POST",
+                    body: JSON.stringify(attResp),
+                    headers: {
+                      "content-type": "application/json",
+                      "x-authc-app-challenge": opts.challenge,
+                    },
+                  }
+                );
+                const reply = await verificationResponse.json();
+                const appOrigin = await verificationResponse.headers.get(
+                  "x-authc-app-origin"
+                );
+
+                window.localStorage.setItem(
+                  "ACCESS_TOKEN",
+                  reply.data.attributes.access_token
+                );
+                showError.value = false;
+                showError.value = false;
+                window.location.href = appOrigin;
+              } else {
+                showError.value = true;
+
+                errorTitle.value = "Error";
+                errorDetail.value =
+                  "There was an issue logging in, please try again";
+              }
+            } catch (e) {
+              console.log(e);
+              showError.value = true;
+
+              errorTitle.value = "Error";
+              errorDetail.value =
+                "There was an issue connecting, please try again";
+            }
+          };
+
+          // expose to the html template
+          return {
+            showError,
+            errorTitle,
+            errorDetail,
+            submit,
+            passkeySubmit,
+            email,
+            password,
+            forgotPassword,
+          };
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

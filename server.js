@@ -26,7 +26,9 @@ function startServer() {
       ###########################################################
                 The AuthCompanion Server has started
 
-           🖥️   UI on: http://localhost:${config.AUTHPORT}/v1/web/login
+           🖥️   Client UI on: http://localhost:${config.AUTHPORT}/v1/web/login
+           🚀   Admin UI on: http://localhost:${config.AUTHPORT}/v1/admin/login
+
 
       ###########################################################
       `);

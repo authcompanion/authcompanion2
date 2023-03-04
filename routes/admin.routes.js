@@ -39,6 +39,27 @@ const adminRoutes = async function (fastify, options) {
     });
     return adminPage;
   });
+
+  //login page for the admin web user interface
+  fastify.get("/login", (request, reply) => {
+    const loginPage = readFileSync("./ui/admin/loginAdminPage.html");
+    reply.headers({
+      "Content-Type": `text/html`,
+    });
+    return loginPage;
+  }
+  );
+
+  //profile page for the admin web user interface
+  fastify.get("/profile", (request, reply) => {
+    const profilePage = readFileSync("./ui/admin/profileAdminPage.html");
+    reply.headers({
+      "Content-Type": `text/html`,
+    });
+    return profilePage;
+  }
+  );
+
 };
 
 export default adminRoutes;

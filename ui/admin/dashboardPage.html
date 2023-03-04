@@ -71,7 +71,7 @@
                 <div class="flex items-center ml-4 md:ml-6">
                   <button
                     type="button"
-                    class="p-1 text-gray-400 bg-gray-800 rounded-full hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                    class="p-1 text-gray-400 bg-gray-800 rounded-full hover:text-white"
                   >
                     <span class="sr-only">View notifications</span>
                     <!-- Heroicon name: outline/bell -->
@@ -139,26 +139,16 @@
                         tabindex="-1"
                       >
                         <a
-                          href="#"
-                          class="block px-4 py-2 text-sm text-gray-700"
+                          href="/v1/admin/profile"
+                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           role="menuitem"
                           tabindex="-1"
                           id="user-menu-item-0"
                           >Your Profile</a
                         >
-
                         <a
                           href="#"
-                          class="block px-4 py-2 text-sm text-gray-700"
-                          role="menuitem"
-                          tabindex="-1"
-                          id="user-menu-item-1"
-                          >Settings</a
-                        >
-
-                        <a
-                          href="#"
-                          class="block px-4 py-2 text-sm text-gray-700"
+                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           role="menuitem"
                           tabindex="-1"
                           id="user-menu-item-2"
@@ -224,108 +214,39 @@
           </div>
 
           <!-- Mobile menu, show/hide based on menu state. -->
-          <div class="md:hidden" id="mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-              <a
-                href="#"
-                class="block px-3 py-2 text-base font-medium text-white bg-gray-900 rounded-md"
-                aria-current="page"
-                >Dashboard</a
-              >
-
-              <a
-                href="#"
-                class="block px-3 py-2 text-base font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white"
-                >Team</a
-              >
-
-              <a
-                href="#"
-                class="block px-3 py-2 text-base font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white"
-                >Projects</a
-              >
-
-              <a
-                href="#"
-                class="block px-3 py-2 text-base font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white"
-                >Calendar</a
-              >
-
-              <a
-                href="#"
-                class="block px-3 py-2 text-base font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white"
-                >Reports</a
-              >
-            </div>
-            <div class="pt-4 pb-3 border-t border-gray-700">
-              <div class="flex items-center px-5">
-                <div class="flex-shrink-0">
-                  <img
-                    class="w-10 h-10 rounded-full"
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    alt=""
-                  />
-                </div>
-                <div class="ml-3">
-                  <div class="text-base font-medium text-white">Tom Cook</div>
-                  <div class="text-sm font-medium text-gray-400">
-                    tom@example.com
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  class="flex-shrink-0 p-1 ml-auto text-gray-400 bg-gray-800 rounded-full hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                >
-                  <span class="sr-only">View notifications</span>
-                  <!-- Heroicon name: outline/bell -->
-                  <svg
-                    class="w-6 h-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div class="px-2 mt-3 space-y-1">
-                <a
-                  href="#"
-                  class="block px-3 py-2 text-base font-medium text-gray-400 rounded-md hover:text-white hover:bg-gray-700"
-                  >Your Profile</a
-                >
-
-                <a
-                  href="#"
-                  class="block px-3 py-2 text-base font-medium text-gray-400 rounded-md hover:text-white hover:bg-gray-700"
-                  >Settings</a
-                >
-
-                <a
-                  href="#"
-                  class="block px-3 py-2 text-base font-medium text-gray-400 rounded-md hover:text-white hover:bg-gray-700"
-                  >Sign out</a
-                >
-              </div>
-            </div>
-          </div>
         </nav>
 
         <header class="bg-white shadow-sm">
-          <div class="px-4 py-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <h1 class="text-lg font-semibold leading-6 text-gray-900">
+          <div
+            class="flex flex-row px-4 py-4 mx-auto max-w-7xl sm:px-6 lg:px-8"
+          >
+            <h1 class="mt-2 text-lg font-semibold leading-6 text-gray-900 grow">
               User Administration
             </h1>
+            <button
+              class="inline-flex items-center px-4 py-2 font-bold text-gray-800 bg-gray-300 rounded hover:bg-gray-400"
+              @click="toggleCreatePanel()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+
+              <span>Create</span>
+            </button>
           </div>
         </header>
+
         <main>
           <div class="py-6 mx-auto max-w-fit sm:px-6 lg:px-8">
             <!-- Replace with your content -->
@@ -539,7 +460,7 @@
                                   <input
                                     type="text"
                                     class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
-                                    :value="selectedUser.attributes.name"
+                                    :value="showCreateMenu ? '' : selectedUser.attributes.name"
                                     @input="event => userRecord.data.attributes.name = event.target.value"
                                   />
                                 </div>
@@ -551,8 +472,19 @@
                                   <input
                                     type="email"
                                     class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
-                                    :value="selectedUser.attributes.email"
+                                    :value="showCreateMenu ? '' : selectedUser.attributes.email"
                                     @input="event => userRecord.data.attributes.email = event.target.value"
+                                  />
+                                </div>
+                                <!-- div containing the user's password -->
+                                <div class="mt-3">
+                                  <span class="font-medium text-gray-700"
+                                    >New Password</span
+                                  >
+                                  <input
+                                    type="email"
+                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
+                                    @input="event => userRecord.data.attributes.password = event.target.value"
                                   />
                                 </div>
                                 <!-- div containing the user's active status -->
@@ -561,9 +493,9 @@
                                     >Active</span
                                   >
                                   <input
-                                    type="text"
+                                    type="number"
                                     class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
-                                    :value="selectedUser.attributes.active"
+                                    :value="showCreateMenu ? '' : selectedUser.attributes.active"
                                     @input="event => userRecord.data.attributes.active = event.target.value"
                                   />
                                 </div>
@@ -576,7 +508,7 @@
                                     disabled
                                     type="text"
                                     class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none focus:bg-white"
-                                    :value="selectedUser.attributes.created"
+                                    :value="showCreateMenu ? '' : selectedUser.attributes.created"
                                   />
                                 </div>
                                 <!-- div containing the user's updated at date -->
@@ -588,7 +520,7 @@
                                     disabled
                                     type="text"
                                     class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none focus:bg-white"
-                                    :value="selectedUser.attributes.updated"
+                                    :value="showCreateMenu ? '' : selectedUser.attributes.updated"
                                   />
                                 </div>
                               </form>
@@ -634,6 +566,7 @@
           //Toggle the edit panel and profile menu
           let showProfileMenu = ref(false);
           let showEditPanel = ref(false);
+          let showCreateMenu = ref(false);
 
           // Array of users to be displayed in the table
           const users = ref([]);
@@ -649,11 +582,18 @@
             },
           });
 
+          //function to toggle the edit panel when the create button is clicked
+          const toggleCreatePanel = () => {
+            showCreateMenu.value = !showCreateMenu.value;
+            showEditPanel.value = !showEditPanel.value;
+          };
+
           // Function to open the edit panel and populate the form with the user data
           const modifyRecord = (user) => {
+            //set the showCreateMenu to false
+            showCreateMenu.value = false;
             // set the selected user to the user passed in the function
             selectedUser.value = user;
-
             // toggle the edit panel
             showEditPanel.value = !showEditPanel.value;
           };
@@ -665,7 +605,7 @@
                 method: "GET",
                 headers: {
                   "Content-type": "application/json",
-                  Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWxob3N0IiwiaWF0IjoxNjc3ODE4MTU3LCJleHAiOjE2Nzc4MjE3NTd9.pfOETWqHzDl1nX0lB0_mJIpURW-cuDNiAth_eldKTNg`,
+                  Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWxob3N0IiwiaWF0IjoxNjc3OTAwNTIzLCJleHAiOjE2Nzc5MDQxMjN9.OO8slAHopMYzVmvr1ko2IQcXAU0InMPVqrO8ObYXd0k`,
                 },
               });
 
@@ -691,7 +631,7 @@
                   method: "PATCH",
                   headers: {
                     "Content-type": "application/json",
-                    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWxob3N0IiwiaWF0IjoxNjc3ODE4MTU3LCJleHAiOjE2Nzc4MjE3NTd9.pfOETWqHzDl1nX0lB0_mJIpURW-cuDNiAth_eldKTNg`,
+                    Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWxob3N0IiwiaWF0IjoxNjc3OTAwNTIzLCJleHAiOjE2Nzc5MDQxMjN9.OO8slAHopMYzVmvr1ko2IQcXAU0InMPVqrO8ObYXd0k`,
                   },
                   // wrap the user object in a data object
                   body: JSON.stringify(user),
@@ -712,6 +652,8 @@
             updateUserRecord,
             selectedUser,
             userRecord,
+            showCreateMenu,
+            toggleCreatePanel,
           };
         },
       }).mount("#app");

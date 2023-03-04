@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en" un-cloak>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@unocss/reset/tailwind.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/uno.global.js"></script>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <style>
+      html {
+        font-family: "Inter var", sans-serif;
+      }
+      [un-cloak] {
+        display: none;
+      }
+    </style>
+    <title>Profile</title>
+  </head>
+
+  <body class="flex flex-col h-full bg-gray-50">
+    <div id="app" class="">
+      <div
+        class="w-full max-w-md px-8 py-6 mx-auto mt-5 bg-white rounded shadow-md md:mt-20"
+      >
+        <div class="px-0 md:px-4">
+          <div class="text-gray-400 rounded-lg">
+            <!-- Toast Notification -->
+            <div v-if="showError">
+              <div class="pb-4">
+                <div
+                  class="inline-flex items-center p-2 text-sm leading-none text-red-600 bg-white rounded-full shadow"
+                >
+                  <span class="inline-flex px-2">{{ errorDetail }}</span>
+                </div>
+              </div>
+            </div>
+            <!-- Navigation -->
+            <div class="flex flex-row justify-between mb-6">
+              <div class="flex flex-row text-xl font-semibold text-gray-700">
+                <span class="mr-1 -rotate-90">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
+                    />
+                  </svg>
+                </span>
+                Profile
+              </div>
+            </div>
+            <!-- Form -->
+            <div class="grid max-w-md grid-cols-1 gap-4 md:gap-6">
+              <label class="block">
+                <span class="font-bold text-gray-700">Full Name</span>
+                <input
+                  type="text"
+                  v-model="name"
+                  class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
+                  placeholder=""
+                />
+              </label>
+              <label class="block">
+                <span class="font-bold text-gray-700">Email</span>
+                <input
+                  type="text"
+                  v-model="email"
+                  class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
+                  placeholder="hello@example.com"
+                />
+              </label>
+              <label class="block">
+                <span class="font-bold text-gray-700"> New Password</span>
+                <input
+                  type="password"
+                  v-model="password"
+                  class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
+                  placeholder=""
+                />
+              </label>
+              <label class="block">
+                <span class="font-bold text-gray-700"> Confirm Password</span>
+                <input
+                  v-model="confirmPassword"
+                  type="password"
+                  class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
+                  placeholder=""
+                />
+              </label>
+              <button
+                type=""
+                class="block w-full px-6 py-3 text-base font-semibold text-white bg-gray-800 border rounded-lg shadow-xl hover:text-white hover:bg-gray-900"
+                @click="submit"
+              >
+                <span class="absolute flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
+                    />
+                  </svg>
+                </span>
+                Update Account
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fixed inset-x-0 bottom-0">
+        <div class="m-4 text-xs text-gray-400">
+          Powered by
+          <span class="underline">
+            <a href="https://github.com/authcompanion/authcompanion2"
+              >AuthCompanion</a
+            >
+          </span>
+        </div>
+      </div>
+    </div>
+    <!-- scripts -->
+    <script type="module">
+      import {
+        createApp,
+        ref,
+        computed,
+      } from "https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.prod.js";
+
+      import jwtDecode from "https://cdn.skypack.dev/jwt-decode";
+
+      createApp({
+        setup() {
+          const name = ref("");
+          const email = ref("");
+          const password = ref("");
+          const confirmPassword = ref("");
+
+          const showError = ref(false);
+          let errorTitle = ref(null);
+          let errorDetail = ref(null);
+
+          const token = computed(() => {
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+
+            if (urlParams.has("token")) {
+              const tokenParam = urlParams.get("token");
+              return tokenParam;
+            } else {
+              return localStorage.getItem("ACCESS_TOKEN");
+            }
+          });
+
+          try {
+            var decoded = jwtDecode(token.value);
+            email.value = decoded.email;
+            name.value = decoded.name;
+          } catch (e) {
+            console.log(e);
+          }
+          async function updateUser() {
+            //make an API request to your web service. Include the ACCESS_TOKEN.
+            const response = await fetch("/v1/auth/users/me", {
+              method: "POST",
+              headers: {
+                "Content-type": "application/json",
+                Authorization: `Bearer ${token.value}`,
+              },
+              body: JSON.stringify({
+                data: {
+                  type: "users",
+                  attributes: {
+                    name: name.value,
+                    email: email.value,
+                    password: password.value,
+                  },
+                },
+              }),
+            });
+
+            return response;
+          }
+
+          const submit = async () => {
+            try {
+              if (password.value !== confirmPassword.value) {
+                showError.value = true;
+                errorTitle.value = "Validation Error";
+                errorDetail.value = "Passwords do not match, please try again";
+                return;
+              }
+              //make a normal request to your web service
+              const response = await updateUser();
+
+              const webserviceResponse = await response.json();
+
+              //if the response comes back as unauthorized (the access_token was expired), let's fetch from AuthC a new ACCESS_TOKEN
+              if (response.status === 401) {
+                //AuthC's refresh endpoint requires the Refresh Token (set by AuthC as a cookie when user logs in) in order to provide you a new ACCESS_TOKEN
+                const refreshResponse = await fetch("/v1/auth/refresh", {
+                  method: "GET",
+                  headers: {
+                    "Content-type": "application/json",
+                  },
+                });
+                //AuthC will store the ACCESS_TOKEN in local storage or you can access it from the response itself!
+                const refreshBody = await refreshResponse.json();
+
+                if (refreshResponse.ok) {
+                  window.localStorage.setItem(
+                    "ACCESS_TOKEN",
+                    refreshBody.data.attributes.access_token
+                  );
+
+                  //make another request to your web service, this time with a new ACCESS_TOKEN
+                  const updatedResponse = await updateUser();
+
+                  errorTitle.value = "Success";
+                  errorDetail.value =
+                    "Your account has been updated, thank you!";
+                  showError.value = true;
+                } else {
+                  showError.value = true;
+                  errorTitle.value = "Error";
+                  errorDetail.value =
+                    "An issue with your account has occured, please try again";
+                }
+              }
+
+              if (response.ok) {
+                window.localStorage.setItem(
+                  "ACCESS_TOKEN",
+                  webserviceResponse.data.attributes.access_token
+                );
+                errorTitle.value = "Success";
+                errorDetail.value = "Your account has been updated, thank you!";
+                showError.value = true;
+              }
+            } catch (error) {
+              //catch any errors
+              console.error(error);
+              showError.value = true;
+              errorTitle.value = "Error";
+              errorDetail.value =
+                "An issue with your account has occured, please try again";
+            }
+          };
+
+          // expose to template
+          return {
+            showError,
+            errorTitle,
+            errorDetail,
+            submit,
+            name,
+            email,
+            password,
+            confirmPassword,
+          };
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

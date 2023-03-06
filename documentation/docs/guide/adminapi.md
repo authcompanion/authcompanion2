@@ -72,7 +72,8 @@ Bearer Token Required: `Authorization: Bearer {admin access token}`
     "attributes": {
       "name": "Authy Person",
       "email": "hello@authcompanion.com",
-      "password": "supersecret"
+      "password": "supersecret",
+      "active": 1
     }
   }
 }

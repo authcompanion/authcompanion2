@@ -554,7 +554,7 @@
                             Cancel
                           </button>
                           <button
-                            type="submit"
+                            type="button"
                             class="inline-flex justify-center px-4 py-2 ml-4 text-sm font-medium text-gray-700 border border-gray-300 rounded-md shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-grey-500 hover:text-white focus:ring-offset-2"
                             @click="showCreateMenu ? createUserRecord(userRecord) : updateUserRecord(selectedUser.id, userRecord)"
                           >
@@ -581,7 +581,7 @@
       createApp({
         setup() {
           // Store the jwt token in a variable
-          const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWxob3N0IiwiaWF0IjoxNjc4MDc0MDE2LCJleHAiOjE2NzgwNzc2MTZ9.gjgldDbo8H_-kuPRvu8kgH9K591YR9kJERx6tCxrUlE`;
+          const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOjEsIm5hbWUiOiJBZG1pbiIsImVtYWlsIjoiYWRtaW5AbG9jYWxob3N0IiwiaWF0IjoxNjc4MjkzMjc1LCJleHAiOjE2NzgyOTY4NzV9.SEd9qYQ-ztpbAarshji5-pI9zBNGcwPx4Y_cfXXcZLE`;
 
           //Toggle the edit panel and profile menu
           let showProfileMenu = ref(false);
@@ -619,35 +619,6 @@
             selectedUser.value = user;
             // toggle the edit panel
             showEditPanel.value = !showEditPanel.value;
-          };
-
-          // Function to delete a user record when the delete button is clicked
-          const deleteUserRecord = async (userID) => {
-            // alert the user to confirm the deletion using window.confirm
-            if (window.confirm("Are you sure you want to delete this user?")) {
-              // Call the deleteUser function to delete the user
-              try {
-                let data = await fetch(
-                  `http://localhost:3002/v1/admin/users/${userID}`,
-                  {
-                    method: "DELETE",
-                    headers: {
-                      "Content-type": "application/json",
-                      Authorization: `Bearer ${token}`,
-                    },
-                  }
-                );
-
-                if (!data.ok) {
-                  throw Error("Error occurs when deleting data");
-                }
-                console.log("User deleted successfully");
-                // Call the fetchUsers function to refresh the table
-                fetchUsers();
-              } catch (e) {
-                console.log("Failed to delete data");
-              }
-            }
           };
 
           // Fetch users from the API and store them in the users array
@@ -697,7 +668,6 @@
           //Create the user records from the from data in the create panel
           const createUserRecord = async (user) => {
             console.log(user);
-
             //if the password and confirm password are not the same, return an error
             if (user.data.attributes.password !== confirmPassword.value) {
               console.log("Password and confirm password do not match");
@@ -713,9 +683,40 @@
                 // wrap the user object in a data object
                 body: JSON.stringify(user),
               });
+              // Call the fetchUsers function to refresh the table
+              fetchUsers();
             } catch (e) {
               console.log("Update User Failed");
               console.log(e);
+            }
+          };
+
+          // Function to delete a user record when the delete button is clicked
+          const deleteUserRecord = async (userID) => {
+            // alert the user to confirm the deletion using window.confirm
+            if (window.confirm("Are you sure you want to delete this user?")) {
+              // Call the deleteUser function to delete the user
+              try {
+                let data = await fetch(
+                  `http://localhost:3002/v1/admin/users/${userID}`,
+                  {
+                    method: "DELETE",
+                    headers: {
+                      "Content-type": "application/json",
+                      Authorization: `Bearer ${token}`,
+                    },
+                  }
+                );
+
+                if (!data.ok) {
+                  throw Error("Error occurs when deleting data");
+                }
+                console.log("User deleted successfully");
+                // Call the fetchUsers function to refresh the table
+                fetchUsers();
+              } catch (e) {
+                console.log("Failed to delete data");
+              }
             }
           };
 

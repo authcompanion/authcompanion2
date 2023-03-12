@@ -10,6 +10,9 @@ import { deleteUserHandler } from "../services/admin/users/delete.js";
 import { updateUserHandler } from "../services/admin/users/update.js";
 import { updateSchema } from "../services/admin/users/schema/updateSchema.js";
 
+import { loginHandler } from "../services/admin/users/login.js";
+import { loginSchema } from "../services/admin/users/schema/loginSchema.js";
+
 import { authenticateRequest } from "../utilities/authenticate.js";
 
 const adminRoutes = async function (fastify, options) {
@@ -29,6 +32,11 @@ const adminRoutes = async function (fastify, options) {
     "/users/:uuid",
     { onRequest: [authenticateRequest], ...updateSchema },
     updateUserHandler
+  );
+  fastify.post(
+    "/login",
+    { onRequest: [authenticateRequest], ...loginSchema },
+    loginHandler
   );
 
   //admin web user interface routes

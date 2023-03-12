@@ -14,11 +14,17 @@ const generatePassword = function () {
 const setupAdminKey = async function (fastify) {
   try {
     //Check if the admin user already exists on server startup
-    const stmt = fastify.db.prepare("SELECT * FROM users WHERE email = ?;");
+    const stmt = fastify.db.prepare(
+      "SELECT uuid, name, email, active, created_at, updated_at FROM users WHERE email = ?;"
+    );
     const adminUser = await stmt.get("admin@localhost");
 
     if (adminUser) {
+      //register the admin user on the fastify instance
+      fastify.decorate("registeredAdminUser", adminUser);
+
       console.log("Admin API key - READY");
+
       return;
     }
 
@@ -54,6 +60,10 @@ const setupAdminKey = async function (fastify) {
       config.ADMINKEYPATH,
       `access token: ${adminAccessToken.token}\nadmin password: ${adminPwd}`
     );
+
+    //register the admin user on the fastify instance
+    fastify.decorate("registeredAdminUser", user);
+
     console.log("Admin API key - READY");
   } catch (error) {
     console.log(error);

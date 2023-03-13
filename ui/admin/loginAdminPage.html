@@ -71,15 +71,16 @@
             </div>
             <!-- Form -->
             <div class="grid max-w-md grid-cols-1 gap-4 md:gap-6">
-              <label class="block">
+              <!-- <label class="block">
                 <span class="font-bold text-gray-700">Email</span>
                 <input
+                  disabled
                   type="email"
                   v-model="email"
                   class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
-                  placeholder="hello@example.com"
+                  placeholder="admin@localhost"
                 />
-              </label>
+              </label> -->
               <label class="block">
                 <span class="font-bold text-gray-700"> Password</span>
                 <input
@@ -144,8 +145,6 @@
         computed,
       } from "https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.prod.js";
 
-      const { startAuthentication } = SimpleWebAuthnBrowser;
-
       createApp({
         setup() {
           const email = ref("");
@@ -157,14 +156,13 @@
 
           const submit = async () => {
             try {
-              let response = await fetch("/v1/auth/login", {
+              let response = await fetch("/v1/admin/login", {
                 method: "POST",
                 credentials: "include",
                 body: JSON.stringify({
                   data: {
                     type: "users",
                     attributes: {
-                      email: email.value,
                       password: password.value,
                     },
                   },
@@ -205,67 +203,12 @@
             window.location.href = "recovery";
           };
 
-          const passkeySubmit = async () => {
-            try {
-              let optionsResponse = await fetch("/v1/auth/login-options", {
-                method: "GET",
-                headers: {
-                  "content-type": "application/json",
-                },
-              });
-
-              if (optionsResponse.ok) {
-                const opts = await optionsResponse.json();
-
-                let attResp = await startAuthentication(opts);
-
-                let verificationResponse = await fetch(
-                  "/v1/auth/login-verification",
-                  {
-                    method: "POST",
-                    body: JSON.stringify(attResp),
-                    headers: {
-                      "content-type": "application/json",
-                      "x-authc-app-challenge": opts.challenge,
-                    },
-                  }
-                );
-                const reply = await verificationResponse.json();
-                const appOrigin = await verificationResponse.headers.get(
-                  "x-authc-app-origin"
-                );
-
-                window.localStorage.setItem(
-                  "ACCESS_TOKEN",
-                  reply.data.attributes.access_token
-                );
-                showError.value = false;
-                showError.value = false;
-                window.location.href = appOrigin;
-              } else {
-                showError.value = true;
-
-                errorTitle.value = "Error";
-                errorDetail.value =
-                  "There was an issue logging in, please try again";
-              }
-            } catch (e) {
-              console.log(e);
-              showError.value = true;
-
-              errorTitle.value = "Error";
-              errorDetail.value =
-                "There was an issue connecting, please try again";
-            }
-          };
-
           // expose to the html template
           return {
             showError,
             errorTitle,
             errorDetail,
             submit,
-            passkeySubmit,
             email,
             password,
             forgotPassword,

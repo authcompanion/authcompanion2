@@ -580,8 +580,8 @@
 
       createApp({
         setup() {
-          // Store the jwt token in a variable
-          const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJkOTdiZTIwOC02YTBmLTQ1YWMtYjJkNy0xZjgzNGY1MDNhOGEiLCJuYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsImlhdCI6MTY3ODU4NTA2MSwiZXhwIjoxNjc4NTg4NjYxfQ.kObACfUfMQnzVsLz624WtIvL7lD4s4DW6rLl8iMTCz8`;
+          // Get the user's jwt token from the local storage
+          const token = localStorage.getItem("ACCESS_TOKEN");
 
           //Toggle the edit panel and profile menu
           let showProfileMenu = ref(false);

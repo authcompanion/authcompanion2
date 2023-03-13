@@ -1,7 +1,6 @@
 import fastifyPlugin from "fastify-plugin";
 import config from "../../config.js";
 import { writeFileSync } from "fs";
-import { makeAccesstoken } from "../../utilities/jwt.js";
 import { randomUUID } from "crypto";
 import { hashPassword } from "../../utilities/credential.js";
 import * as crypto from "crypto";
@@ -52,13 +51,10 @@ const setupAdminKey = async function (fastify) {
       ""
     );
 
-    //make access token use to authenticate into the Admin API
-    const adminAccessToken = await makeAccesstoken(userObj, fastify.key);
-
-    //export access token to file
+    //export admin password to a file. Admin password is only exported once on server startup and can be traded for an access token
     writeFileSync(
       config.ADMINKEYPATH,
-      `access token: ${adminAccessToken.token}\nadmin password: ${adminPwd}`
+      `admin password: ${adminPwd}`
     );
 
     //register the admin user on the fastify instance

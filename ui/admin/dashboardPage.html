@@ -569,8 +569,72 @@
             </div>
           </Transition>
         </main>
+        <!-- Global notification live region, render this permanently at the end of the document -->
+        <div
+          aria-live="assertive"
+          class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6"
+        >
+          <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
+            <!--
+            Notification panel, dynamically insert this into the live region when it needs to be displayed
+      
+            Entering: "transform ease-out duration-300 transition"
+              From: "translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+              To: "translate-y-0 opacity-100 sm:translate-x-0"
+            Leaving: "transition ease-in duration-100"
+              From: "opacity-100"
+              To: "opacity-0"
+          -->
+            <Transition
+              un-cloak
+              enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+              enter-active-class="transform ease-out duration-300 transition"
+              enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+              leave-from-class="opacity-100"
+              leave-active-class="transition ease-in duration-100"
+              leave-to-class="opacity-0"
+            >
+              <div
+                v-if="showNotification"
+                class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+              >
+                <div class="p-4">
+                  <div class="flex items-center">
+                    <div class="flex w-0 flex-1 justify-between">
+                      <p class="w-0 flex-1 text-sm font-medium text-gray-900">
+                        {{ notificationMessage }}
+                      </p>
+                    </div>
+                    <div class="ml-2 flex flex-shrink-0">
+                      <button
+                        @click="showNotification = !showNotification"
+                        type="button"
+                        class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      >
+                        <span class="sr-only">Close</span>
+                        <!-- Heroicon name: mini/x-mark -->
+                        <svg
+                          class="h-5 w-5"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Transition>
+          </div>
+        </div>
       </div>
     </div>
+
     <!-- scripts -->
     <script type="module">
       import {
@@ -580,13 +644,33 @@
 
       createApp({
         setup() {
-          // Get the user's jwt token from the local storage
+          // Get the user's jwt token from the local storage and store it in a variable
           const token = localStorage.getItem("ACCESS_TOKEN");
 
           //Toggle the edit panel and profile menu
           let showProfileMenu = ref(false);
           let showEditPanel = ref(false);
           let showCreateMenu = ref(false);
+
+          // Toggle the notification
+          let showNotification = ref(false);
+
+          // Notification message
+          const notificationMessage = ref("");
+
+          // Function to accept a message and show the notification, then call the dismissNotification function
+          const showNotificationMessage = (message) => {
+            // call the fetchUsers function to refresh the table
+            fetchUsers();
+            // set the notification message to the message passed in the function
+            notificationMessage.value = message;
+            // set the showNotification to true
+            showNotification.value = true;
+            // set a timeout to dismiss the notification after 3 seconds
+            setTimeout(() => {
+              showNotification.value = false;
+            }, 3200);
+          };
 
           // Array of users to be displayed in the table
           const users = ref([]);
@@ -636,7 +720,6 @@
                 throw Error("Error occurs when loading data");
               }
               users.value = await data.json();
-              console.log(users);
             } catch (e) {
               console.log("Failed to load data");
             }
@@ -659,6 +742,14 @@
                   body: JSON.stringify(user),
                 }
               );
+              //if the response is not ok, throw an error
+              if (!data.ok) {
+                throw Error("Error occurs when updating user");
+              }
+              // Call the showNotificationMessage function to show the notification
+              showNotificationMessage("User updated successfully!");
+              // toggle the edit panel
+              showEditPanel.value = !showEditPanel.value;
             } catch (e) {
               console.log("Update User Failed");
               console.log(e);
@@ -683,8 +774,14 @@
                 // wrap the user object in a data object
                 body: JSON.stringify(user),
               });
-              // Call the fetchUsers function to refresh the table
-              fetchUsers();
+              //if the response is not ok, throw an error
+              if (!data.ok) {
+                throw Error("Error occurs when creating user");
+              }
+              // Call the showNotificationMessage function to show the notification
+              showNotificationMessage("User created successfully!");
+              // toggle the create panel
+              showCreateMenu.value = !showCreateMenu.value;
             } catch (e) {
               console.log("Update User Failed");
               console.log(e);
@@ -711,9 +808,8 @@
                 if (!data.ok) {
                   throw Error("Error occurs when deleting data");
                 }
-                console.log("User deleted successfully");
-                // Call the fetchUsers function to refresh the table
-                fetchUsers();
+                // Call the showNotificationMessage function to show the notification
+                showNotificationMessage("User deleted successfully!");
               } catch (e) {
                 console.log("Failed to delete data");
               }
@@ -734,6 +830,8 @@
             confirmPassword,
             createUserRecord,
             deleteUserRecord,
+            showNotification,
+            notificationMessage,
           };
         },
       }).mount("#app");

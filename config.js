@@ -10,7 +10,6 @@ const ADMINORIGIN =
 const DBPATH = process.env.DB_PATH || "./authcompanion_users.db";
 const KEYPATH = process.env.SERVER_KEY_PATH || "./serverkey";
 const ADMINKEYPATH = process.env.ADMIN_KEY_PATH || "./adminkey";
-const WEBMODE = process.env.WEB_MODE || "true";
 const RECOVERYURL =
   process.env.RECOVERY_REDIRECT_URL || "http://localhost:3002/v1/web/profile";
 const SMTPHOSTNAME = process.env.SMTP_HOSTNAME || "";
@@ -30,7 +29,6 @@ export default {
   SMTPPASSWORD,
   FROMADDRESS,
   RECOVERYURL,
-  WEBMODE,
   APPLICATIONORIGIN,
   ADMINORIGIN,
   DBPATH,

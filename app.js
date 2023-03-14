@@ -5,7 +5,6 @@ import webRoutes from "./routes/ui.routes.js";
 import sqlite3 from "./plugins/db/db.js";
 import serverkey from "./plugins/key/server.key.js";
 import adminkey from "./plugins/key/admin.key.js";
-import config from "./config.js";
 
 const buildApp = async function (opts) {
   const app = await Fastify(opts);
@@ -22,9 +21,8 @@ const buildApp = async function (opts) {
   //register the authentication api routes
   await app.register(authRoutes, { prefix: "/v1/auth" });
   //register the frontend routes used for the UI. This is optional
-  if (config.WEBMODE == "true") {
-    await app.register(webRoutes, { prefix: "/v1/web" });
-  }
+  await app.register(webRoutes, { prefix: "/v1/web" });
+
 
   //register a default route welcoming the user
   await app.register(async function defaultRoute(fastify, opts) {

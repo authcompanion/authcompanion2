@@ -34,6 +34,8 @@ Set both the `ORIGIN` and `APPLICATION_ORIGIN` (like below) to match your deploy
 
 The application_origin config tells AuthC where to redirect the user after they register or login with an account (right now it's set to the AuthC default homepage, but ultimately to your frontend application's home page). Secondly, the origin configuration tells AuthC how to set the authenticator for the 'passwordless' user flow. Both are important!
 
+Lastly, set the `ADMIN_ORIGIN` to the AuthC admin dashboard. This is where you'll be able to manage your users and their accounts.
+
 Next, set the internal_port to AuthC's default port of `3002`. See the highlighted sections below generated for the cold-glitter-1600 app (but your app name will be different).
 
 ```toml{12,16,24}
@@ -53,6 +55,7 @@ processes = []
   # redirect the user to your main application UI using
   # the supplied URL below.
   APPLICATION_ORIGIN="https://cold-glitter-1600.fly.dev/v1/web/home"
+  ADMIN_ORIGIN="http://demo.authcompanion.com/v1/admin/dashboard"
 
 [experimental]
   allowed_public_ports = []
@@ -150,6 +153,7 @@ Also update the [env] section of your `fly.toml` to persist the server key and d
   # redirect the user to your main application UI using
   # the supplied URL below.
   APPLICATION_ORIGIN="https://auth.example.com/v1/web/home"
+  ADMIN_ORIGIN="http://demo.authcompanion.com/v1/admin/dashboard"
   SERVER_KEY_PATH="/data/keyfile"
   DB_PATH="/data/authcompanion_users.db"
 ```

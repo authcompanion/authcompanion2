@@ -44,6 +44,7 @@ export default defineUserConfig({
             "/guide/configuration.md",
             "/guide/integrate.md",
             "/guide/launch.md",
+            "/guide/administer.md",
           ],
         },
         {

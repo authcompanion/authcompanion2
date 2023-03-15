@@ -4,9 +4,9 @@ The RESTful Admin API helps you to manage your Authcompanion Users for administr
 
 ## Admin Access Token (Bearer Token)
 
-All Admin API requests require a Bearer Token in the request's header. This token is generated when you start the AuthComanion server and is available as a file on the path set in the `ADMIN_KEY_PATH=./adminkey` config (via `.env.example`).
+All Admin API requests require a Bearer Token in the request's header. This token is generated when you call the `admin/login` endpoint (described below). The token is a JWT (JSON Web Token) that contains the user's ID, name, email, and scope. The scope is always `admin` for the admin user.
 
-The JWT itself has a expiration time of 1 hour. After that time, you will need to restart the AuthCompanion server to generate a new token - available in the same file.
+The JWT itself has a expiration time of 2 hours. After that time, you will need to generate a new token by calling the `admin/login` endpoint again.
 
 ## Server URL
 
@@ -15,6 +15,43 @@ http://localhost:3002/v1/
 Returns Content-Type: application/json
 
 ## Endpoints
+
+### admin/login
+
+Description: Trades the admin credentials for an admin access token used to access the Admin API. See more information about the admin credentials the administer section of the documentation at [Administer](./administer.md). Only Admin tokens can access the Admin API.
+
+**POST** Request Body:
+
+```json
+{
+  "data": {
+    "type": "users",
+    "attributes": {
+      "password": "9ae5a568ad70f6c3ee886d72baf1e5fcec3be630"
+    }
+  }
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "type": "users",
+    "id": "01f900ba-2c5e-4e0b-84e0-12355d731de4",
+    "attributes": {
+      "name": "Admin",
+      "email": "admin@localhost",
+      "created": "2023-03-12T17:33:48.636Z",
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiIwMWY5MDBiYS0yYzVlLTRlMGItODRlMC0xMjM1NWQ3MzFkZTQiLCJuYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsInNjb3BlIjoiYWRtaW4iLCJpYXQiOjE2Nzg2Nzc2NzksImV4cCI6MTY3ODY4NDg3OX0.d-vycADtZehogLeYSdrs0mQ_4YhHwNBuiAS7UaD1ozs",
+      "access_token_expiry": 1678684879
+    }
+  }
+}
+```
+
+---
 
 ### admin/users
 

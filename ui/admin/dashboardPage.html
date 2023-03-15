@@ -501,7 +501,7 @@
                                   <input
                                     type="password"
                                     class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
-                                    v-model="confirmPassword"
+                                    @input="event => confirmPassword = event.target.value"
                                   />
                                 </div>
                                 <!-- div containing the user's active status -->
@@ -658,6 +658,23 @@
           // Notification message
           const notificationMessage = ref("");
 
+          // Array of users to be displayed in the table
+          const users = ref([]);
+
+          // User record to be edited
+          let selectedUser = ref({});
+
+          // User record to be sent to the API and populated in the form
+          const userRecord = ref({
+            data: {
+              type: "users",
+              attributes: {},
+            },
+          });
+
+          //Variable to store the confrim password value
+          const confirmPassword = ref("");
+
           // Function to accept a message and show the notification, then call the dismissNotification function
           const showNotificationMessage = (message) => {
             // call the fetchUsers function to refresh the table
@@ -672,30 +689,13 @@
             }, 3200);
           };
 
-          // Array of users to be displayed in the table
-          const users = ref([]);
-
-          // User record to be edited
-          let selectedUser = ref({});
-
-          // User record to be sent to the API
-          const userRecord = ref({
-            data: {
-              type: "users",
-              attributes: {},
-            },
-          });
-
-          //Variable to store the confrim password value
-          const confirmPassword = ref("");
-
           //function to toggle the create panel when the create button is clicked
           const toggleCreatePanel = () => {
             showCreateMenu.value = true;
             showEditPanel.value = !showEditPanel.value;
           };
 
-          // Function to toggle the edit panel and populate the form with the user data when the edit button is clicked
+          // Function to toggle the edit panel and populate the form with the user data
           const toggleEditPanel = (user) => {
             //set the showCreateMenu to false
             showCreateMenu.value = false;

@@ -2,6 +2,7 @@ import buildApp from "../app.js";
 import test from "ava";
 import { unlink } from "node:fs/promises";
 import { parse } from "cookie";
+import { readFile } from "node:fs/promises";
 
 // There are two main ways you can use to test your application,
 // one is to test with a running server, which means that inside
@@ -20,7 +21,11 @@ test.before(async (t) => {
     //build app with the test database
     t.context.app = await buildApp({ testdb: "true" });
 
-    //create a user to test with, and save the uuid to the context
+    //read the adminkey file and parse, save the password to the context
+    const adminKey = await readFile("./adminkey", "utf8");
+    const adminPassword = adminKey.split(":")[1].trim();
+
+    //create a user to test auth api endpoints with, and save the uuid to the context
     const response = await t.context.app.inject({
       method: "POST",
       url: "/v1/auth/register",
@@ -43,6 +48,23 @@ test.before(async (t) => {
     t.context.uuid = response.json().data.id;
     //save the jwt to the context
     t.context.jwt = response.json().data.attributes.access_token;
+
+    //create a user to test admin api endpoints with, and save the uuid to the context
+    const response2 = await t.context.app.inject({
+      method: "POST",
+      url: "/v1/admin/login",
+      payload: {
+        data: {
+          type: "users",
+          attributes: {
+            password: adminPassword,
+          },
+        },
+      },
+    });
+    //save the response to the context
+    t.context.adminJWT = response2.json().data.attributes.access_token;
+    t.context.adminPass = adminPassword;
   } catch (error) {
     throw new Error("Failed to setup test");
   }
@@ -59,7 +81,7 @@ test.after.always("cleanup tests", async (t) => {
 
 // Start Tests
 
-test.serial("Auth Endpoint Test: /auth/refresh", async (t) => {
+test.serial("Auth Endpoint Test: GET /auth/refresh", async (t) => {
   try {
     const response = await t.context.app.inject({
       method: "GET",
@@ -75,7 +97,7 @@ test.serial("Auth Endpoint Test: /auth/refresh", async (t) => {
   }
 });
 
-test.serial("Auth Endpoint Test: /auth/register", async (t) => {
+test.serial("Auth Endpoint Test: POST /auth/register", async (t) => {
   try {
     const response = await t.context.app.inject({
       method: "POST",
@@ -97,7 +119,7 @@ test.serial("Auth Endpoint Test: /auth/register", async (t) => {
   }
 });
 
-test.serial("Auth Endpoint Test: /auth/login", async (t) => {
+test.serial("Auth Endpoint Test: POST /auth/login", async (t) => {
   try {
     const response = await t.context.app.inject({
       method: "POST",
@@ -119,7 +141,7 @@ test.serial("Auth Endpoint Test: /auth/login", async (t) => {
   }
 });
 
-test.serial("Auth Endpoint Test: /auth/users/me", async (t) => {
+test.serial("Auth Endpoint Test: POST /auth/users/me", async (t) => {
   try {
     const response = await t.context.app.inject({
       method: "POST",
@@ -146,13 +168,34 @@ test.serial("Auth Endpoint Test: /auth/users/me", async (t) => {
 
 test.serial.todo("API Endpoint Test: /auth/recovery");
 
+test.serial("Admin Endpoint Test: POST /admin/login", async (t) => {
+  try {
+    const response = await t.context.app.inject({
+      method: "POST",
+      url: `/v1/admin/login`,
+      payload: {
+        data: {
+          type: "users",
+          attributes: {
+            password: t.context.adminPass,
+          },
+        },
+      },
+    });
+
+    t.is(response.statusCode, 200, "API - Status Code Incorrect");
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 test.serial("Admin Endpoint Test: GET /admin/users", async (t) => {
   try {
     const response = await t.context.app.inject({
       method: "GET",
       url: "/v1/admin/users",
       headers: {
-        Authorization: `Bearer ${t.context.jwt}`,
+        Authorization: `Bearer ${t.context.adminJWT}`,
       },
     });
     t.is(response.statusCode, 200, "API - Status Code Incorrect");
@@ -171,13 +214,14 @@ test.serial("Admin Endpoint Test: POST /admin/users", async (t) => {
           type: "users",
           attributes: {
             name: "Test User",
-            email: "mytestuser@authcompanion.com",
+            email: "mytestuser1@authcompanion.com",
             password: "supersecret",
+            active: 1,
           },
         },
       },
       headers: {
-        Authorization: `Bearer ${t.context.jwt}`,
+        Authorization: `Bearer ${t.context.adminJWT}`,
       },
     });
     t.is(response.statusCode, 201, "API - Status Code Incorrect");
@@ -203,7 +247,7 @@ test.serial("Admin Endpoint Test: PATCH /admin/users/:uuid", async (t) => {
         },
       },
       headers: {
-        Authorization: `Bearer ${t.context.jwt}`,
+        Authorization: `Bearer ${t.context.adminJWT}`,
       },
     });
     t.is(response.statusCode, 200, "API - Status Code Incorrect");
@@ -218,7 +262,7 @@ test.serial("Admin Endpoint Test: DELETE /admin/users/:uuid", async (t) => {
       method: "DELETE",
       url: `/v1/admin/users/${t.context.uuid}`,
       headers: {
-        Authorization: `Bearer ${t.context.jwt}`,
+        Authorization: `Bearer ${t.context.adminJWT}`,
       },
     });
     t.is(response.statusCode, 204, "API - Status Code Incorrect");

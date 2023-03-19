@@ -21,9 +21,7 @@ const setupAdminKey = async function (fastify) {
     if (adminUser) {
       //register the admin user on the fastify instance
       fastify.decorate("registeredAdminUser", adminUser);
-
       console.log("Admin API key - READY");
-
       return;
     }
 
@@ -52,10 +50,7 @@ const setupAdminKey = async function (fastify) {
     );
 
     //export admin password to a file. Admin password is only exported once on server startup and can be traded for an access token
-    writeFileSync(
-      config.ADMINKEYPATH,
-      `admin password: ${adminPwd}`
-    );
+    writeFileSync(config.ADMINKEYPATH, `admin password: ${adminPwd}`);
 
     //register the admin user on the fastify instance
     fastify.decorate("registeredAdminUser", user);

@@ -13,6 +13,8 @@ import { updateSchema } from "../services/admin/users/schema/updateSchema.js";
 import { loginHandler } from "../services/admin/users/login.js";
 import { loginSchema } from "../services/admin/users/schema/loginSchema.js";
 
+import { logoutHandler } from "../services/admin/users/logout.js";
+
 import {
   authenticateAdminRequest,
   authenticateWebAdminRequest,
@@ -41,6 +43,11 @@ const adminRoutes = async function (fastify, options) {
     updateUserHandler
   );
   fastify.post("/login", loginSchema, loginHandler);
+  fastify.get(
+    "/logout",
+    { onRequest: [authenticateAdminRequest] },
+    logoutHandler
+  );
 
   //admin web user interface routes
   fastify.get(

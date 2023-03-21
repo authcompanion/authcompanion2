@@ -567,7 +567,7 @@
         <!-- Global notification live region, render this permanently at the end of the document -->
         <div
           aria-live="assertive"
-          class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6"
+          class="z-10 pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6"
         >
           <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
             <!--
@@ -671,8 +671,6 @@
 
           // Function to accept a message and show the notification, then call the dismissNotification function
           const showNotificationMessage = (message) => {
-            // call the fetchUsers function to refresh the table
-            fetchUsers();
             // set the notification message to the message passed in the function
             notificationMessage.value = message;
             // set the showNotification to true
@@ -681,6 +679,8 @@
             setTimeout(() => {
               showNotification.value = false;
             }, 3200);
+            // call the fetchUsers function to refresh the table
+            fetchUsers();
           };
 
           //function to toggle the create panel when the create button is clicked
@@ -701,15 +701,20 @@
 
           // Function to logout the user, remove the token from cookies and redirect to the login page
           const logout = () => {
-            // GET request to our logout endpoint /v1/admin/logout
             try {
-              let logout = fetch(`/v1/admin/logout`, {
+              // GET request to our logout endpoint /v1/admin/logout
+              let response = fetch(`/v1/admin/logout`, {
                 method: "GET",
                 headers: {
                   "Content-type": "application/json",
                   Authorization: `Bearer ${token}`,
                 },
               });
+              // if the response is not ok, throw an error
+              if (!response.ok) {
+                showNotificationMessage("Error: " + response.message);
+                return;
+              }
               // remove the token from the local storage
               localStorage.removeItem("ACCESS_TOKEN");
               window.location.href = "/v1/admin/login";
@@ -722,20 +727,23 @@
           // Fetch users from the API and store them in the users array
           const fetchUsers = async () => {
             try {
-              let data = await fetch("/v1/admin/users", {
+              // GET request to our users endpoint /v1/admin/users
+              let response = await fetch("/v1/admin/users", {
                 method: "GET",
                 headers: {
                   "Content-type": "application/json",
                   Authorization: `Bearer ${token}`,
                 },
               });
-
-              if (!data.ok) {
-                throw Error("Error occurs when loading data");
+              //if the response is not ok, throw an error
+              if (!response.ok) {
+                showNotificationMessage("Error: " + response.message);
+                return;
               }
               users.value = await data.json();
             } catch (e) {
               console.log("Failed to load data");
+              console.log(e);
             }
           };
           // Call the fetchUsers function on page load
@@ -744,7 +752,7 @@
           //Update the user record from the form data in the edit panel
           const updateUserRecord = async (userID, user) => {
             try {
-              let data = await fetch(`/v1/admin/users/${userID}`, {
+              let response = await fetch(`/v1/admin/users/${userID}`, {
                 method: "PATCH",
                 headers: {
                   "Content-type": "application/json",
@@ -754,8 +762,9 @@
                 body: JSON.stringify(user),
               });
               //if the response is not ok, throw an error
-              if (!data.ok) {
-                throw Error("Error occurs when updating user");
+              if (!response.ok) {
+                showNotificationMessage("Error: " + response.message);
+                return;
               }
               // Call the showNotificationMessage function to show the notification
               showNotificationMessage("User updated successfully!");
@@ -769,13 +778,15 @@
 
           //Create the user records from the from data in the create panel
           const createUserRecord = async (user) => {
-            //if the password and confirm password are not the same, return an error
-            if (user.data.attributes.password !== confirmPassword.value) {
-              console.log("Password and confirm password do not match");
-            }
-
             try {
-              let data = await fetch(`/v1/admin/users`, {
+              //if the password and confirm password are not the same, return an error
+              if (user.data.attributes.password !== confirmPassword.value) {
+                showNotificationMessage("Passwords do not match, try again!");
+                return;
+              }
+
+              // POST request to the /v1/admin/users endpoint
+              let response = await fetch(`/v1/admin/users`, {
                 method: "POST",
                 headers: {
                   "Content-type": "application/json",
@@ -784,16 +795,24 @@
                 // wrap the user object in a data object
                 body: JSON.stringify(user),
               });
+              const data = await response.json();
               //if the response is not ok, throw an error
-              if (!data.ok) {
-                throw Error("Error occurs when creating user");
+              if (!response.ok) {
+                showNotificationMessage("Error: " + data.message);
+                return;
               }
+              // Toggle the create panel and reset the form
+              showCreateMenu.value = !showCreateMenu.value;
+              userRecord.value = {
+                data: {
+                  type: "users",
+                  attributes: {},
+                },
+              };
               // Call the showNotificationMessage function to show the notification
               showNotificationMessage("User created successfully!");
-              // toggle the create panel
-              showCreateMenu.value = !showCreateMenu.value;
             } catch (e) {
-              console.log("Update User Failed");
+              console.log("Create User Failed");
               console.log(e);
             }
           };
@@ -804,7 +823,7 @@
             if (window.confirm("Are you sure you want to delete this user?")) {
               // Call the deleteUser function to delete the user
               try {
-                let data = await fetch(`/v1/admin/users/${userID}`, {
+                let response = await fetch(`/v1/admin/users/${userID}`, {
                   method: "DELETE",
                   headers: {
                     "Content-type": "application/json",
@@ -812,13 +831,15 @@
                   },
                 });
 
-                if (!data.ok) {
-                  throw Error("Error occurs when deleting data");
+                if (!response.ok) {
+                  showNotificationMessage("Error occured when deleting user");
+                  return;
                 }
                 // Call the showNotificationMessage function to show the notification
                 showNotificationMessage("User deleted successfully!");
               } catch (e) {
                 console.log("Failed to delete data");
+                console.log(e);
               }
             }
           };

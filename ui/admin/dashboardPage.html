@@ -740,7 +740,7 @@
                 showNotificationMessage("Error: " + response.message);
                 return;
               }
-              users.value = await data.json();
+              users.value = await response.json();
             } catch (e) {
               console.log("Failed to load data");
               console.log(e);

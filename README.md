@@ -38,7 +38,7 @@ With AuthC you can:
 
 - Securely handle the registration, login, logout, and account recovery of user accounts.
 - Generate and verify [JWTs](https://jwt.io/introduction), a token used for your user's session and authenticating them into your web application's backend APIs.
-- Confidently store and own your web application's user accounts
+- Manage Users via a self-service Dashboard and confidently store and own your web application's user accounts
 - Help users create accounts and login with a passkey on their mobile device (aka passwordless) or by using traditional username/passwords instead
 
 ## Try it
@@ -86,11 +86,13 @@ $ docker run --name authcompanion \
 authc_server
 ```
 
-When ready, read the [Launch Guide](https://docs.authcompanion.com/guide/launch.html) for more information on setting up AuthC in production environments.
+### Configure AuthCompanion
 
-### Configurations
+If you're just trying AuthC out for the first time, the default configuration will work. See the [Configuration Guide](https://docs.authcompanion.com/guide/configuration.html) for a closer look at how to configure the server for other environments.
 
-If you're just trying AuthC out for the first time, the default configuration will work so you can poke around. See the [Configuration Guide](https://docs.authcompanion.com/guide/configuration.html) for a closer look at how to configure the server.
+### Launch
+
+When ready, read the [Launch Guide](https://docs.authcompanion.com/guide/launch.html) for more information on setting up AuthC in production.
 
 ---
 
@@ -100,10 +102,9 @@ If you're just trying AuthC out for the first time, the default configuration wi
       forms for your application users to: log in with their credentials,
       register an account, update their profile, and issue forgotten passwords.
 
-- [x] **Manage User Profiles and JWTs:** Update the password and profile
-      information of your users - all account information is stored in a SQLite
-      database. Easily manage the life-cycle of your user's JWT used for
-      authentication.
+- [x] **Admin Dashboard for Managing User Profiles:** Modify the profile
+      information of your users via a self-service dashboard - all account information is stored in a SQLite
+      database.
 
 - [x] **User Account Recovery:** Restore a user's access to their account using
       the **Forgot Password** flow which sends a special link via email for
@@ -127,11 +128,22 @@ changes to the Web Form's look and feel.
 |             Login Screen             |            Registration Screen             |
 | :----------------------------------: | :----------------------------------------: |
 | ![Login](./.github/public/login.png) | ![Register](./.github/public/register.png) |
-|  http://localhost:3002/v1/web/login  |   http://localhost:3002/v1/web/register    |
 
 After a user authenticates with AuthC's web forms, we pass them to your web application.
 
 For a full list of AuthC's Web Forms, see the [Web Form Guide](https://docs.authcompanion.com/guide/webforms.html).
+
+---
+
+## Admin Dashboard
+
+The Admin Dashboard is a tool that allows administrators or web application owners to manage the users of their web application.
+
+It provides a range of functions that administrators can use to create, edit, and delete user accounts via a friendly and intuitive interface.
+
+![Login](./.github/public/admin_dashboard.png)
+
+Check out the Admin Dashboard in the documentation here: [Administer](https://docs.authcompanion.com/guide/administer.html)
 
 ---
 
@@ -155,17 +167,29 @@ Next, log in with the account you just created using your email and password at
 this web form: http://localhost:3002/v1/web/login. The server response includes
 an access token for use when authenticating to backend APIs and redirects the user to your application's home page.
 
+### 3. Login as the Administrator
+
+Log into the Admin Dashboard using the credentials found via the [Administer Guide](https://docs.authcompanion.com/guide/administer.html) and update the user's profile you created in the previous step by changing their email (or similar field).
+
 ### 3. Read the Integration Guide
 
 Have a look through the [Integration Guide](https://docs.authcompanion.com/guide/integrate.html) to understand how your frontend applications and backend web services interact with AuthC.
 
 ---
 
-## Authentication API Docs
+## API Docs
 
-The RESTful Authentication API powers the Web Forms by which users authenticate into your web app. It's important to note that the web forms alone doesn't cover every auth flow for your users. For example: validating the magic URL in the forgot password flow or refreshing an expired access token would require interacting with AuthC's APIs.
+### Authentication API
 
-Using both the Auth API and Web Forms you can easily integrate and cover your auth use cases. For more information about the Authentication API check out the docs here: [https://docs.authcompanion.com/guide/authapi.html](https://docs.authcompanion.com/guide/authapi.html)
+The RESTful Authentication API powers the Web Forms by which users authenticate into your web app. It's important to note that the web forms alone doesn't cover every authentication flow for your users. For example: refreshing an expired access token would require interacting with AuthC's APIs in addition to using the Web Froms.
+
+For more information about the Authentication API check out the docs here: [Auth API](https://docs.authcompanion.com/guide/authapi.html)
+
+### Admin API
+
+The Admin API helps an administrator to manage the users of their web application. It provides a range of functions through which administrators can programatially create, edit, and delete user accounts. The Admin API is also natively used by the Admin Dashboard.
+
+For more information about the Admin API check out the docs here: [Admin API](https://docs.authcompanion.com/guide/adminapi.html)
 
 ---
 

@@ -1,4 +1,4 @@
-export const createSchema = {
+export const loginSchema = {
   schema: {
     body: {
       type: "object",
@@ -9,12 +9,9 @@ export const createSchema = {
             attributes: {
               type: "object",
               properties: {
-                name: { type: "string" },
-                email: { type: "string" },
                 password: { type: "string" },
-                active: { type: "string" },
               },
-              required: ["name", "email", "password", "active"],
+              required: ["password"],
             },
           },
           required: ["type", "attributes"],

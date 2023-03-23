@@ -17,7 +17,7 @@ import { registrationVerificationHandler } from "../services/webAuthn/registrati
 import { loginOptionsHandler } from "../services/webAuthn/loginOptions.js";
 import { loginVerificationHandler } from "../services/webAuthn/loginVerification.js";
 
-import { authenticateRequest } from "../utilities/authenticate.js";
+import { authenticateAuthRequest } from "../utilities/authenticate.js";
 
 const authRoutes = async function (fastify, options) {
   //authentication API routes
@@ -25,7 +25,7 @@ const authRoutes = async function (fastify, options) {
   fastify.post("/login", loginSchema, loginHandler);
   fastify.post(
     "/users/me",
-    { onRequest: [authenticateRequest], ...userProfileSchema },
+    { onRequest: [authenticateAuthRequest], ...userProfileSchema },
     userProfileHandler
   );
   fastify.post("/recovery", profileRecoverySchema, profileRecoveryHandler);

@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en" un-cloak>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@unocss/reset/tailwind.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/uno.global.js"></script>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <style>
+      html {
+        font-family: "Inter var", sans-serif;
+      }
+      [un-cloak] {
+        display: none;
+      }
+    </style>
+    <!-- <script>
+      // pass unocss options
+      window.__unocss = {
+        rules: [
+          // custom rules...
+        ],
+        presets: [
+          // custom presets...
+        ],
+        // ...
+      } 
+      </script>-->
+    <title>Admin</title>
+  </head>
+
+  <body class="">
+    <div id="app" class="">
+      <div class="min-h-full">
+        <nav class="bg-gray-800">
+          <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1"
+                    stroke="currentColor"
+                    class="text-white w-9 h-9"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25"
+                    />
+                  </svg>
+                </div>
+                <div class="hidden md:block">
+                  <div class="flex items-baseline ml-8 space-x-4">
+                    <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+                    <a
+                      href="#"
+                      class="px-3 py-2 text-base font-medium text-white rounded-md hover:text-gray-400"
+                      aria-current="page"
+                      >Home</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="hidden md:block">
+                <div class="flex items-center ml-4 md:ml-6">
+                  <button
+                    type="button"
+                    class="p-1 text-gray-400 bg-gray-800 rounded-full hover:text-white"
+                  >
+                    <span class="sr-only">View notifications</span>
+                    <!-- Heroicon name: outline/bell -->
+                    <svg
+                      class="w-6 h-6"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                      />
+                    </svg>
+                  </button>
+
+                  <!-- Profile dropdown -->
+                  <div class="flex flex-row ml-3 items-center">
+                    <a
+                      href="#"
+                      class="px-1 py-2 text-base font-medium text-white rounded-md hover:text-gray-400"
+                      aria-current="page"
+                      @click="logout()"
+                      >Logout</a
+                    >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="2"
+                      stroke="currentColor"
+                      class="w-4 h-4 text-gray-400"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                      />
+                    </svg>
+
+                    <!-- <Transition
+                      un-cloak
+                      enter-from-class="transform scale-95 opacity-0"
+                      enter-active-class="transition duration-100 ease-out"
+                      enter-to-class="transform scale-100 opacity-100"
+                      leave-from-class="transform scale-100 opacity-100"
+                      leave-active-class="transition duration-75 ease-in"
+                      leave-to-class="transform scale-95 opacity-0"
+                    >
+                      <div
+                        v-if="showProfileMenu"
+                        class="absolute right-0 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        role="menu"
+                        aria-orientation="vertical"
+                        aria-labelledby="user-menu-button"
+                        tabindex="-1"
+                      >
+                        <a
+                          href="/v1/admin/profile"
+                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          role="menuitem"
+                          tabindex="-1"
+                          id="user-menu-item-0"
+                          >Your Profile</a
+                        >
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          role="menuitem"
+                          tabindex="-1"
+                          id="user-menu-item-2"
+                          >Sign out</a
+                        >
+                      </div>
+                    </Transition> -->
+                  </div>
+                </div>
+              </div>
+              <div class="flex -mr-2 md:hidden">
+                <!-- Mobile menu button -->
+                <button
+                  type="button"
+                  class="inline-flex items-center justify-center p-2 text-gray-400 bg-gray-800 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                  aria-controls="mobile-menu"
+                  aria-expanded="false"
+                >
+                  <span class="sr-only">Open main menu</span>
+                  <!--
+                    Heroicon name: outline/menu
+      
+                    Menu open: "hidden", Menu closed: "block"
+                  -->
+                  <svg
+                    class="block w-6 h-6"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  </svg>
+                  <!--
+                    Heroicon name: outline/x
+      
+                    Menu open: "block", Menu closed: "hidden"
+                  -->
+                  <svg
+                    class="hidden w-6 h-6"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mobile menu, show/hide based on menu state. -->
+        </nav>
+
+        <header class="bg-white shadow-sm">
+          <div
+            class="flex flex-row px-4 py-4 mx-auto max-w-7xl sm:px-6 lg:px-8"
+          >
+            <h1 class="mt-2 text-lg font-semibold leading-6 text-gray-900 grow">
+              User Administration
+            </h1>
+            <button
+              class="inline-flex items-center px-4 py-2 font-bold text-gray-800 bg-gray-300 rounded hover:bg-gray-400"
+              @click="toggleCreatePanel()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+
+              <span>Create</span>
+            </button>
+          </div>
+        </header>
+
+        <main>
+          <div class="py-6 mx-auto max-w-fit sm:px-6 lg:px-8">
+            <!-- Replace with your content -->
+
+            <div class="flex flex-col">
+              <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div
+                  class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8"
+                >
+                  <div
+                    class="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg"
+                  >
+                    <table class="min-w-full divide-y divide-gray-200">
+                      <thead class="bg-gray-50">
+                        <tr>
+                          <th
+                            scope="col"
+                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+                          >
+                            ID
+                          </th>
+                          <th
+                            scope="col"
+                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+                          >
+                            Name
+                          </th>
+                          <th
+                            scope="col"
+                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+                          >
+                            Email
+                          </th>
+                          <th
+                            scope="col"
+                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+                          >
+                            Active
+                          </th>
+                          <th
+                            scope="col"
+                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+                          >
+                            Created At
+                          </th>
+                          <th
+                            scope="col"
+                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+                          >
+                            Updated At
+                          </th>
+                          <th
+                            scope="col"
+                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+                          >
+                            Action
+                          </th>
+
+                          <th scope="col" class="relative px-6 py-3">
+                            <span class="sr-only">Edit</span>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          v-for="(user, index) in users.data"
+                          :class="index % 2 ? 'bg-gray-50' : 'bg-white'"
+                        >
+                          <td
+                            class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap"
+                          >
+                            {{ user.id }}
+                          </td>
+                          <td
+                            class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
+                          >
+                            {{ user.attributes.name }}
+                          </td>
+                          <td
+                            class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
+                          >
+                            {{ user.attributes.email }}
+                          </td>
+                          <td
+                            class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
+                          >
+                            <span
+                              class="inline-flex items-center rounded-full bg-green-100 px-3 py-0.5 text-sm font-medium text-green-800"
+                            >
+                              {{ user.attributes.active }}
+                            </span>
+                          </td>
+                          <td
+                            class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
+                          >
+                            {{ user.attributes.created }}
+                          </td>
+                          <td
+                            class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
+                          >
+                            {{ user.attributes.updated }}
+                          </td>
+                          <td
+                            class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap"
+                          >
+                            <a
+                              href="#"
+                              class="underline text-sky-800 hover:text-sky-900"
+                              @click="toggleEditPanel(user)"
+                              >Edit</a
+                            >
+                            <a
+                              href="#"
+                              class="underline text-sky-800 hover:text-sky-900 ml-2"
+                              @click="deleteUserRecord(user.id)"
+                              >Delete</a
+                            >
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /End replace -->
+          <!-- Start of Modify Entry Slide-in -->
+          <Transition
+            un-cloak
+            enter-from-class="opacity-0"
+            enter-active-class="duration-100 ease-in-out"
+            enter-to-class="opacity-100"
+            leave-from-class="opacity-100"
+            leave-active-class="duration-200 ease-in-out"
+            leave-to-class="opacity-0"
+          >
+            <div
+              class="relative z-10"
+              aria-labelledby="slide-over-title"
+              role="dialog"
+              aria-modal="true"
+              v-if="showEditPanel"
+            >
+              <!-- Background backdrop, show/hide based on slide-over state. -->
+              <div
+                class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+              ></div>
+              <div class="fixed inset-0 overflow-hidden">
+                <div class="absolute inset-0 overflow-hidden">
+                  <div
+                    class="fixed inset-y-0 right-0 flex max-w-full pl-10 pointer-events-none"
+                  >
+                    <div class="w-screen max-w-md pointer-events-auto">
+                      <div
+                        class="flex flex-col h-full bg-white divide-y divide-gray-200 shadow-xl"
+                      >
+                        <div
+                          class="flex flex-col flex-1 min-h-0 py-6 overflow-y-scroll"
+                        >
+                          <div class="px-4 sm:px-6">
+                            <div class="flex items-start justify-between">
+                              <h2
+                                class="text-lg font-medium text-gray-900"
+                                id="slide-over-title"
+                              >
+                                Account Details
+                              </h2>
+                              <div class="flex items-center ml-3 h-7">
+                                <button
+                                  @click="showEditPanel = !showEditPanel"
+                                  type="button"
+                                  class="text-gray-400 bg-white rounded-md hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-grey-500"
+                                >
+                                  <span class="sr-only">Close panel</span>
+                                  <!-- Heroicon name: outline/x-mark -->
+                                  <svg
+                                    class="w-6 h-6"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="1.5"
+                                    stroke="currentColor"
+                                    aria-hidden="true"
+                                  >
+                                    <path
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      d="M6 18L18 6M6 6l12 12"
+                                    />
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="relative flex-1 px-4 mt-6 sm:px-6">
+                            <!-- Replace with your content -->
+                            <div class="h-full" aria-hidden="true">
+                              <form>
+                                <!-- div containing the user's id -->
+                                <div v-if="!showCreateMenu" class="mt-3">
+                                  <span class="font-medium text-gray-700"
+                                    >ID</span
+                                  >
+                                  <input
+                                    disabled
+                                    type="text"
+                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none focus:bg-white"
+                                    :value="selectedUser.id"
+                                  />
+                                </div>
+                                <!-- div containing the user's name -->
+                                <div class="mt-3">
+                                  <span class="font-medium text-gray-700"
+                                    >Name</span
+                                  >
+                                  <input
+                                    type="text"
+                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
+                                    :value="showCreateMenu ? '' : selectedUser.attributes.name"
+                                    @input="event => userRecord.data.attributes.name = event.target.value"
+                                  />
+                                </div>
+                                <!-- div containing the user's email -->
+                                <div class="mt-3">
+                                  <span class="font-medium text-gray-700"
+                                    >Email</span
+                                  >
+                                  <input
+                                    type="email"
+                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
+                                    :value="showCreateMenu ? '' : selectedUser.attributes.email"
+                                    @input="event => userRecord.data.attributes.email = event.target.value"
+                                  />
+                                </div>
+                                <!-- div containing the user's password -->
+                                <div class="mt-3">
+                                  <span class="font-medium text-gray-700"
+                                    >New Password</span
+                                  >
+                                  <input
+                                    type="password"
+                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
+                                    @input="event => userRecord.data.attributes.password = event.target.value"
+                                  />
+                                </div>
+                                <!-- div containing the user's password -->
+                                <div v-if="showCreateMenu" class="mt-3">
+                                  <span class="font-medium text-gray-700"
+                                    >Confirm Password</span
+                                  >
+                                  <input
+                                    type="password"
+                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
+                                    @input="event => confirmPassword = event.target.value"
+                                  />
+                                </div>
+                                <!-- div containing the user's active status -->
+                                <div class="mt-3">
+                                  <span class="font-medium text-gray-700"
+                                    >Active</span
+                                  >
+                                  <input
+                                    type="number"
+                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
+                                    :value="showCreateMenu ? '' : selectedUser.attributes.active"
+                                    @input="event => userRecord.data.attributes.active = event.target.value"
+                                  />
+                                </div>
+                                <!-- div containing the user's created date -->
+                                <div v-if="!showCreateMenu" class="mt-3">
+                                  <span class="font-medium text-gray-700"
+                                    >Created At</span
+                                  >
+                                  <input
+                                    disabled
+                                    type="text"
+                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none focus:bg-white"
+                                    :value="showCreateMenu ? '' : selectedUser.attributes.created"
+                                  />
+                                </div>
+                                <!-- div containing the user's updated at date -->
+                                <div v-if="!showCreateMenu" class="mt-3">
+                                  <span class="font-medium text-gray-700"
+                                    >Updated At</span
+                                  >
+                                  <input
+                                    disabled
+                                    type="text"
+                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none focus:bg-white"
+                                    :value="showCreateMenu ? '' : selectedUser.attributes.updated"
+                                  />
+                                </div>
+                              </form>
+                            </div>
+                            <!-- /End replace -->
+                          </div>
+                        </div>
+                        <div class="flex justify-end flex-shrink-0 px-4 py-4">
+                          <button
+                            @click="showEditPanel = !showEditPanel"
+                            type="button"
+                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-grey-500 focus:ring-offset-2"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="button"
+                            class="inline-flex justify-center px-4 py-2 ml-4 text-sm font-medium text-gray-700 border border-gray-300 rounded-md shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-grey-500 hover:text-white focus:ring-offset-2"
+                            @click="showCreateMenu ? createUserRecord(userRecord) : updateUserRecord(selectedUser.id, userRecord)"
+                          >
+                            Save
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Transition>
+        </main>
+        <!-- Global notification live region, render this permanently at the end of the document -->
+        <div
+          aria-live="assertive"
+          class="z-10 pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6"
+        >
+          <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
+            <!--
+            Notification panel, dynamically insert this into the live region when it needs to be displayed
+      
+            Entering: "transform ease-out duration-300 transition"
+              From: "translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+              To: "translate-y-0 opacity-100 sm:translate-x-0"
+            Leaving: "transition ease-in duration-100"
+              From: "opacity-100"
+              To: "opacity-0"
+          -->
+            <Transition
+              un-cloak
+              enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+              enter-active-class="transform ease-out duration-300 transition"
+              enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+              leave-from-class="opacity-100"
+              leave-active-class="transition ease-in duration-100"
+              leave-to-class="opacity-0"
+            >
+              <div
+                v-if="showNotification"
+                class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+              >
+                <div class="p-4">
+                  <div class="flex items-center">
+                    <div class="flex w-0 flex-1 justify-between">
+                      <p class="w-0 flex-1 text-sm font-medium text-gray-900">
+                        {{ notificationMessage }}
+                      </p>
+                    </div>
+                    <div class="ml-2 flex flex-shrink-0">
+                      <button
+                        @click="showNotification = !showNotification"
+                        type="button"
+                        class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      >
+                        <span class="sr-only">Close</span>
+                        <!-- Heroicon name: mini/x-mark -->
+                        <svg
+                          class="h-5 w-5"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Transition>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- scripts -->
+    <script type="module">
+      import {
+        createApp,
+        ref,
+      } from "https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.prod.js";
+
+      createApp({
+        setup() {
+          // Get the user's jwt token from the local storage and store it in a variable
+          const token = localStorage.getItem("ACCESS_TOKEN");
+
+          //Toggle the edit panel and profile menu
+          let showEditPanel = ref(false);
+          let showCreateMenu = ref(false);
+
+          // Toggle the notification
+          let showNotification = ref(false);
+
+          // Notification message
+          const notificationMessage = ref("");
+
+          // Array of users to be displayed in the table
+          const users = ref([]);
+
+          // User record to be edited
+          let selectedUser = ref({});
+
+          // User record to be sent to the API and populated in the form
+          const userRecord = ref({
+            data: {
+              type: "users",
+              attributes: {},
+            },
+          });
+
+          //Variable to store the confrim password value
+          const confirmPassword = ref("");
+
+          // Function to accept a message and show the notification, then call the dismissNotification function
+          const showNotificationMessage = (message) => {
+            // set the notification message to the message passed in the function
+            notificationMessage.value = message;
+            // set the showNotification to true
+            showNotification.value = true;
+            // set a timeout to dismiss the notification after 3 seconds
+            setTimeout(() => {
+              showNotification.value = false;
+            }, 3200);
+            // call the fetchUsers function to refresh the table
+            fetchUsers();
+          };
+
+          //function to toggle the create panel when the create button is clicked
+          const toggleCreatePanel = () => {
+            showCreateMenu.value = true;
+            showEditPanel.value = !showEditPanel.value;
+          };
+
+          // Function to toggle the edit panel and populate the form with the user data
+          const toggleEditPanel = (user) => {
+            //set the showCreateMenu to false
+            showCreateMenu.value = false;
+            // set the selected user to the user passed in the function
+            selectedUser.value = user;
+            // toggle the edit panel
+            showEditPanel.value = !showEditPanel.value;
+          };
+
+          // Function to logout the user, remove the token from cookies and redirect to the login page
+          const logout = () => {
+            try {
+              // GET request to our logout endpoint /v1/admin/logout
+              let response = fetch(`/v1/admin/logout`, {
+                method: "GET",
+                headers: {
+                  "Content-type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+              // if the response is not ok, throw an error
+              if (!response.ok) {
+                showNotificationMessage("Error: " + response.message);
+                return;
+              }
+              // remove the token from the local storage
+              localStorage.removeItem("ACCESS_TOKEN");
+              window.location.href = "/v1/admin/login";
+            } catch (e) {
+              console.log("Logout User Failed");
+              console.log(e);
+            }
+          };
+
+          // Fetch users from the API and store them in the users array
+          const fetchUsers = async () => {
+            try {
+              // GET request to our users endpoint /v1/admin/users
+              let response = await fetch("/v1/admin/users", {
+                method: "GET",
+                headers: {
+                  "Content-type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+              //if the response is not ok, throw an error
+              if (!response.ok) {
+                showNotificationMessage("Error: " + response.message);
+                return;
+              }
+              users.value = await response.json();
+            } catch (e) {
+              console.log("Failed to load data");
+              console.log(e);
+            }
+          };
+          // Call the fetchUsers function on page load
+          fetchUsers();
+
+          //Update the user record from the form data in the edit panel
+          const updateUserRecord = async (userID, user) => {
+            try {
+              let response = await fetch(`/v1/admin/users/${userID}`, {
+                method: "PATCH",
+                headers: {
+                  "Content-type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                // wrap the user object in a data object
+                body: JSON.stringify(user),
+              });
+              //if the response is not ok, throw an error
+              if (!response.ok) {
+                showNotificationMessage("Error: " + response.message);
+                return;
+              }
+              // Call the showNotificationMessage function to show the notification
+              showNotificationMessage("User updated successfully!");
+              // toggle the edit panel
+              showEditPanel.value = !showEditPanel.value;
+            } catch (e) {
+              console.log("Update User Failed");
+              console.log(e);
+            }
+          };
+
+          //Create the user records from the from data in the create panel
+          const createUserRecord = async (user) => {
+            try {
+              //if the password and confirm password are not the same, return an error
+              if (user.data.attributes.password !== confirmPassword.value) {
+                showNotificationMessage("Passwords do not match, try again!");
+                return;
+              }
+
+              // POST request to the /v1/admin/users endpoint
+              let response = await fetch(`/v1/admin/users`, {
+                method: "POST",
+                headers: {
+                  "Content-type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                // wrap the user object in a data object
+                body: JSON.stringify(user),
+              });
+              const data = await response.json();
+              //if the response is not ok, throw an error
+              if (!response.ok) {
+                showNotificationMessage("Error: " + data.message);
+                return;
+              }
+              // Toggle the create panel and reset the form
+              showCreateMenu.value = !showCreateMenu.value;
+              userRecord.value = {
+                data: {
+                  type: "users",
+                  attributes: {},
+                },
+              };
+              // Call the showNotificationMessage function to show the notification
+              showNotificationMessage("User created successfully!");
+            } catch (e) {
+              console.log("Create User Failed");
+              console.log(e);
+            }
+          };
+
+          // Function to delete a user record when the delete button is clicked
+          const deleteUserRecord = async (userID) => {
+            // alert the user to confirm the deletion using window.confirm
+            if (window.confirm("Are you sure you want to delete this user?")) {
+              // Call the deleteUser function to delete the user
+              try {
+                let response = await fetch(`/v1/admin/users/${userID}`, {
+                  method: "DELETE",
+                  headers: {
+                    "Content-type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                  },
+                });
+
+                if (!response.ok) {
+                  showNotificationMessage("Error occured when deleting user");
+                  return;
+                }
+                // Call the showNotificationMessage function to show the notification
+                showNotificationMessage("User deleted successfully!");
+              } catch (e) {
+                console.log("Failed to delete data");
+                console.log(e);
+              }
+            }
+          };
+
+          // expose to the html template
+          return {
+            users,
+            showEditPanel,
+            toggleEditPanel,
+            updateUserRecord,
+            selectedUser,
+            userRecord,
+            showCreateMenu,
+            toggleCreatePanel,
+            confirmPassword,
+            createUserRecord,
+            deleteUserRecord,
+            showNotification,
+            notificationMessage,
+            logout,
+          };
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

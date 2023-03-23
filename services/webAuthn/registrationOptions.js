@@ -38,7 +38,7 @@ export const registrationOptionsHandler = async function (request, reply) {
     );
     const userObj = registerStmt.get(
       userUUID,
-      "n/a",
+      "(auto-generated username)",
       generatedUniqueEmail,
       "n/a",
       generatedOptions.challenge,

@@ -21,6 +21,33 @@ export const createUserHandler = async function (request, reply) {
       );
       throw { statusCode: 400, message: "Duplicate Email Address Exists" };
     }
+
+    //If the user's active status is a string, convert it to a number
+    if (request.body.data.attributes.active) {
+      if (typeof request.body.data.attributes.active === "string") {
+        request.body.data.attributes.active = Number(
+          request.body.data.attributes.active
+        );
+      }
+    }
+
+    //Check if the user's active status is being updated and if it is, check if the new status is a valid 1 or 0
+    if (request.body.data.attributes.active) {
+      if (
+        request.body.data.attributes.active !== 0 &&
+        request.body.data.attributes.active !== 1
+      ) {
+        request.log.info(
+          "Admin API: User's active status is not valid, update failed"
+        );
+        throw {
+          statusCode: 400,
+          message:
+            "Invalid Active Status, Please use 1 for true and 0 for false",
+        };
+      }
+    }
+
     //Create the user in the Database
     const hashpwd = await hashPassword(request.body.data.attributes.password);
     const uuid = randomUUID();
@@ -34,7 +61,7 @@ export const createUserHandler = async function (request, reply) {
       request.body.data.attributes.name,
       request.body.data.attributes.email,
       hashpwd,
-      "1",
+      request.body.data.attributes.active,
       jwtid
     );
     //Prepare the server response

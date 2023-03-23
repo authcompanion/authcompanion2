@@ -1,11 +1,9 @@
 import * as jose from "jose";
-import { webcrypto } from "crypto";
 import { randomUUID } from "crypto";
 import Database from "better-sqlite3";
 import config from "../config.js";
 
-const { subtle } = webcrypto;
-
+// Creates a JWT token used for user authentication, with scope as "user"
 export async function makeAccesstoken(userObj, secretKey) {
   try {
     // set default expiration time of the jwt token
@@ -15,6 +13,7 @@ export async function makeAccesstoken(userObj, secretKey) {
       userid: userObj.uuid,
       name: userObj.name,
       email: userObj.email,
+      scope: "user",
     };
 
     const jwt = await new jose.SignJWT(claims)
@@ -75,11 +74,37 @@ export async function makeRefreshtoken(
   }
 }
 
-export async function validateJWT(jwt, secretKey) {
+// Creates a JWT token used for Admin dashboard authentication, with scope as "admin"
+export async function makeAdminToken(userObj, secretKey) {
   try {
+    // set default expiration time of the jwt token
+    let expirationTime = "2h";
+
+    const claims = {
+      userid: userObj.uuid,
+      name: userObj.name,
+      email: userObj.email,
+      scope: "admin",
+    };
+
+    const jwt = await new jose.SignJWT(claims)
+      .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+      .setIssuedAt()
+      .setExpirationTime(expirationTime)
+      .sign(secretKey);
 
     const { payload } = await jose.jwtVerify(jwt, secretKey);
 
+    return { token: jwt, expiration: payload.exp };
+  } catch (error) {
+    throw { statusCode: 500, message: "Server Error" };
+  }
+}
+
+// Validates a JWT token
+export async function validateJWT(jwt, secretKey) {
+  try {
+    const { payload } = await jose.jwtVerify(jwt, secretKey);
     return payload;
   } catch (error) {
     throw { statusCode: 500, message: "Server Error" };

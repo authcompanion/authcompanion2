@@ -8,6 +8,7 @@ processes = []
 [env]
 ORIGIN="https://demo.authcompanion.com"
 APPLICATION_ORIGIN="https://demo.authcompanion.com/v1/web/home"
+ADMIN_ORIGIN="http://demo.authcompanion.com/v1/admin/dashboard"
 SERVER_KEY_PATH="/data/serverkey"
 ADMIN_KEY_PATH="/data/adminkey"
 DB_PATH="/data/authcompanion_users.db"

@@ -700,10 +700,10 @@
           };
 
           // Function to logout the user, remove the token from cookies and redirect to the login page
-          const logout = () => {
+          const logout = async () => {
             try {
               // GET request to our logout endpoint /v1/admin/logout
-              let response = fetch(`/v1/admin/logout`, {
+              let response = await fetch(`/v1/admin/logout`, {
                 method: "GET",
                 headers: {
                   "Content-type": "application/json",

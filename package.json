@@ -1,6 +1,6 @@
 {
   "name": "authcompanion2",
-  "version": "3.0.0-beta.10",
+  "version": "3.0.0-beta.11",
   "description": "An effortless, token-based user management server - well suited for modern web projects.",
   "main": "server.js",
   "type": "module",

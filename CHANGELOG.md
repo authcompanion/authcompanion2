@@ -1,3 +1,12 @@
+# [3.0.0-beta.11](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.10...3.0.0-beta.11) (2023-03-23)
+
+
+### Features
+
+* new admin dashboard ([#10](https://github.com/authcompanion/authcompanion2/issues/10)) ([d8b4c96](https://github.com/authcompanion/authcompanion2/commit/d8b4c96688c568a8d96c41b98c770796e47e1416))
+
+Introduces a Admin Dashboard for managing your users in AuthCompanion. It provides a range of functions that administrators can use to create, edit, and delete user accounts via a friendly and intuitive interface.
+
 # [3.0.0-beta.10](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.9...3.0.0-beta.10) (2023-02-23)
 
 

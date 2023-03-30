@@ -12,7 +12,7 @@ specifiers:
   fastify: ^4.15.0
   fastify-plugin: ^3.0.1
   jose: ^4.13.1
-  prettier: ^2.8.6
+  prettier: ^2.8.7
 
 dependencies:
   '@simplewebauthn/server': 7.2.0
@@ -28,7 +28,7 @@ dependencies:
 devDependencies:
   ava: 4.3.3
   conventional-changelog-cli: 2.2.2
-  prettier: 2.8.6
+  prettier: 2.8.7
 
 packages:
 
@@ -224,7 +224,7 @@ packages:
     resolution: {integrity: sha512-m8pts+mwPEcTIzBRRlEGTQyx6T2q+aQa6CljnW+VP/3MikKKeOkZEuLhe8bHnmsQNKLF8dtgQ2WyhHe39pzjpg==}
     dependencies:
       '@simplewebauthn/typescript-types': 7.0.0
-      '@types/node': 18.15.5
+      '@types/node': 18.15.11
     dev: false
 
   /@simplewebauthn/server/7.2.0:
@@ -240,7 +240,7 @@ packages:
       '@simplewebauthn/iso-webcrypto': 7.2.0
       '@simplewebauthn/typescript-types': 7.0.0
       '@types/debug': 4.1.7
-      '@types/node': 18.15.5
+      '@types/node': 18.15.11
       cbor-x: 1.5.1
       cross-fetch: 3.1.5
       debug: 4.3.4
@@ -267,8 +267,8 @@ packages:
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
     dev: false
 
-  /@types/node/18.15.5:
-    resolution: {integrity: sha512-Ark2WDjjZO7GmvsyFFf81MXuGTA/d6oP38anyxWOL6EREyBKAxKoFHwBhaZxCfLRLpO8JgVXwqOwSwa7jRcjew==}
+  /@types/node/18.15.11:
+    resolution: {integrity: sha512-E5Kwq2n4SbMzQOn6wnmBjuK9ouqlURrcZDVfbo9ftDDTFt3nk7ZKK4GMOzoYgnpQJKcxwQw+lGaBvvlMo0qN/Q==}
     dev: false
 
   /@types/normalize-package-data/2.4.1:
@@ -1249,7 +1249,7 @@ packages:
       rfdc: 1.3.0
       secure-json-parse: 2.7.0
       semver: 7.3.8
-      tiny-lru: 10.2.2
+      tiny-lru: 10.3.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -2187,7 +2187,7 @@ packages:
     resolution: {integrity: sha512-c7vo5OpW4wIS42hUVcT5REsL8ZljsUfBjqV/e2sFxmFEFZiq1XLUp5EYLtuDH6PEHq9W1egWqRbnLUP5FuZmOA==}
     dependencies:
       readable-stream: 4.3.0
-      split2: 4.1.0
+      split2: 4.2.0
     dev: false
 
   /pino-std-serializers/6.1.0:
@@ -2245,8 +2245,8 @@ packages:
       tunnel-agent: 0.6.0
     dev: false
 
-  /prettier/2.8.6:
-    resolution: {integrity: sha512-mtuzdiBbHwPEgl7NxWlqOkithPyp4VN93V7VeHVWBF+ad3I5avc0RVDT4oImXQy9H/AqxA2NSQH8pSxHW6FYbQ==}
+  /prettier/2.8.7:
+    resolution: {integrity: sha512-yPngTo3aXUUmyuTjeTUT75txrf+aMh9FiD7q9ZE/i6r0bPb22g4FsE6Y338PQX1bmfy08i9QQCB7/rcUAVntfw==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
@@ -2603,8 +2603,8 @@ packages:
       readable-stream: 3.6.2
     dev: true
 
-  /split2/4.1.0:
-    resolution: {integrity: sha512-VBiJxFkxiXRlUIeyMQi8s4hgvKCSjtknJv/LVYbrgALPwf5zSKmEwV9Lst25AkvMDnvxODugjdl6KZgwKM1WYQ==}
+  /split2/4.2.0:
+    resolution: {integrity: sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==}
     engines: {node: '>= 10.x'}
     dev: false
 
@@ -2777,8 +2777,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /tiny-lru/10.2.2:
-    resolution: {integrity: sha512-yx+e2W/6E0SBEuXG+3M1fibQyyMDbz3jd/8EPyodw+LQVcUXA6tfNGUzktEy1PgZlresc6PiC4HQiyeZM2lGzA==}
+  /tiny-lru/10.3.0:
+    resolution: {integrity: sha512-vTKRT2AEO1sViFDWAIzZVpV8KURCaMtnHa4RZB3XqtYLbrTO/fLDXKPEX9kVWq9u+nZREkwakbcmzGgvJm8QKA==}
     engines: {node: '>=12'}
     dev: false
 

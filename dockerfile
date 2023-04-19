@@ -1,4 +1,4 @@
-FROM node:lts-slim as builder
+FROM node:18-slim as builder
 
 LABEL version="2.0.0"
 LABEL description="Authcompanion 2 - An effortless, token-based user management server - well suited for modern web projects."

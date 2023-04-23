@@ -6,6 +6,9 @@ import sqlite3 from "./plugins/db/db.js";
 import serverkey from "./plugins/key/server.key.js";
 import adminkey from "./plugins/key/admin.key.js";
 
+import pkg from "./package.json" assert { type: "json" };
+const appVersion = pkg.version;
+
 const buildApp = async function (opts) {
   const app = await Fastify(opts);
 
@@ -23,12 +26,12 @@ const buildApp = async function (opts) {
   //register the frontend routes used for the UI. This is optional
   await app.register(webRoutes, { prefix: "/v1/web" });
 
-
   //register a default route welcoming the user
   await app.register(async function defaultRoute(fastify, opts) {
     fastify.get("/", async (req, reply) => {
-      return `Welcome and hello 👋. AuthCompanion is serving requests!
-      Please navigate to the login and registration web forms`;
+      return `Welcome and hello 👋 - AuthCompanion is serving requests!      
+      Version: ${appVersion}
+      `;
     });
   });
   return app;

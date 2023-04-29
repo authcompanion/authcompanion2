@@ -17,57 +17,57 @@ import { readFile } from "node:fs/promises";
 
 // Setup Test
 test.before(async (t) => {
-  try {
-    //build app with the test database
-    t.context.app = await buildApp({ testdb: "true" });
+  //build app with the test database
+  t.context.app = await buildApp({ testdb: "true" });
 
-    //read the adminkey file and parse, save the password to the context
-    const adminKey = await readFile("./adminkey", "utf8");
-    const adminPassword = adminKey.split(":")[1].trim();
+  //set up admin password
+  const adminKey = await readFile("./adminkey", "utf8");
+  const adminPassword = adminKey.split(":")[1].trim();
+  t.context.adminPass = adminPassword;
 
-    //create a user to test auth api endpoints with, and save the uuid to the context
-    const response = await t.context.app.inject({
-      method: "POST",
-      url: "/v1/auth/register",
-      payload: {
-        data: {
-          type: "users",
-          attributes: {
-            name: "Authy Person",
-            email: "hello_test@authcompanion.com",
-            password: "mysecretpass",
-          },
+  //create a user to test auth api endpoints with
+  const response = await t.context.app.inject({
+    method: "POST",
+    url: "/v1/auth/register",
+    payload: {
+      data: {
+        type: "users",
+        attributes: {
+          name: "Authy Person",
+          email: "hello_test@authcompanion.com",
+          password: "mysecretpass",
         },
       },
-    });
-    //save the response to the context
-    //t.context.response = parse(response.headers);
-    const cookieValue = parse(Object.values(response.headers)[0]);
-    t.context.refreshToken = cookieValue.userRefreshToken;
-    //save the uuid to the context
-    t.context.uuid = response.json().data.id;
-    //save the jwt to the context
-    t.context.jwt = response.json().data.attributes.access_token;
+    },
+  });
 
-    //create a user to test admin api endpoints with, and save the uuid to the context
-    const response2 = await t.context.app.inject({
-      method: "POST",
-      url: "/v1/admin/login",
-      payload: {
-        data: {
-          type: "users",
-          attributes: {
-            password: adminPassword,
-          },
+  //save user details to context
+  const data = await response.json();
+  t.context.uuid = data.data.id;
+  t.context.jwt = data.data.attributes.access_token;
+  t.context.refreshToken = parse(response.headers["set-cookie"][0])[
+    "userRefreshToken"
+  ];
+  t.context.fgp = parse(response.headers["set-cookie"][1])["fgp"];
+
+  //create a user to test admin api endpoints with
+  const response2 = await t.context.app.inject({
+    method: "POST",
+    url: "/v1/admin/login",
+    payload: {
+      data: {
+        type: "users",
+        attributes: {
+          password: t.context.adminPass,
         },
       },
-    });
-    //save the response to the context
-    t.context.adminJWT = response2.json().data.attributes.access_token;
-    t.context.adminPass = adminPassword;
-  } catch (error) {
-    throw new Error("Failed to setup test");
-  }
+    },
+  });
+
+  //save admin jwt to context
+  t.context.adminJWT = response2.json().data.attributes.access_token;
+  t.context.adminFgp = parse(response.headers["set-cookie"][1])["fgp"];
+
 });
 
 // Cleanup Test
@@ -158,6 +158,7 @@ test.serial("Auth Endpoint Test: POST /auth/users/me", async (t) => {
       },
       headers: {
         Authorization: `Bearer ${t.context.jwt}`,
+        cookie: `${t.context.fgp}`
       },
     });
     t.is(response.statusCode, 200, "API - Status Code Incorrect");
@@ -196,6 +197,7 @@ test.serial("Admin Endpoint Test: GET /admin/users", async (t) => {
       url: "/v1/admin/users",
       headers: {
         Authorization: `Bearer ${t.context.adminJWT}`,
+        cookie: `${t.context.adminFgp}`
       },
     });
     t.is(response.statusCode, 200, "API - Status Code Incorrect");
@@ -222,6 +224,7 @@ test.serial("Admin Endpoint Test: POST /admin/users", async (t) => {
       },
       headers: {
         Authorization: `Bearer ${t.context.adminJWT}`,
+        cookie: `${t.context.adminFgp}`
       },
     });
     t.is(response.statusCode, 201, "API - Status Code Incorrect");
@@ -248,6 +251,7 @@ test.serial("Admin Endpoint Test: PATCH /admin/users/:uuid", async (t) => {
       },
       headers: {
         Authorization: `Bearer ${t.context.adminJWT}`,
+        cookie: `${t.context.adminFgp}`
       },
     });
     t.is(response.statusCode, 200, "API - Status Code Incorrect");
@@ -263,6 +267,7 @@ test.serial("Admin Endpoint Test: DELETE /admin/users/:uuid", async (t) => {
       url: `/v1/admin/users/${t.context.uuid}`,
       headers: {
         Authorization: `Bearer ${t.context.adminJWT}`,
+        cookie: `${t.context.adminFgp}`
       },
     });
     t.is(response.statusCode, 204, "API - Status Code Incorrect");

@@ -1,3 +1,18 @@
+# [3.0.0-beta.12](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.11...3.0.0-beta.12) (2023-04-29)
+
+
+### Bug Fixes
+
+* admin panel logout link bug corrected ([734d5cb](https://github.com/authcompanion/authcompanion2/commit/734d5cb78cc1f8a72997bf50b10faf3587b6388e))
+* show app version in default route ([ad3e0d1](https://github.com/authcompanion/authcompanion2/commit/ad3e0d12aa97947c7d88f462a63b88996b7e4025))
+
+
+### Features
+
+* prevent token sidejacking through a new "user context" added to the JWT; as implemented in the [OWASP recommendation](https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.md#token-sidejacking) ([9948b59](https://github.com/authcompanion/authcompanion2/commit/9948b59394c225d5123a58c54f1dd651b2394fdd))
+
+
+
 # [3.0.0-beta.11](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.10...3.0.0-beta.11) (2023-03-23)
 
 

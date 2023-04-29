@@ -132,14 +132,16 @@ export async function makeAdminToken(userObj, secretKey) {
 }
 
 // Validates a JWT token
-export async function validateJWT(jwt, secretKey, fingerprint) {
+export async function validateJWT(jwt, secretKey, fingerprint = null) {
   try {
-    //verify the jwt and ensure the proper claim
     const { payload } = await jose.jwtVerify(jwt, secretKey, {
-      requiredClaims: ["userFingerprint"],
+      requiredClaims: fingerprint === null ? [] : ["userFingerprint"],
     });
 
-    //check the fingperprint with jwt's userFingerprint hash
+    if (!fingerprint) {
+      return payload;
+    }
+
     const validUserContext = await verifyValueWithHash(
       fingerprint,
       payload.userFingerprint
@@ -148,6 +150,7 @@ export async function validateJWT(jwt, secretKey, fingerprint) {
     if (!validUserContext) {
       throw { statusCode: 500, message: "Server Error" };
     }
+
     return payload;
   } catch (error) {
     throw { statusCode: 500, message: "Server Error" };

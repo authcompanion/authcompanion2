@@ -2,7 +2,7 @@ import fastifyPlugin from "fastify-plugin";
 import config from "../../config.js";
 import { writeFileSync } from "fs";
 import { randomUUID } from "crypto";
-import { hashPassword } from "../../utilities/credential.js";
+import { createHash } from "../../utilities/credential.js";
 import * as crypto from "crypto";
 
 //function to generate a random password using crypto module
@@ -28,7 +28,7 @@ const setupAdminKey = async function (fastify) {
     //Create the default admin user in the Database, set the password to a random UUID as a placeholder
     const uuid = randomUUID();
     const adminPwd = generatePassword();
-    const hashPwd = await hashPassword(adminPwd);
+    const hashPwd = await createHash(adminPwd);
 
     //Create a user object to use to create the user in the database and access token
     const userObj = {

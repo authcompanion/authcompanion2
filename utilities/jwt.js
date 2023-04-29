@@ -2,17 +2,34 @@ import * as jose from "jose";
 import { randomUUID } from "crypto";
 import Database from "better-sqlite3";
 import config from "../config.js";
+import { createHash, verifyValueWithHash } from "./credential.js";
+import crypto from "crypto";
+
+// Generate a random string & hash that will constitute the fingerprint for this user
+async function generateClientContext() {
+  //generate a random string of length 16
+  const fingerprint = crypto.randomBytes(16).toString("hex");
+  //has the random string
+  const hash = await createHash(fingerprint);
+  return { userFingerprint: fingerprint, userFingerprintHash: hash };
+}
 
 // Creates a JWT token used for user authentication, with scope as "user"
 export async function makeAccesstoken(userObj, secretKey) {
   try {
-    // set default expiration time of the jwt token
+    // set default expiration time of the access jwt token
     let expirationTime = "1h";
 
+    //generate the client context for storing the hash in the jwt claims
+    const { userFingerprint, userFingerprintHash } =
+      await generateClientContext();
+
+    // build the token claims
     const claims = {
       userid: userObj.uuid,
       name: userObj.name,
       email: userObj.email,
+      userFingerprint: userFingerprintHash,
       scope: "user",
     };
 
@@ -24,7 +41,11 @@ export async function makeAccesstoken(userObj, secretKey) {
 
     const { payload } = await jose.jwtVerify(jwt, secretKey);
 
-    return { token: jwt, expiration: payload.exp };
+    return {
+      token: jwt,
+      expiration: payload.exp,
+      userFingerprint: userFingerprint,
+    };
   } catch (error) {
     throw { statusCode: 500, message: "Server Error" };
   }
@@ -80,10 +101,15 @@ export async function makeAdminToken(userObj, secretKey) {
     // set default expiration time of the jwt token
     let expirationTime = "2h";
 
+    //generate the client context for storing the hash in the jwt claims
+    const { userFingerprint, userFingerprintHash } =
+      await generateClientContext();
+
     const claims = {
       userid: userObj.uuid,
       name: userObj.name,
       email: userObj.email,
+      userFingerprint: userFingerprintHash,
       scope: "admin",
     };
 
@@ -95,16 +121,33 @@ export async function makeAdminToken(userObj, secretKey) {
 
     const { payload } = await jose.jwtVerify(jwt, secretKey);
 
-    return { token: jwt, expiration: payload.exp };
+    return {
+      token: jwt,
+      expiration: payload.exp,
+      userFingerprint: userFingerprint,
+    };
   } catch (error) {
     throw { statusCode: 500, message: "Server Error" };
   }
 }
 
 // Validates a JWT token
-export async function validateJWT(jwt, secretKey) {
+export async function validateJWT(jwt, secretKey, fingerprint) {
   try {
-    const { payload } = await jose.jwtVerify(jwt, secretKey);
+    //verify the jwt and ensure the proper claim
+    const { payload } = await jose.jwtVerify(jwt, secretKey, {
+      requiredClaims: ["userFingerprint"],
+    });
+
+    //check the fingperprint with jwt's userFingerprint hash
+    const validUserContext = await verifyValueWithHash(
+      fingerprint,
+      payload.userFingerprint
+    );
+
+    if (!validUserContext) {
+      throw { statusCode: 500, message: "Server Error" };
+    }
     return payload;
   } catch (error) {
     throw { statusCode: 500, message: "Server Error" };

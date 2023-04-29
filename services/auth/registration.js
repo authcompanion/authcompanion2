@@ -1,4 +1,4 @@
-import { hashPassword } from "../../utilities/credential.js";
+import { createHash } from "../../utilities/credential.js";
 import { randomUUID } from "crypto";
 import { makeAccesstoken, makeRefreshtoken } from "../../utilities/jwt.js";
 import config from "../../config.js";
@@ -18,12 +18,14 @@ export const registrationHandler = async function (request, reply) {
     const requestedAccount = await stmt.get(request.body.data.attributes.email);
 
     if (requestedAccount) {
-      request.log.info("Auth API: User already exists in database, registration failed");
+      request.log.info(
+        "Auth API: User already exists in database, registration failed"
+      );
 
       throw { statusCode: 400, message: "Registration Failed" };
     }
     //Create the user in the Database
-    const hashpwd = await hashPassword(request.body.data.attributes.password);
+    const hashpwd = await createHash(request.body.data.attributes.password);
     const uuid = randomUUID();
     const jwtid = randomUUID();
 
@@ -53,7 +55,10 @@ export const registrationHandler = async function (request, reply) {
     expireDate.setTime(expireDate.getTime() + 7 * 24 * 60 * 60 * 1000); // TODO: Make configurable now, set to 7 days
 
     reply.headers({
-      "set-cookie": `userRefreshToken=${userRefreshToken.token}; Path=/; Expires=${expireDate}; SameSite=None; Secure; HttpOnly`,
+      "set-cookie": [
+        `userRefreshToken=${userRefreshToken.token}; Path=/; Expires=${expireDate}; SameSite=None; Secure; HttpOnly`,
+        `Fgp=${userAccessToken.userFingerprint}; Path=/; Max-Age=3600; SameSite=None; Secure; HttpOnly`,
+      ],
       "x-authc-app-origin": config.APPLICATIONORIGIN,
     });
 

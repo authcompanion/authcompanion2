@@ -1,4 +1,4 @@
-import { verifyPasswordWithHash } from "../../utilities/credential.js";
+import { verifyValueWithHash } from "../../utilities/credential.js";
 import { makeAccesstoken, makeRefreshtoken } from "../../utilities/jwt.js";
 import config from "../../config.js";
 
@@ -32,7 +32,7 @@ export const loginHandler = async function (request, reply) {
       throw { statusCode: 400, message: "Login Failed" };
     }
 
-    const passwordCheckResult = await verifyPasswordWithHash(
+    const passwordCheckResult = await verifyValueWithHash(
       request.body.data.attributes.password,
       userObj.password
     );
@@ -58,7 +58,10 @@ export const loginHandler = async function (request, reply) {
     expireDate.setTime(expireDate.getTime() + 7 * 24 * 60 * 60 * 1000); // TODO: Make configurable now, set to 7 days
 
     reply.headers({
-      "set-cookie": `userRefreshToken=${userRefreshToken.token}; Path=/; Expires=${expireDate}; SameSite=None; Secure; HttpOnly`,
+      "set-cookie": [
+        `userRefreshToken=${userRefreshToken.token}; Path=/; Expires=${expireDate}; SameSite=None; Secure; HttpOnly`,
+        `Fgp=${userAccessToken.userFingerprint}; Path=/; Max-Age=3600; SameSite=None; Secure; HttpOnly`,
+      ],
       "x-authc-app-origin": config.APPLICATIONORIGIN,
     });
 

@@ -1,4 +1,4 @@
-import { hashPassword } from "../../../utilities/credential.js";
+import { createHash } from "../../../utilities/credential.js";
 import { randomUUID } from "crypto";
 
 export const createUserHandler = async function (request, reply) {
@@ -49,7 +49,7 @@ export const createUserHandler = async function (request, reply) {
     }
 
     //Create the user in the Database
-    const hashpwd = await hashPassword(request.body.data.attributes.password);
+    const hashpwd = await createHash(request.body.data.attributes.password);
     const uuid = randomUUID();
     const jwtid = randomUUID();
 

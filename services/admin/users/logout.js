@@ -6,7 +6,7 @@ export const logoutHandler = async function (request, reply) {
     expireDate.setTime(expireDate.getTime());
 
     reply.headers({
-      "set-cookie": `adminAccessToken=; Path=/; Expires=${expireDate}; SameSite=None; Secure; HttpOnly`,
+      "set-cookie": `adminAccessToken=; Path=/; Expires=; SameSite=None; Secure; HttpOnly`,
       "x-authc-app-origin": config.ADMINORIGIN,
     });
 

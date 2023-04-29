@@ -1,4 +1,4 @@
-import { hashPassword } from "../../../utilities/credential.js";
+import { createHash } from "../../../utilities/credential.js";
 
 export const updateUserHandler = async function (request, reply) {
   try {
@@ -39,7 +39,7 @@ export const updateUserHandler = async function (request, reply) {
 
     //if the user's password is being updated, hash the new password
     if (request.body.data.attributes.password) {
-      const hashpwd = await hashPassword(request.body.data.attributes.password);
+      const hashpwd = await createHash(request.body.data.attributes.password);
       request.body.data.attributes.password = hashpwd;
     }
 

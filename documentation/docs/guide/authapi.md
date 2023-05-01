@@ -164,7 +164,7 @@ Response:
 
 ### auth/refresh
 
-Description: Your uer's access token (JWTs) will expire according the exp date. When it does, you
+Description: Your user's access token (JWTs) will expire according the exp date. When it does, you
 can refresh the access token without asking your user to log in again.
 
 If the request has a valid refresh token (stored as http only cookie) AuthCompanion will return a new
@@ -172,7 +172,7 @@ access token and set a new refresh token (http only cookie).
 
 Cookie required: `refreshToken={user's refresh token}`
 
-**GET**
+**POST**
 
 Response:
 

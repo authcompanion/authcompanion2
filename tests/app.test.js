@@ -84,12 +84,13 @@ test.after.always("cleanup tests", async (t) => {
 test.serial("Auth Endpoint Test: GET /auth/refresh", async (t) => {
   try {
     const response = await t.context.app.inject({
-      method: "GET",
+      method: "POST",
       url: "/v1/auth/refresh",
       payload: {},
       headers: {
         Cookie: `userRefreshToken=${t.context.refreshToken}`,
       },
+      body: JSON.stringify({})
     });
     t.is(response.statusCode, 200, "API - Status Code Incorrect");
   } catch (error) {

@@ -215,10 +215,11 @@
               if (response.status === 401) {
                 //AuthC's refresh endpoint requires the Refresh Token (set by AuthC as a cookie when user logs in) in order to provide you a new ACCESS_TOKEN
                 const refreshResponse = await fetch("/v1/auth/refresh", {
-                  method: "GET",
+                  method: "POST",
                   headers: {
                     "Content-type": "application/json",
                   },
+                  body: JSON.stringify({})
                 });
                 //AuthC will store the ACCESS_TOKEN in local storage or you can access it from the response itself!
                 const refreshBody = await refreshResponse.json();

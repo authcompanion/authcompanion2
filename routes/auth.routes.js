@@ -18,6 +18,9 @@ import { registrationVerificationHandler } from "../services/webAuthn/registrati
 import { loginOptionsHandler } from "../services/webAuthn/loginOptions.js";
 import { loginVerificationHandler } from "../services/webAuthn/loginVerification.js";
 
+import { loginVerificationSchema } from "../services/webAuthn/schemas/loginVerificationSchema.js";
+import { registerVerificationSchema } from "../services/webAuthn/schemas/registerVerificationSchema.js";
+
 import { authenticateAuthRequest } from "../utilities/authenticate.js";
 
 const authRoutes = async function (fastify, options) {
@@ -34,9 +37,17 @@ const authRoutes = async function (fastify, options) {
 
   //webAuthn API routes
   fastify.get("/registration-options", registrationOptionsHandler);
-  fastify.post("/registration-verification", registrationVerificationHandler);
+  fastify.post(
+    "/registration-verification",
+    registerVerificationSchema,
+    registrationVerificationHandler
+  );
   fastify.get("/login-options", loginOptionsHandler);
-  fastify.post("/login-verification", loginVerificationHandler);
+  fastify.post(
+    "/login-verification",
+    loginVerificationSchema,
+    loginVerificationHandler
+  );
 };
 
 export default authRoutes;

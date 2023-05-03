@@ -3,7 +3,8 @@ export const refreshSchema = {
     body: {
       type: "object",
       properties: {},
-      required: ["body"],
+      required: [],
+      maxProperties: 0,
     },
   },
 };

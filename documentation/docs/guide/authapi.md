@@ -172,7 +172,11 @@ access token and set a new refresh token (http only cookie).
 
 Cookie required: `refreshToken={user's refresh token}`
 
-**POST**
+**POST** Request Body:
+
+```json
+{}
+```
 
 Response:
 

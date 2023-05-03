@@ -30,7 +30,7 @@ const authRoutes = async function (fastify, options) {
     userProfileHandler
   );
   fastify.post("/recovery", profileRecoverySchema, profileRecoveryHandler);
-  fastify.post("/refresh", tokenRefreshHandler);
+  fastify.post("/refresh", refreshSchema, tokenRefreshHandler);
 
   //webAuthn API routes
   fastify.get("/registration-options", registrationOptionsHandler);

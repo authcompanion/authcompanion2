@@ -1,5 +1,9 @@
 import config from "../../config.js";
 import { randomUUID } from "crypto";
+import compadre from "compadre";
+import { nouns } from "../../utilities/names.js";
+import { createHash } from "../../utilities/credential.js";
+import crypto from "crypto";
 import { generateRegistrationOptions } from "@simplewebauthn/server";
 
 export const registrationOptionsHandler = async function (request, reply) {
@@ -11,12 +15,19 @@ export const registrationOptionsHandler = async function (request, reply) {
     const appURL = new URL(config.ORIGIN);
     const rpID = appURL.hostname;
 
+    //build the userName field
+    const nameGenerator = new compadre({
+      glue: "-",
+      nouns: nouns,
+    });
+    const userName = nameGenerator.generate();
+
     //build webauthn options for "passwordless" flow.
     let opts = {
       rpName: "AuthCompanion",
       rpID,
       userID: userUUID,
-      userName: `(A username for ${rpID} created at ${new Date().toGMTString()} by Authcompanion)`,
+      userName: userName,
       timeout: 60000,
       attestationType: "indirect",
       authenticatorSelection: {
@@ -29,18 +40,27 @@ export const registrationOptionsHandler = async function (request, reply) {
     //generate registration options to prepare the response
     const generatedOptions = generateRegistrationOptions(opts);
 
-    //Create the user in the Database, with some placeholder record information.
+    //Generate user data and create user in database
+    //build jwtid
     const jwtid = randomUUID();
+
+    //build password
+    //generate a random string of length 16
+    const fingerprint = crypto.randomBytes(16).toString("hex");
+    const hashpwd = await createHash(fingerprint);
+
+    //build email
     const generatedUniqueEmail = randomUUID();
 
+    //create user
     const registerStmt = this.db.prepare(
       "INSERT INTO users (uuid, name, email, password, challenge, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, jwt_id, created_at, updated_at;"
     );
     const userObj = registerStmt.get(
       userUUID,
-      "(auto-generated username)",
+      userName,
       generatedUniqueEmail,
-      "n/a",
+      hashpwd,
       generatedOptions.challenge,
       "1",
       jwtid

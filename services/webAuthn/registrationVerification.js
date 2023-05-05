@@ -44,12 +44,12 @@ export const registrationVerificationHandler = async function (request, reply) {
       counter
     );
 
-    //associate the authenticator to the user
+    //associate the authenticator to the user and activate the account
     const userStmt = this.db.prepare(
-      "UPDATE users SET authenticator_id = ? WHERE uuid = ? RETURNING uuid, name, email, jwt_id, created_at, updated_at;"
+      "UPDATE users SET authenticator_id = ?, active = ? WHERE uuid = ? RETURNING uuid, name, email, jwt_id, created_at, updated_at;"
     );
 
-    const userObj = userStmt.get(authenticatorObj.id, requestedAccount);
+    const userObj = userStmt.get(authenticatorObj.id, "1", requestedAccount);
 
     //Prepare the reply
     const userAccessToken = await makeAccesstoken(userObj, this.key);

@@ -23,7 +23,7 @@ export const registrationOptionsHandler = async function (request, reply) {
     const userName = nameGenerator.generate();
 
     //build webauthn options for "passwordless" flow.
-    let opts = {
+    let options = {
       rpName: "AuthCompanion",
       rpID,
       userID: userUUID,
@@ -38,7 +38,7 @@ export const registrationOptionsHandler = async function (request, reply) {
     };
 
     //generate registration options to prepare the response
-    const generatedOptions = generateRegistrationOptions(opts);
+    const generatedOptions = generateRegistrationOptions(options);
 
     //Generate user data and create user in database
     //build jwtid
@@ -50,7 +50,9 @@ export const registrationOptionsHandler = async function (request, reply) {
     const hashpwd = await createHash(fingerprint);
 
     //build email
-    const generatedUniqueEmail = randomUUID();
+    const generatedUniqueEmail = `placeholder+${Math.random()
+      .toString(36)
+      .substring(8)}@example.com`;
 
     //create user
     const registerStmt = this.db.prepare(
@@ -62,7 +64,7 @@ export const registrationOptionsHandler = async function (request, reply) {
       generatedUniqueEmail,
       hashpwd,
       generatedOptions.challenge,
-      "1",
+      "0",
       jwtid
     );
     //send the reply

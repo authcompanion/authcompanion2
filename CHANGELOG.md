@@ -1,3 +1,20 @@
+# [3.0.0-beta.13](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.12...3.0.0-beta.13) (2023-05-05)
+
+
+### Bug Fixes
+
+* added validation for webauthn POST endpoints ([250fbc1](https://github.com/authcompanion/authcompanion2/commit/250fbc1b153d9a0dd36ab321ae454f1723088b27))
+* avoid GET for state change operations; auth/refresh is now POST request ([941e37d](https://github.com/authcompanion/authcompanion2/commit/941e37d0de659829eeb6a5ea67cb84babf9bdd36))
+* corrected /refresh schema for validation ([e3fce6c](https://github.com/authcompanion/authcompanion2/commit/e3fce6c75437a4aad3e72166b0f404e615e6b996))
+* user is set to active once finishes webauthn registration + better user record defaults ([98f5176](https://github.com/authcompanion/authcompanion2/commit/98f517689958dc2e2ecfd1f9a7dec86280256d8f))
+
+
+### Features
+
+* auto generate username field for registrations via webauthn ([4ff4775](https://github.com/authcompanion/authcompanion2/commit/4ff4775f914a473ab435c9f7bad358b4ca1f37f3))
+
+
+
 # [3.0.0-beta.12](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.11...3.0.0-beta.12) (2023-04-29)
 
 

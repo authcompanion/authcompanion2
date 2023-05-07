@@ -237,7 +237,7 @@ packages:
     resolution: {integrity: sha512-m8pts+mwPEcTIzBRRlEGTQyx6T2q+aQa6CljnW+VP/3MikKKeOkZEuLhe8bHnmsQNKLF8dtgQ2WyhHe39pzjpg==}
     dependencies:
       '@simplewebauthn/typescript-types': 7.0.0
-      '@types/node': 18.16.3
+      '@types/node': 18.16.5
     dev: false
 
   /@simplewebauthn/server@7.2.0:
@@ -253,7 +253,7 @@ packages:
       '@simplewebauthn/iso-webcrypto': 7.2.0
       '@simplewebauthn/typescript-types': 7.0.0
       '@types/debug': 4.1.7
-      '@types/node': 18.16.3
+      '@types/node': 18.16.5
       cbor-x: 1.5.2
       cross-fetch: 3.1.5
       debug: 4.3.4
@@ -280,8 +280,8 @@ packages:
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
     dev: false
 
-  /@types/node@18.16.3:
-    resolution: {integrity: sha512-OPs5WnnT1xkCBiuQrZA4+YAV4HEJejmHneyraIaxsbev5yCEr6KMwINNFP9wQeFIw8FWcoTqF3vQsa5CDaI+8Q==}
+  /@types/node@18.16.5:
+    resolution: {integrity: sha512-seOA34WMo9KB+UA78qaJoCO20RJzZGVXQ5Sh6FWu0g/hfT44nKXnej3/tCQl7FL97idFpBhisLYCTB50S0EirA==}
     dev: false
 
   /@types/normalize-package-data@2.4.1:

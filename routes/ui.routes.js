@@ -14,11 +14,9 @@ const webRoutes = async function (fastify, options) {
   });
   fastify.get("/register", (request, reply) => {
     //create session id for tracking webauthn challenges used for verification. Send session id as cookie
-    const sessionID = randomUUID();
     const registrationPage = readFileSync("./ui/auth/registrationPage.html");
     reply.headers({
       "Content-Type": `text/html`,
-      "set-cookie": `sessionID=${sessionID}; Path=/; SameSite=None; Secure; HttpOnly`,
     });
     return registrationPage;
   });

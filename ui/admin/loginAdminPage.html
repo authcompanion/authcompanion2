@@ -88,13 +88,12 @@
                   v-model="password"
                   class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
                   placeholder="********"
+                  @keyup.enter="submit"
                 />
               </label>
               <button
-                type=""
                 class="block w-full px-6 py-3 text-base font-semibold text-white bg-gray-800 border rounded-lg shadow-xl hover:text-white hover:bg-gray-900"
                 @click="submit"
-                @keyup.enter="submit"
               >
                 <span class="absolute flex items-center">
                   <svg

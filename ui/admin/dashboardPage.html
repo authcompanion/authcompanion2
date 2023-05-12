@@ -13,6 +13,7 @@
       html {
         font-family: "Inter var", sans-serif;
       }
+
       [un-cloak] {
         display: none;
       }
@@ -93,7 +94,7 @@
                   </button>
 
                   <!-- Profile dropdown -->
-                  <div class="flex flex-row ml-3 items-center">
+                  <div class="flex flex-row items-center ml-3">
                     <a
                       href="#"
                       class="px-1 py-2 text-base font-medium text-white rounded-md hover:text-gray-400"
@@ -308,7 +309,9 @@
                       <tbody>
                         <tr
                           v-for="(user, index) in users.data"
+                          class="cursor-pointer hover:bg-gray-100"
                           :class="index % 2 ? 'bg-gray-50' : 'bg-white'"
+                          @click="toggleEditPanel(user)"
                         >
                           <td
                             class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap"
@@ -329,13 +332,14 @@
                             class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
                           >
                             <span
-                            :class="[
+                              :class="[
                             'inline-flex', 'items-center', 'rounded-full', 'px-3', 'py-0.5', 'text-sm', 'font-medium',
                             user.attributes.active ? 'text-green-800 bg-green-100' : 'text-red-800 bg-red-100'
                           ]"
                             >
-                            {{ user.attributes.active == 1 ? 'Active (1)' : 'Inactive (0)' }}
-                          </span>
+                              {{ user.attributes.active == 1 ? 'Active (1)' :
+                              'Inactive (0)' }}
+                            </span>
                           </td>
                           <td
                             class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
@@ -358,8 +362,8 @@
                             >
                             <a
                               href="#"
-                              class="underline text-sky-800 hover:text-sky-900 ml-2"
-                              @click="deleteUserRecord(user.id)"
+                              class="ml-2 underline text-sky-800 hover:text-sky-900"
+                              @click.stop="deleteUserRecord(user.id)"
                               >Delete</a
                             >
                           </td>
@@ -570,9 +574,9 @@
         <!-- Global notification live region, render this permanently at the end of the document -->
         <div
           aria-live="assertive"
-          class="z-10 pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6"
+          class="fixed inset-0 z-10 flex items-end px-4 py-6 pointer-events-none sm:items-start sm:p-6"
         >
-          <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
+          <div class="flex flex-col items-center w-full space-y-4 sm:items-end">
             <!--
             Notification panel, dynamically insert this into the live region when it needs to be displayed
       
@@ -586,33 +590,33 @@
             <Transition
               un-cloak
               enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
-              enter-active-class="transform ease-out duration-300 transition"
+              enter-active-class="transition duration-300 ease-out transform"
               enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
               leave-from-class="opacity-100"
-              leave-active-class="transition ease-in duration-100"
+              leave-active-class="transition duration-100 ease-in"
               leave-to-class="opacity-0"
             >
               <div
                 v-if="showNotification"
-                class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5"
+                class="w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-lg pointer-events-auto ring-1 ring-black ring-opacity-5"
               >
                 <div class="p-4">
                   <div class="flex items-center">
-                    <div class="flex w-0 flex-1 justify-between">
-                      <p class="w-0 flex-1 text-sm font-medium text-gray-900">
+                    <div class="flex justify-between flex-1 w-0">
+                      <p class="flex-1 w-0 text-sm font-medium text-gray-900">
                         {{ notificationMessage }}
                       </p>
                     </div>
-                    <div class="ml-2 flex flex-shrink-0">
+                    <div class="flex flex-shrink-0 ml-2">
                       <button
                         @click="showNotification = !showNotification"
                         type="button"
-                        class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        class="inline-flex text-gray-400 bg-white rounded-md hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
                         <span class="sr-only">Close</span>
                         <!-- Heroicon name: mini/x-mark -->
                         <svg
-                          class="h-5 w-5"
+                          class="w-5 h-5"
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 20 20"
                           fill="currentColor"
@@ -699,7 +703,7 @@
             // set the selected user to the user passed in the function
             selectedUser.value = user;
             // toggle the edit panel
-            showEditPanel.value = !showEditPanel.value;
+            showEditPanel.value = true;
           };
 
           // Function to logout the user, remove the token from cookies and redirect to the login page
@@ -806,6 +810,8 @@
               }
               // Toggle the create panel and reset the form
               showCreateMenu.value = !showCreateMenu.value;
+              showEditPanel.value = !showEditPanel.value;
+
               userRecord.value = {
                 data: {
                   type: "users",
@@ -838,6 +844,7 @@
                   showNotificationMessage("Error occured when deleting user");
                   return;
                 }
+
                 // Call the showNotificationMessage function to show the notification
                 showNotificationMessage("User deleted successfully!");
               } catch (e) {

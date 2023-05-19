@@ -20,7 +20,7 @@
     "compadre": "^3.2.0",
     "cookie": "^0.5.0",
     "dotenv": "^16.0.3",
-    "emailjs": "^4.0.1",
+    "emailjs": "^4.0.2",
     "fastify": "^4.17.0",
     "fastify-plugin": "^3.0.1",
     "jose": "^4.14.4"

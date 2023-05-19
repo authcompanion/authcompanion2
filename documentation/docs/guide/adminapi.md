@@ -61,6 +61,11 @@ Bearer Token Required: `Authorization: Bearer {admin access token}`
 
 **GET**
 
+Query Parameters:
+
+* page[size] (optional): The number of users to include per page.
+* page[number] (optional): The page number of users to retrieve.
+
 Response:
 
 ```json
@@ -88,7 +93,12 @@ Response:
         "updated": "2023-02-02T21:34:37.712Z"
       }
     }
-  ]
+  ],
+	"links": {
+		"next": "/v1/admin/users?page[number]=2&page[size]=2",
+		"first": "/v1/admin/users?page[number]=1&page[size]=2",
+		"last": "/v1/admin/users?page[number]=3&page[size]=2"
+	}
 }
 ```
 

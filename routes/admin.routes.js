@@ -4,6 +4,7 @@ import { createUserHandler } from "../services/admin/users/create.js";
 import { createSchema } from "../services/admin/users/schema/createSchema.js";
 
 import { listUsersHandler } from "../services/admin/users/list.js";
+import { listUsersSchema } from "../services/admin/users/schema/listSchema.js";
 
 import { deleteUserHandler } from "../services/admin/users/delete.js";
 
@@ -29,7 +30,7 @@ const adminRoutes = async function (fastify, options) {
   );
   fastify.get(
     "/users",
-    { onRequest: [authenticateAdminRequest] },
+    { onRequest: [authenticateAdminRequest], ...listUsersSchema },
     listUsersHandler
   );
   fastify.delete(

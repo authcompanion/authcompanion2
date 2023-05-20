@@ -65,6 +65,7 @@ Query Parameters:
 
 * page[size] (optional): The number of users to include per page.
 * page[number] (optional): The page number of users to retrieve.
+* search[email] (optional): Filter users by email address using the LIKE operator.
 
 Response:
 

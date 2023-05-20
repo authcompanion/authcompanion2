@@ -5,6 +5,7 @@ export const listUsersSchema = {
       properties: {
         "page[size]": { type: "integer" },
         "page[number]": { type: "integer" },
+        "search[email]": { type: "string" },
       },
     },
   },

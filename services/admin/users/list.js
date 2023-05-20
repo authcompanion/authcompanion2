@@ -1,7 +1,10 @@
 export const listUsersHandler = async function (request, reply) {
   try {
-    const { "page[number]": pageNumber = 1, "page[size]": pageSize = 10 } =
-      request.query;
+    const {
+      "page[number]": pageNumber = 1,
+      "page[size]": pageSize = 10,
+      "search[email]": searchEmail,
+    } = request.query;
 
     // Convert the page number and size to integers
     const page = parseInt(pageNumber);
@@ -10,11 +13,23 @@ export const listUsersHandler = async function (request, reply) {
     // Calculate the offset based on the page and size
     const offset = (page - 1) * size;
 
+    // Prepare the SQL query and parameters
+    let query =
+      "SELECT uuid, name, email, active, created_at, updated_at FROM users";
+    let params = [];
+
+    if (searchEmail) {
+      query += " WHERE email LIKE ?";
+      params.push(`%${searchEmail}%`);
+    }
+
+    query += " LIMIT ? OFFSET ?";
+
     // Fetch the user's uuid, name, email, active, created_at, updated_at attributes from the database
-    const stmt = this.db.prepare(
-      "SELECT uuid, name, email, active, created_at, updated_at FROM users LIMIT ? OFFSET ?"
-    );
-    const users = await stmt.all(size, offset);
+    const stmt = this.db.prepare(query);
+    params.push(size, offset); // Add size and offset to the parameters
+
+    const users = await stmt.all(...params); // Spread the params array
 
     // For each user, prepare the server response
     const userAttributes = users.map((user) => {
@@ -31,9 +46,16 @@ export const listUsersHandler = async function (request, reply) {
       };
     });
 
-    // Fetch the total count of users
-    const countStmt = this.db.prepare("SELECT COUNT(*) as count FROM users");
-    const totalCount = await countStmt.get();
+    // Fetch the total count of users matching the search
+    let countQuery = "SELECT COUNT(*) as count FROM users";
+    if (searchEmail) {
+      countQuery += " WHERE email LIKE ?";
+    }
+
+    const countStmt = this.db.prepare(countQuery);
+    const totalCount = await countStmt.get(
+      ...(searchEmail ? [`%${searchEmail}%`] : [])
+    ); // Spread the searchEmail param if provided
 
     // Calculate pagination metadata
     const totalPages = Math.ceil(totalCount.count / size);

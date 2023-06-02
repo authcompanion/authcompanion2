@@ -230,12 +230,12 @@
                     class="block w-full p-4 pl-5 pr-12 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Search Email"
                     v-model="searchValue"
-                    @keyup.enter="searchUser()"
+                    @keyup.enter="searchUser(10)"
                     @input="handleInputChange()"
                   />
                   <button
                     type="button"
-                    @click="searchUser()"
+                    @click="searchUser(10)"
                     class="absolute inset-y-0 right-0 flex items-center px-3 bg-gray-400 rounded hover:bg-gray-400"
                   >
                     <svg
@@ -281,10 +281,9 @@
           </div>
         </header>
 
+        <!-- Main Content Area -->
         <main>
           <div class="py-6 mx-auto max-w-fit sm:px-6 lg:px-8">
-            <!-- Replace with your content -->
-
             <div class="flex flex-col">
               <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div
@@ -453,7 +452,7 @@
                                 class="text-lg font-medium text-gray-900"
                                 id="slide-over-title"
                               >
-                                Account Details
+                                Details
                               </h2>
                               <div class="flex items-center ml-3 h-7">
                                 <button
@@ -551,6 +550,9 @@
                                   >
                                   <input
                                     type="number"
+                                    min="0"
+                                    max="1"
+                                    placeholder="1"
                                     class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
                                     :value="showCreateMenu ? '' : selectedUser.attributes.active"
                                     @input="event => userRecord.data.attributes.active = event.target.value"
@@ -607,6 +609,70 @@
               </div>
             </div>
           </Transition>
+
+          <!-- Pagination Area -->
+          <paginate class="bg-white shadow-sm">
+            <div
+              class="flex flex-row justify-between px-4 mx-auto text-sm max-w-7xl place-items-center"
+            >
+              <div class="flex flex-row place-items-center">
+                <div>
+                  <label class="mx-3">Page size:</label>
+                </div>
+                <div>
+                  <select
+                    class="px-3 py-2 border"
+                    v-model="pageSize"
+                    @change="handlePageSizeInputChange()"
+                  >
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                  </select>
+                </div>
+              </div>
+              <!-- <div class="flex items-center">
+                <button
+                  class="flex items-center mx-3 space-x-1 text-gray-600 hover:text-gray-800"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 19l-7-7 7-7"
+                    ></path>
+                  </svg>
+                  <span>Previous Page</span>
+                </button>
+                <button
+                  class="flex items-center space-x-1 text-gray-600 hover:text-gray-800"
+                >
+                  <span>Next Page</span>
+                  <svg
+                    class="w-4 h-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 5l7 7-7 7"
+                    ></path>
+                  </svg>
+                </button>
+              </div> -->
+            </div>
+          </paginate>
         </main>
         <!-- Global notification live region, render this permanently at the end of the document -->
         <div
@@ -686,7 +752,7 @@
           // Get the user's jwt token from the local storage and store it in a variable
           const token = localStorage.getItem("ACCESS_TOKEN");
 
-          //Toggle the edit panel and profile menu
+          // Toggle the edit panel and profile menu
           let showEditPanel = ref(false);
           let showCreateMenu = ref(false);
 
@@ -696,7 +762,7 @@
           // Notification message
           const notificationMessage = ref("");
 
-          // Array of users to be displayed in the table
+          // The search term
           const searchValue = ref([]);
 
           // Array of users to be displayed in the table
@@ -713,8 +779,11 @@
             },
           });
 
-          //Variable to store the confrim password value
+          // Variable to store the confrim password value
           const confirmPassword = ref("");
+
+          // Variable to store the page size of the data table
+          const pageSize = ref("10");
 
           // Function to accept a message and show the notification, then call the dismissNotification function
           const showNotificationMessage = (message) => {
@@ -772,21 +841,27 @@
           };
 
           // Fetch users from the API and store them in the users array
-          const fetchUsers = async () => {
+          const fetchUsers = async (pageSize = 10, pageNumber = 1) => {
             try {
               // GET request to our users endpoint /v1/admin/users
-              let response = await fetch("/v1/admin/users", {
+              let url = `/v1/admin/users`;
+              let queryParams = `?page[number]=${pageNumber}&page[size]=${pageSize}`;
+              url += queryParams;
+
+              let response = await fetch(url, {
                 method: "GET",
                 headers: {
                   "Content-type": "application/json",
                   Authorization: `Bearer ${token}`,
                 },
               });
-              //if the response is not ok, throw an error
+
+              // if the response is not ok, throw an error
               if (!response.ok) {
                 showNotificationMessage("Error: " + response.message);
                 return;
               }
+
               users.value = await response.json();
             } catch (e) {
               console.log("Failed to load data");
@@ -899,11 +974,11 @@
           };
 
           // Function to search for a user
-          const searchUser = async () => {
+          const searchUser = async (pageSize, pageNumber = 1) => {
             try {
               // GET request to the /v1/admin/users endpoint with the search query
               let response = await fetch(
-                `/v1/admin/users?search[email]=${searchValue.value}`,
+                `/v1/admin/users?search[email]=${searchValue.value}&page[size]=${pageSize}&page[number]=${pageNumber}`,
                 {
                   method: "GET",
                   headers: {
@@ -933,7 +1008,15 @@
 
           const handleInputChange = async () => {
             if (searchValue.value.trim() === "") {
-              fetchUsers();
+              fetchUsers(pageSize.value);
+            }
+          };
+
+          const handlePageSizeInputChange = async () => {
+            if (searchValue.value) {
+              searchUser(pageSize.value);
+            } else {
+              fetchUsers(pageSize.value);
             }
           };
 
@@ -959,6 +1042,8 @@
             searchValue,
             searchUser,
             handleInputChange,
+            handlePageSizeInputChange,
+            pageSize,
           };
         },
       }).mount("#app");

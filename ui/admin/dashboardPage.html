@@ -230,8 +230,8 @@
                     class="block w-full p-4 pl-5 pr-12 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
                     placeholder="Search Email"
                     v-model="searchValue"
-                    @keyup.enter="searchUser(10)"
-                    @input="handleInputChange()"
+                    @keyup.enter="searchUser()"
+                    @input="handleSearchInputChange()"
                   />
                   <button
                     type="button"
@@ -631,9 +631,10 @@
                   </select>
                 </div>
               </div>
-              <!-- <div class="flex items-center">
+              <div class="flex items-center">
                 <button
-                  class="flex items-center mx-3 space-x-1 text-gray-600 hover:text-gray-800"
+                  class="flex items-center space-x-1 text-gray-600 hover:text-gray-800"
+                  @click="previousPage"
                 >
                   <svg
                     class="w-4 h-4"
@@ -651,8 +652,14 @@
                   </svg>
                   <span>Previous Page</span>
                 </button>
+                <input
+                  class="w-5 mx-3 text-center text-black bg-gray-200 rounded"
+                  v-model="pageNumber"
+                  readonly
+                />
                 <button
                   class="flex items-center space-x-1 text-gray-600 hover:text-gray-800"
+                  @click="nextPage"
                 >
                   <span>Next Page</span>
                   <svg
@@ -670,7 +677,7 @@
                     ></path>
                   </svg>
                 </button>
-              </div> -->
+              </div>
             </div>
           </paginate>
         </main>
@@ -680,16 +687,6 @@
           class="fixed inset-0 z-10 flex items-end px-4 py-6 pointer-events-none sm:items-start sm:p-6"
         >
           <div class="flex flex-col items-center w-full space-y-4 sm:items-end">
-            <!--
-            Notification panel, dynamically insert this into the live region when it needs to be displayed
-      
-            Entering: "transform ease-out duration-300 transition"
-              From: "translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
-              To: "translate-y-0 opacity-100 sm:translate-x-0"
-            Leaving: "transition ease-in duration-100"
-              From: "opacity-100"
-              To: "opacity-0"
-          -->
             <Transition
               un-cloak
               enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
@@ -785,6 +782,9 @@
           // Variable to store the page size of the data table
           const pageSize = ref("10");
 
+          // Variable to store the page number of the data table
+          const pageNumber = ref("1");
+
           // Function to accept a message and show the notification, then call the dismissNotification function
           const showNotificationMessage = (message) => {
             // set the notification message to the message passed in the function
@@ -841,11 +841,11 @@
           };
 
           // Fetch users from the API and store them in the users array
-          const fetchUsers = async (pageSize = 10, pageNumber = 1) => {
+          const fetchUsers = async () => {
             try {
               // GET request to our users endpoint /v1/admin/users
               let url = `/v1/admin/users`;
-              let queryParams = `?page[number]=${pageNumber}&page[size]=${pageSize}`;
+              let queryParams = `?page[number]=${pageNumber.value}&page[size]=${pageSize.value}`;
               url += queryParams;
 
               let response = await fetch(url, {
@@ -974,11 +974,11 @@
           };
 
           // Function to search for a user
-          const searchUser = async (pageSize, pageNumber = 1) => {
+          const searchUser = async () => {
             try {
               // GET request to the /v1/admin/users endpoint with the search query
               let response = await fetch(
-                `/v1/admin/users?search[email]=${searchValue.value}&page[size]=${pageSize}&page[number]=${pageNumber}`,
+                `/v1/admin/users?search[email]=${searchValue.value}&page[size]=${pageSize.value}&page[number]=${pageNumber.value}`,
                 {
                   method: "GET",
                   headers: {
@@ -1006,17 +1006,39 @@
             }
           };
 
-          const handleInputChange = async () => {
+          const handleSearchInputChange = async () => {
             if (searchValue.value.trim() === "") {
-              fetchUsers(pageSize.value);
+              await fetchUsers();
             }
           };
 
           const handlePageSizeInputChange = async () => {
-            if (searchValue.value) {
-              searchUser(pageSize.value);
+            if (searchValue.value === null) {
+              await fetchUsers();
             } else {
-              fetchUsers(pageSize.value);
+              await searchUser();
+            }
+          };
+
+          const nextPage = async () => {
+            const currentPage = parseInt(pageNumber.value);
+            pageNumber.value = (currentPage + 1).toString();
+            if (searchValue.value === null) {
+              await fetchUsers();
+            } else {
+              await searchUser();
+            }
+          };
+
+          const previousPage = async () => {
+            const currentPage = parseInt(pageNumber.value);
+            if (currentPage > 1) {
+              pageNumber.value = (currentPage - 1).toString();
+            }
+            if (searchValue.value === null) {
+              await fetchUsers();
+            } else {
+              await searchUser();
             }
           };
 
@@ -1041,9 +1063,12 @@
             logout,
             searchValue,
             searchUser,
-            handleInputChange,
+            handleSearchInputChange,
             handlePageSizeInputChange,
             pageSize,
+            pageNumber,
+            previousPage,
+            nextPage,
           };
         },
       }).mount("#app");

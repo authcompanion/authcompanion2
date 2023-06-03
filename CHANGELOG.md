@@ -1,3 +1,25 @@
+# [3.0.0-beta.14](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.13...3.0.0-beta.14) (2023-06-03)
+
+This release of AuthCompanion features an improved Admin Dashboard, which includes new search functionality for filtering by a user's email address and new pagination tools for navigating a large number of users. 
+
+### Bug Fixes
+
+* **admin:** conditional formatting for active/inactive accounts ([5b03a5f](https://github.com/authcompanion/authcompanion2/commit/5b03a5f3edad6d92d5cf1ccb520e3b7d07ce04d7))
+* **admin:** trigger login form submit with enter key ([ed88b1d](https://github.com/authcompanion/authcompanion2/commit/ed88b1d2707c0633a729748641768fc3f0d593f9))
+* **admin:** usability improvements for table rows ([7c57722](https://github.com/authcompanion/authcompanion2/commit/7c57722cfb520b11fdbbd38b802b5fb154fc643b))
+* only set challenge cookie on /login routes ([cbdb515](https://github.com/authcompanion/authcompanion2/commit/cbdb5157971ff8b4a32899a4d5efe64659668cca))
+
+
+### Features
+
+* **admin:** add page size dropdown to dashboard ([1e329fa](https://github.com/authcompanion/authcompanion2/commit/1e329fa6420f229d453bfb9dbf0e436b91c45609))
+* **admin:** add pagination to admin api list endpoint ([d9c73af](https://github.com/authcompanion/authcompanion2/commit/d9c73af77143dd174014890ec7c5da164a514cc7))
+* **admin:** add pagination to dashboard ([f9c0a12](https://github.com/authcompanion/authcompanion2/commit/f9c0a12d2a27b2d965ec8d600cd5cff8bc593e08))
+* **admin:** admin dashboard now has a search box for filtering by user email ([2548f83](https://github.com/authcompanion/authcompanion2/commit/2548f833934bc7bb61d53aa3c0bc65c5f3b3cb74))
+* **admin:** filter users by email address using the LIKE operator ([79ac5f8](https://github.com/authcompanion/authcompanion2/commit/79ac5f8b52aaa472423742add94427463ae63256))
+
+
+
 # [3.0.0-beta.13](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.12...3.0.0-beta.13) (2023-05-05)
 
 

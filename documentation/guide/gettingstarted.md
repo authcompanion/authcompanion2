@@ -34,7 +34,7 @@ $ npm run start
 If you'd like to change the default settings, copy the example config file like
 below. Take a look through the values in the .env file and make changes as
 necessary; if you have questions please see
-[configuring documenation](configuration.md)
+[configuring documentation](configuration.md)
 
 ```bash
 $ cp env.example .env
@@ -72,8 +72,8 @@ When the server is properly configured and running there are two main entries
 into AuthCompanion.
 
 🖥️ The web forms, available to your application users. The login starts here:
-[http://localhost:3002/v1/web/login](http://localhost:3002/v1/web/login).
+`http://localhost:3002/v1/web/login`.
 
 🚀 To interact directly with with the backend APIs you start at this endpoint to
 register a user:
-[http://localhost:3002/v1/auth/register](http://localhost:3002/v1/auth/register)
+`http://localhost:3002/v1/auth/register`

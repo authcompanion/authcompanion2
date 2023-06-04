@@ -7,7 +7,7 @@ help cover your use cases.
 
 ## Server URL
 
-http://localhost:3002/v1/
+`http://localhost:3002/v1/`
 
 Returns Content-Type: application/json
 

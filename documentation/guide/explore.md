@@ -8,7 +8,7 @@ The best way to learn something is by using it yourself - use this guide as the 
 
 AuthCompanion takes care of the the user authentication for your web applications. The Server comes with pre-built [Web Forms](./webforms.md) to help you quickly integrate user auth alongside your web application and backend web services.
 
-With the AuthC server running, start first by registering an account using this Web Form located at: http://localhost:3002/v1/web/register
+With the AuthC server running, start first by registering an account using this Web Form located at: `http://localhost:3002/v1/web/register`
 
 After a successful login or account registration, AuthC provides developers a user's access token like below:
 
@@ -33,23 +33,23 @@ AuthCompanion).
 In AuthCompanion's .env file change "APPLICATION_ORIGIN" to the URL of your
 application. Example:
 
-APPLICATION_ORIGIN=http://localhost:3002/client/v1/home
+`APPLICATION_ORIGIN=http://localhost:3002/client/v1/home`
 
 ## Login as User
 
 Next, log in with the account you just created using your email and password at
 this Web Form:
-[http://localhost:3002/v1/web/login](http://localhost:3002/v1/web/login). You
+`http://localhost:3002/v1/web/login`. You
 should be redirected back to the home page.
 
 ## Change User's Profile
 
 If you'd like to change your user account - that's easy to do as well, try this
 Web Form:
-[http://localhost:3002/v1/web/profile](http://localhost:3002/v1/web/profile).
+`http://localhost:3002/v1/web/profile`.
 
 ## Recover an Account
 
 Have you forgotten your account details? Use the recovery flow Web Form to gain
 access to your account:
-[http://localhost:3002/v1/web/recovery](http://localhost:3002/v1/web/recovery).
+`http://localhost:3002/v1/web/recovery`.

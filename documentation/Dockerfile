@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM node:current-alpine3.15 AS build
+FROM node:current-alpine AS build
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -14,9 +14,9 @@ COPY . .
 RUN npm run docs:build
 
 # Setup Caddy
-FROM caddy:2.4.6-alpine
+FROM caddy:2-alpine
 
-COPY --from=build /usr/src/app/docs/.vuepress/dist /usr/share/caddy/
+COPY --from=build /usr/src/app/.vitepress/dist /usr/share/caddy/
 COPY ./Caddyfile /etc/caddy/Caddyfile
 #COPY ./downloads /usr/share/caddy/downloads
 

@@ -10,7 +10,7 @@ The JWT itself has a expiration time of 2 hours. After that time, you will need 
 
 ## Server URL
 
-http://localhost:3002/v1/
+`http://localhost:3002/v1/`
 
 Returns Content-Type: application/json
 
@@ -18,7 +18,7 @@ Returns Content-Type: application/json
 
 ### admin/login
 
-Description: Trades the admin credentials for an admin access token used to access the Admin API. See more information about the admin credentials the administer section of the documentation at [Administer](./administer.md). Only Admin tokens can access the Admin API.
+Description: Trades the admin credentials for an admin access token used to access the Admin API. See more information about the admin credentials the administer section of the documentation at [Administer](/guide/administer.md). Only Admin tokens can access the Admin API.
 
 **POST** Request Body:
 

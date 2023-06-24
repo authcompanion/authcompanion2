@@ -141,9 +141,9 @@ The Admin Dashboard is a tool that allows administrators or web application owne
 
 It provides a range of functions that administrators can use to create, edit, and delete user accounts via a friendly and intuitive interface.
 
-Check out the Admin Dashboard in the documentation here: [Administer](https://docs.authcompanion.com/guide/administer.html)
+Check out the Admin Dashboard in the documentation here: [Administer](https://docs.authcompanion.com/guide/administer.html). You can find the initial admin password on the `./adminkey` file.
 
-![Login](./.github/public/admin_dashboard.png)
+![Admin](./.github/public/admin_dashboard.png)
 
 ---
 

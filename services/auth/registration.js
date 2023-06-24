@@ -1,5 +1,6 @@
 import { createHash } from "../../utilities/credential.js";
 import { randomUUID } from "crypto";
+import { createId } from "@paralleldrive/cuid2";
 import { makeAccesstoken, makeRefreshtoken } from "../../utilities/jwt.js";
 import config from "../../config.js";
 
@@ -26,7 +27,7 @@ export const registrationHandler = async function (request, reply) {
     }
     //Create the user in the Database
     const hashpwd = await createHash(request.body.data.attributes.password);
-    const uuid = randomUUID();
+    const uuid = createId();
     const jwtid = randomUUID();
 
     const registerStmt = this.db.prepare(

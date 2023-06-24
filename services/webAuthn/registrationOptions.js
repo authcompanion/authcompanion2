@@ -1,5 +1,6 @@
 import config from "../../config.js";
 import { randomUUID } from "crypto";
+import { createId } from "@paralleldrive/cuid2";
 import compadre from "compadre";
 import { nouns } from "../../utilities/names.js";
 import { createHash } from "../../utilities/credential.js";
@@ -9,7 +10,7 @@ import { generateRegistrationOptions } from "@simplewebauthn/server";
 export const registrationOptionsHandler = async function (request, reply) {
   try {
     //create a user.id for the new registration
-    const userUUID = randomUUID();
+    const userUUID = createId();
 
     //set the PR's ID value
     const appURL = new URL(config.ORIGIN);

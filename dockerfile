@@ -27,7 +27,7 @@ ENV NPM_CONFIG_LOGLEVEL=warn
 COPY --chown=nodejs:nodejs package*.json ./
 
 # install dependencies here, for better reuse of layers
-RUN npm install && npm audit fix && npm cache clean --force
+RUN npm install
 
 # copy all sources in the container (exclusions in .dockerignore file)
 COPY --chown=nodejs:nodejs . .

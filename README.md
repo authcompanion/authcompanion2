@@ -5,7 +5,7 @@
 
 <h2 align="center"><b>AuthCompanion 2</b></h2>
 
-<p align="center"> An effortless, user management server with JWTs - well suited for modern web projects
+<p align="center"> An effortless and passwordless, User Management Server (with JWTs) - well suited for the modern web app.
 </p>
 
 <div align="center">
@@ -38,7 +38,7 @@ With AuthC you can:
 
 - Securely handle the registration, login, logout, and account recovery of user accounts.
 - Generate and verify [JWTs](https://jwt.io/introduction), a token used for your user's session and authenticating them into your web application's backend APIs.
-- Manage Users via a self-service Dashboard and confidently store and own your web application's user accounts
+- Manage Users via a self-service Dashboard and confidently store and own your web application's user accounts, on your terms.
 - Help users create accounts and login with a passkey on their mobile device (aka passwordless) or by using traditional username/passwords instead
 
 ## Try it

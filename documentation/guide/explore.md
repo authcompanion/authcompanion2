@@ -6,7 +6,7 @@ The best way to learn something is by using it yourself - use this guide as the 
 
 ## Registering a User
 
-AuthCompanion takes care of the the user authentication for your web applications. The Server comes with pre-built [Web Forms](./webforms.md) to help you quickly integrate user auth alongside your web application and backend web services.
+AuthCompanion takes care of the user authentication for your web applications. The Server comes with pre-built [Web Forms](./webforms.md) to help you quickly integrate user auth alongside your web application and backend web services.
 
 With the AuthC server running, start first by registering an account using this Web Form located at: `http://localhost:3002/v1/web/register`
 

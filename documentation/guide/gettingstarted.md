@@ -17,15 +17,15 @@ $ cd authcompanion2/
 
 Pre-requirement:
 
-- Make sure you have [Node.js](http://nodejs.org) installed **version 16+**
+- Make sure you have [Node.js](http://nodejs.org) installed **latest TLS version - v18 **
 
-Let's install the application's packages
+Let's install the application's packages. 
 
 ```bash
 $ npm install
 ```
 
-When you're ready, start the server with the default settings.
+When you're ready, start the server (with the default settings). AuthC's default settings are great for getting started and trying things out.
 
 ```bash
 $ npm run start
@@ -40,16 +40,15 @@ necessary; if you have questions please see
 $ cp env.example .env
 ```
 
-Then restart the server with your new settings. 
-
-AuthC's default settings are great for getting started and trying things out.
+Then restart the server to apply your new settings.
 
 ## With Docker
 
 Make sure to have the
 [respository cloned](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
-as outlined in the steps above. Then from the main directory, build the AuthC
-server image:
+as outlined in the steps above. 
+
+Then from the main directory, build the AuthC server image:
 
 ```bash
 $ docker build -t authc_server .
@@ -64,7 +63,7 @@ authc_server
 ```
 
 If you have your own configuration file you can pass it into your docker command
-with: `--env-file .env \`
+with: `--env-file .env \` but this is optional. 
 
 ## Using AuthCompanion
 
@@ -72,8 +71,9 @@ When the server is properly configured and running there are two main entries
 into AuthCompanion.
 
 🖥️ The web forms, available to your application users. The login starts here:
-`http://localhost:3002/v1/web/login`.
+`http://localhost:3002/v1/web/login`. 
 
-🚀 To interact directly with with the backend APIs you start at this endpoint to
-register a user:
-`http://localhost:3002/v1/auth/register`
+Or check out the registration page here: `http://localhost:3002/v1/web/register`
+
+🚀 To interact directly your user accounts as an administrator - check out the Admin Dashboard here:
+`http://localhost:3002/v1/admin/login`

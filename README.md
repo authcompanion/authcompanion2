@@ -5,7 +5,7 @@
 
 <h2 align="center"><b>AuthCompanion 2</b></h2>
 
-<p align="center"> An effortless and passwordless, User Management Server (with JWTs) - well suited for the modern web app.
+<p align="center"> An admin-friendly, User Management Server (with Passkeys & JWTs) - for seamless and secure integration of user authentication.
 </p>
 
 <div align="center">

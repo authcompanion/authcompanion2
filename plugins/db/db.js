@@ -3,11 +3,11 @@ import Database from "better-sqlite3";
 import config from "../../config.js";
 import fastifyPlugin from "fastify-plugin";
 
-const dbPlugin = async function (fastify, options) {
+const dbPlugin = async function (fastify) {
   let db = {};
   try {
     //create test database to support CI
-    if (options.testdb) {
+    if (process.env.NODE_ENV === "test") {
       config.DBPATH = "./test.db";
       console.log("Test database - ENABLED");
     }

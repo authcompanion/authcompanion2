@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch --no-warnings server.js",
-    "test": "ava ./tests/app.test.js",
+    "test": "ava",
     "start": "node --no-warnings server.js",
     "release:changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },

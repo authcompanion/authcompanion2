@@ -51,6 +51,11 @@ async function generateAndExportKey() {
 
 const setupServerKey = async function (fastify, options) {
   try {
+    //create a test serverkey to support CI
+    if (process.env.NODE_ENV === "test") {
+      config.KEYPATH = "./serverkey_test";
+    }
+
     if (!existsSync(config.KEYPATH)) {
       //Create a JWK if one does not exist
       await generateAndExportKey();

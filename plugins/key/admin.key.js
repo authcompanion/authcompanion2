@@ -12,6 +12,11 @@ const generatePassword = function () {
 
 const setupAdminKey = async function (fastify) {
   try {
+    //create test database to support CI
+    if (process.env.NODE_ENV === "test") {
+      config.ADMINKEYPATH = "./adminkey_test";
+    }
+
     //Check if the admin user already exists on server startup
     const stmt = fastify.db.prepare(
       "SELECT uuid, name, email, active, created_at, updated_at FROM users WHERE email = ?;"
@@ -51,6 +56,7 @@ const setupAdminKey = async function (fastify) {
 
     //export admin password to a file. Admin password is only exported once on server startup and can be traded for an access token
     writeFileSync(config.ADMINKEYPATH, `admin password: ${adminPwd}`);
+    console.log("Admin API key - BUILT");
 
     //register the admin user on the fastify instance
     fastify.decorate("registeredAdminUser", user);

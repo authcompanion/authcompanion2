@@ -1,27 +1,18 @@
-import buildApp from "../app.js";
 import test from "ava";
+import buildApp from "../app.js";
 import { unlink } from "node:fs/promises";
 import { parse } from "cookie";
 import { readFile } from "node:fs/promises";
-
-// There are two main ways you can use to test your application,
-// one is to test with a running server, which means that inside
-// each test you will invoke `.listen()`, or with http injection.
-// Http injection allows you to call routes of your server without
-// the need to have a running http server underneath.
-// Http injection is a first class citizen in Fastify, and you can
-// use it both in production and testing.
-//
-// You can read more about testing and http injection at the following url:
-// https://www.fastify.io/docs/latest/Guides/Testing/
+import { makeAccesstoken } from "../utilities/jwt.js";
+import * as jose from "jose";
 
 // Setup Test
 test.before(async (t) => {
   //build app with the test database
-  t.context.app = await buildApp({ testdb: "true" });
+  t.context.app = await buildApp();
 
   //set up admin password
-  const adminKey = await readFile("./adminkey", "utf8");
+  const adminKey = await readFile("./adminkey_test", "utf8");
   const adminPassword = adminKey.split(":")[1].trim();
   t.context.adminPass = adminPassword;
 
@@ -67,7 +58,6 @@ test.before(async (t) => {
   //save admin jwt to context
   t.context.adminJWT = response2.json().data.attributes.access_token;
   t.context.adminFgp = parse(response.headers["set-cookie"][1])["fgp"];
-
 });
 
 // Cleanup Test
@@ -75,11 +65,18 @@ test.after.always("cleanup tests", async (t) => {
   await unlink("./test.db");
   await unlink("./test.db-shm");
   await unlink("./test.db-wal");
+  //remove the serverkey
+  await unlink("./serverkey_test");
+
+  //remove adminkey
+  await unlink("./adminkey_test");
 
   console.log("Cleaning up tests - successfully deleted test db");
 });
 
 // Start Tests
+
+test.serial.todo("API Endpoint Test: /auth/recovery");
 
 test.serial("Auth Endpoint Test: GET /auth/refresh", async (t) => {
   try {
@@ -90,7 +87,7 @@ test.serial("Auth Endpoint Test: GET /auth/refresh", async (t) => {
       headers: {
         Cookie: `userRefreshToken=${t.context.refreshToken}`,
       },
-      body: JSON.stringify({})
+      body: JSON.stringify({}),
     });
     t.is(response.statusCode, 200, "API - Status Code Incorrect");
   } catch (error) {
@@ -159,7 +156,7 @@ test.serial("Auth Endpoint Test: POST /auth/users/me", async (t) => {
       },
       headers: {
         Authorization: `Bearer ${t.context.jwt}`,
-        cookie: `${t.context.fgp}`
+        cookie: `${t.context.fgp}`,
       },
     });
     t.is(response.statusCode, 200, "API - Status Code Incorrect");
@@ -167,8 +164,6 @@ test.serial("Auth Endpoint Test: POST /auth/users/me", async (t) => {
     console.log(error);
   }
 });
-
-test.serial.todo("API Endpoint Test: /auth/recovery");
 
 test.serial("Admin Endpoint Test: POST /admin/login", async (t) => {
   try {
@@ -198,7 +193,7 @@ test.serial("Admin Endpoint Test: GET /admin/users", async (t) => {
       url: "/v1/admin/users",
       headers: {
         Authorization: `Bearer ${t.context.adminJWT}`,
-        cookie: `${t.context.adminFgp}`
+        cookie: `${t.context.adminFgp}`,
       },
     });
     t.is(response.statusCode, 200, "API - Status Code Incorrect");
@@ -225,7 +220,7 @@ test.serial("Admin Endpoint Test: POST /admin/users", async (t) => {
       },
       headers: {
         Authorization: `Bearer ${t.context.adminJWT}`,
-        cookie: `${t.context.adminFgp}`
+        cookie: `${t.context.adminFgp}`,
       },
     });
     t.is(response.statusCode, 201, "API - Status Code Incorrect");
@@ -252,7 +247,7 @@ test.serial("Admin Endpoint Test: PATCH /admin/users/:uuid", async (t) => {
       },
       headers: {
         Authorization: `Bearer ${t.context.adminJWT}`,
-        cookie: `${t.context.adminFgp}`
+        cookie: `${t.context.adminFgp}`,
       },
     });
     t.is(response.statusCode, 200, "API - Status Code Incorrect");
@@ -268,11 +263,42 @@ test.serial("Admin Endpoint Test: DELETE /admin/users/:uuid", async (t) => {
       url: `/v1/admin/users/${t.context.uuid}`,
       headers: {
         Authorization: `Bearer ${t.context.adminJWT}`,
-        cookie: `${t.context.adminFgp}`
+        cookie: `${t.context.adminFgp}`,
       },
     });
     t.is(response.statusCode, 204, "API - Status Code Incorrect");
   } catch (error) {
     console.log(error);
   }
+});
+
+test("JWT Test: makeAccesstoken generates a valid JWT token", async (t) => {
+  const userObj = {
+    uuid: "123",
+    name: "John Doe",
+    email: "johndoe@example.com",
+  };
+  const secretKey = t.context.app.key;
+
+  const { token, expiration, userFingerprint } = await makeAccesstoken(
+    userObj,
+    secretKey
+  );
+
+  // Fetch the payload
+  const { payload } = await jose.jwtVerify(token, secretKey);
+
+  // Verify the user information in the JWT payload
+  t.is(payload.userid, userObj.uuid);
+  t.is(payload.name, userObj.name);
+  t.is(payload.email, userObj.email);
+
+  // Assert that the token is not empty
+  t.truthy(token);
+
+  // Assert that the userFingerprint is not empty
+  t.truthy(userFingerprint);
+
+  // Assert that the expiration is not empty
+  t.truthy(expiration);
 });

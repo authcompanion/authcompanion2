@@ -9,11 +9,11 @@ import adminkey from "./plugins/key/admin.key.js";
 import pkg from "./package.json" assert { type: "json" };
 const appVersion = pkg.version;
 
-const buildApp = async function (opts) {
-  const app = await Fastify(opts);
+const buildApp = async function (serverOptions) {
+  const app = await Fastify(serverOptions);
 
   //register the sqlite database plugin
-  app.register(sqlite3, opts);
+  app.register(sqlite3);
   //register the server key plugin
   app.register(serverkey);
   //register the admin key plugin

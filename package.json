@@ -15,21 +15,21 @@
   "license": "Big Time Public License",
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.1",
-    "@simplewebauthn/server": "^7.3.1",
-    "argon2": "^0.30.3",
-    "better-sqlite3": "^8.4.0",
+    "@simplewebauthn/server": "^7.4.0",
+    "argon2": "^0.31.0",
+    "better-sqlite3": "^8.5.0",
     "compadre": "^3.2.0",
     "cookie": "^0.5.0",
     "dotenv": "^16.3.1",
     "emailjs": "^4.0.2",
-    "fastify": "^4.19.2",
-    "fastify-plugin": "^3.0.1",
+    "fastify": "^4.21.0",
+    "fastify-plugin": "^4.5.1",
     "jose": "^4.14.4"
   },
   "devDependencies": {
-    "ava": "^4.3.3",
-    "conventional-changelog-cli": "^2.2.2",
-    "prettier": "^2.8.8"
+    "ava": "^5.3.1",
+    "conventional-changelog-cli": "^3.0.0",
+    "prettier": "^3.0.0"
   },
   "engines": {
     "node": ">=18.16",

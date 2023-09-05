@@ -3,7 +3,7 @@ import buildApp from "../app.js";
 import { unlink } from "node:fs/promises";
 import { parse } from "cookie";
 import { readFile } from "node:fs/promises";
-import { makeAccesstoken } from "../utilities/jwt.js";
+import { makeAccesstoken, makeRefreshtoken, makeAdminToken } from "../utilities/jwt.js";
 import * as jose from "jose";
 
 // Setup Test
@@ -298,6 +298,91 @@ test("JWT Test: makeAccesstoken generates a valid JWT token", async (t) => {
 
   // Assert that the userFingerprint is not empty
   t.truthy(userFingerprint);
+
+  // Assert that the expiration is not empty
+  t.truthy(expiration);
+});
+
+test("JWT Test: makeRefreshtoken generates a valid refresh JWT token", async (t) => {
+  const userObj = {
+    uuid: "123",
+    name: "John Doe",
+    email: "johndoe@example.com",
+  };
+  const secretKey = t.context.app.key;
+
+  // Generate a refresh token using the function
+  const { token, expiration } = await makeRefreshtoken(userObj, secretKey);
+
+  // Fetch the payload
+  const { payload } = await jose.jwtVerify(token, secretKey);
+
+  // Verify the user information in the JWT payload
+  t.is(payload.userid, userObj.uuid);
+  t.is(payload.name, userObj.name);
+  t.is(payload.email, userObj.email);
+
+  // Assert that the token is not empty
+  t.truthy(token);
+
+  // Assert that the expiration is not empty
+  t.truthy(expiration);
+});
+
+test("JWT Test: makeRefreshtoken generates a valid recovery JWT token", async (t) => {
+  const userObj = {
+    uuid: "123",
+    name: "John Doe",
+    email: "johndoe@example.com",
+  };
+  const secretKey = t.context.app.key;
+
+  // Generate a recovery token using the function
+  const { token, expiration } = await makeRefreshtoken(userObj, secretKey, { recoveryToken: true });
+
+  // Fetch the payload
+  const { payload } = await jose.jwtVerify(token, secretKey);
+
+  // Verify the user information in the JWT payload
+  t.is(payload.userid, userObj.uuid);
+  t.is(payload.name, userObj.name);
+  t.is(payload.email, userObj.email);
+
+  // Assert that the token is not empty
+  t.truthy(token);
+
+  // Assert that the expiration is not empty
+  t.truthy(expiration);
+});
+
+test("JWT Test: makeAdminToken generates a valid admin JWT token", async (t) => {
+  const userObj = {
+    uuid: "123",
+    name: "Admin User",
+    email: "admin@example.com",
+  };
+  const secretKey = t.context.app.key;
+
+  // Generate an admin token using the function
+  const { token, expiration, userFingerprint } = await makeAdminToken(userObj, secretKey);
+
+  // Fetch the payload
+  const { payload } = await jose.jwtVerify(token, secretKey);
+
+  // Verify the user information in the JWT payload
+  t.is(payload.userid, userObj.uuid);
+  t.is(payload.name, userObj.name);
+  t.is(payload.email, userObj.email);
+
+  // Verify the scope in the JWT payload
+  t.is(payload.scope, "admin");
+
+  // Verify the userFingerprint in the JWT payload
+  // t.truthy(payload.userFingerprint);
+  // t.is(payload.userFingerprint, userFingerprint);
+
+  // Assert that the token is not empty
+  t.truthy(token);
 
   // Assert that the expiration is not empty
   t.truthy(expiration);

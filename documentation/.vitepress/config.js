@@ -1,7 +1,6 @@
-import { defineConfig } from "vitepress";
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
+export default {
   title: "AuthCompanion2",
   description:
     "Documentation site for AuthcCompanion2 - an effortless user management server for modern apps",
@@ -66,4 +65,4 @@ export default defineConfig({
       ],
     },
   },
-});
+};

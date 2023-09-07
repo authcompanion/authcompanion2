@@ -1,10 +1,9 @@
 {
   "name": "authcompanion2_documentation",
   "version": "1.0.0",
-  "description": "Documentation site for authcompanion2",
+  "description": "Documentation site for authcompanion2 at https://docs.authcompanion.com/",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "docs:dev": "vitepress dev",
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview"
@@ -13,6 +12,6 @@
   "author": "Paul Fischer",
   "license": "MIT",
   "devDependencies": {
-    "vitepress": "1.0.0-beta.7"
+    "vitepress": "1.0.0-rc.10"
   }
 }

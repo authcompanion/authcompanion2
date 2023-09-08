@@ -1,7 +1,7 @@
 {
   "name": "authcompanion2",
-  "version": "3.0.0-beta.14",
-  "description": "An effortless, token-based user management server - well suited for modern web projects.",
+  "version": "3.0.0-beta.15",
+  "description": "An admin-friendly, User Management Server (with Passkeys & JWTs) - for seamless and secure integration of user authentication.",
   "main": "server.js",
   "type": "module",
   "scripts": {

@@ -1,3 +1,13 @@
+# [3.0.0-beta.15](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.14...3.0.0-beta.15) (2023-09-08)
+
+
+### Bug Fixes
+
+* **docs:** improvements to article grammar ([f86b1aa](https://github.com/authcompanion/authcompanion2/commit/f86b1aadea665db0e4d26f1ff2b7c38fc5d88130))
+* **docs:** refreshed examples used in documenation ([fd30180](https://github.com/authcompanion/authcompanion2/commit/fd30180355836739337c78641ecdcd9460ca94e8))
+
+
+
 # [3.0.0-beta.14](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.13...3.0.0-beta.14) (2023-06-03)
 
 This release of AuthCompanion features an improved Admin Dashboard, which includes new search functionality for filtering by a user's email address and new pagination tools for navigating a large number of users. 

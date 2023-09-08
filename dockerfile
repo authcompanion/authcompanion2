@@ -1,6 +1,6 @@
 FROM node:18-slim as builder
 
-LABEL version="3.0.0-beta.14"
+LABEL version="3.0.0-beta.15"
 LABEL description="An admin-friendly, User Management Server (with Passkeys & JWTs) - for seamless and secure integration of user authentication"
 LABEL maintainer="Paul Fischer"
 

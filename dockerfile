@@ -1,7 +1,7 @@
 FROM node:18-slim as builder
 
-LABEL version="2.0.0"
-LABEL description="Authcompanion 2 - An effortless, token-based user management server - well suited for modern web projects."
+LABEL version="3.0.0-beta.14"
+LABEL description="An admin-friendly, User Management Server (with Passkeys & JWTs) - for seamless and secure integration of user authentication"
 LABEL maintainer="Paul Fischer"
 
 # update packages, to reduce risk of vulnerabilities

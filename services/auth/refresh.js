@@ -2,7 +2,7 @@ import {
   makeAccesstoken,
   makeRefreshtoken,
   validateJWT,
-} from "../../utilities/jwt.js";
+} from "../../utils/jwt.js";
 import config from "../../config.js";
 import { parse } from "cookie";
 

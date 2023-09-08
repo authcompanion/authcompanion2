@@ -3,7 +3,7 @@ import buildApp from "../app.js";
 import { unlink } from "node:fs/promises";
 import { parse } from "cookie";
 import { readFile } from "node:fs/promises";
-import { makeAccesstoken, makeRefreshtoken, makeAdminToken } from "../utilities/jwt.js";
+import { makeAccesstoken, makeRefreshtoken, makeAdminToken } from "../utils/jwt.js";
 import * as jose from "jose";
 
 // Setup Test

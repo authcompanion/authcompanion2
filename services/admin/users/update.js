@@ -1,4 +1,4 @@
-import { createHash } from "../../../utilities/credential.js";
+import { createHash } from "../../../utils/credential.js";
 
 export const updateUserHandler = async function (request, reply) {
   try {

@@ -1,7 +1,7 @@
-import { createHash } from "../../utilities/credential.js";
+import { createHash } from "../../utils/credential.js";
 import { randomUUID } from "crypto";
 import { createId } from "@paralleldrive/cuid2";
-import { makeAccesstoken, makeRefreshtoken } from "../../utilities/jwt.js";
+import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import config from "../../config.js";
 
 export const registrationHandler = async function (request, reply) {

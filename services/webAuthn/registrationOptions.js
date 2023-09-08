@@ -2,8 +2,8 @@ import config from "../../config.js";
 import { randomUUID } from "crypto";
 import { createId } from "@paralleldrive/cuid2";
 import compadre from "compadre";
-import { nouns } from "../../utilities/names.js";
-import { createHash } from "../../utilities/credential.js";
+import { nouns } from "../../utils/names.js";
+import { createHash } from "../../utils/credential.js";
 import crypto from "crypto";
 import { generateRegistrationOptions } from "@simplewebauthn/server";
 

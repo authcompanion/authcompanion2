@@ -1,6 +1,6 @@
 import config from "../../config.js";
 import { parse } from "cookie";
-import { makeAccesstoken, makeRefreshtoken } from "../../utilities/jwt.js";
+import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import { verifyAuthenticationResponse } from "@simplewebauthn/server";
 
 export const loginVerificationHandler = async function (request, reply) {

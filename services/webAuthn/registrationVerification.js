@@ -1,5 +1,5 @@
 import config from "../../config.js";
-import { makeAccesstoken, makeRefreshtoken } from "../../utilities/jwt.js";
+import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import { verifyRegistrationResponse } from "@simplewebauthn/server";
 
 export const registrationVerificationHandler = async function (request, reply) {

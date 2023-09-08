@@ -2,7 +2,7 @@ import fastifyPlugin from "fastify-plugin";
 import config from "../../config.js";
 import { writeFileSync } from "fs";
 import { createId } from "@paralleldrive/cuid2";
-import { createHash } from "../../utilities/credential.js";
+import { createHash } from "../../utils/credential.js";
 import * as crypto from "crypto";
 
 //function to generate a random password using crypto module

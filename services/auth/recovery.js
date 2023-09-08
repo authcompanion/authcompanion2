@@ -1,4 +1,4 @@
-import { makeRefreshtoken } from "../../utilities/jwt.js";
+import { makeRefreshtoken } from "../../utils/jwt.js";
 import config from "../../config.js";
 import { SMTPClient } from "emailjs";
 

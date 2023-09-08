@@ -1,4 +1,4 @@
-import { createHash } from "../../../utilities/credential.js";
+import { createHash } from "../../../utils/credential.js";
 import { randomUUID } from "crypto";
 import { createId } from "@paralleldrive/cuid2";
 

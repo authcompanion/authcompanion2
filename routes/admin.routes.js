@@ -19,7 +19,7 @@ import { logoutHandler } from "../services/admin/users/logout.js";
 import {
   authenticateAdminRequest,
   authenticateWebAdminRequest,
-} from "../utilities/authenticate.js";
+} from "../utils/authenticate.js";
 
 const adminRoutes = async function (fastify, options) {
   //admin API routes

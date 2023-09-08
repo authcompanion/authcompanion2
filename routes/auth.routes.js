@@ -21,7 +21,7 @@ import { loginVerificationHandler } from "../services/webAuthn/loginVerification
 import { loginVerificationSchema } from "../services/webAuthn/schemas/loginVerificationSchema.js";
 import { registerVerificationSchema } from "../services/webAuthn/schemas/registerVerificationSchema.js";
 
-import { authenticateAuthRequest } from "../utilities/authenticate.js";
+import { authenticateAuthRequest } from "../utils/authenticate.js";
 
 const authRoutes = async function (fastify, options) {
   //authentication API routes

@@ -1,54 +1,54 @@
 import buildApp from "./app.js";
 import config from "./config.js";
 
-const server = await buildApp({
-  logger: true,
-  forceCloseConnections: true,
-});
+async function startServer() {
+  try {
+    const server = await buildApp({
+      logger: true,
+      forceCloseConnections: true,
+    });
 
-/**
- * Let's run the AuthCompanion server!
- */
-function startServer() {
-  server.listen(
-    {
+    await server.listen({
       port: config.AUTHPORT,
       host: "0.0.0.0",
-    },
-    (err) => {
-      if (err) {
-        console.log("Error starting server:", err);
-        process.exit(1);
-      }
-    }
-  );
-  console.log(`
-      ###########################################################
-                The AuthCompanion Server has started
+    });
 
-           🖥️   Client UI on: http://localhost:${config.AUTHPORT}/v1/web/login
-           🚀   Admin UI on: http://localhost:${config.AUTHPORT}/v1/admin/login
-
-      ###########################################################
-      `);
-  console.log("Use CTRL-C to shutdown AuthCompanion");
-}
-
-//setup for gracefully exiting the AuthCompanion server
-async function handleSignal() {
-  try {
-    await server.close();
-    console.log(`
-  AuthCompanion has exited, Good bye👋`);
-    process.exit(0);
+    printStartupMessage(config.AUTHPORT);
+    setupGracefulShutdown(server);
   } catch (error) {
-    console.log("Error shutting down server:", error);
+    console.error("Error starting server:", error);
     process.exit(1);
   }
 }
 
-process.on("SIGTERM", handleSignal);
-process.on("SIGINT", handleSignal);
-process.on("SIGUSR2", handleSignal);
+function printStartupMessage(port) {
+  console.log(`
+      ###########################################################
+                The AuthCompanion Server has started
+
+           🖥️   Client UI on: http://localhost:${port}/v1/web/login
+           🚀   Admin UI on: http://localhost:${port}/v1/admin/login
+
+      ###########################################################
+      `);
+  console.log("Use CTRL-C to shut down AuthCompanion");
+}
+
+function setupGracefulShutdown(server) {
+  const handleSignal = async () => {
+    try {
+      await server.close();
+      console.log("AuthCompanion has exited. Goodbye! 👋");
+      process.exit(0);
+    } catch (error) {
+      console.error("Error shutting down server:", error);
+      process.exit(1);
+    }
+  };
+
+  process.on("SIGTERM", handleSignal);
+  process.on("SIGINT", handleSignal);
+  process.on("SIGUSR2", handleSignal);
+}
 
 startServer();

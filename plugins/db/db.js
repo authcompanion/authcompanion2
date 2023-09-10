@@ -18,10 +18,10 @@ const dbPlugin = async function (fastify) {
       db = new Database(config.DBPATH);
       db.pragma("journal_mode = WAL");
 
-      console.log("Sqlite3 database - CREATED");
-
       const migration = readFileSync("./plugins/db/1__main.sql", "utf8");
       db.exec(migration);
+
+      fastify.log.info(`Generated Sqlite3 Database: ${config.DBPATH}...`);
     } else {
       db = new Database(config.DBPATH);
       db.pragma("journal_mode = WAL");
@@ -34,7 +34,7 @@ const dbPlugin = async function (fastify) {
         throw new Error("Database is an unexpected version, please try again");
       }
     }
-    console.log("Sqlite3 database - READY");
+    fastify.log.info(`Using Sqlite3 Database: ${config.DBPATH}`);
   } catch (error) {
     console.log(error);
     throw new Error(

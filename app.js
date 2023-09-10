@@ -13,11 +13,11 @@ const buildApp = async function (serverOptions) {
   const app = await Fastify(serverOptions);
 
   //register the sqlite database plugin
-  app.register(sqlite3);
+  await app.register(sqlite3);
   //register the server key plugin
-  app.register(serverkey);
+  await app.register(serverkey);
   //register the admin key plugin
-  app.register(adminkey);
+  await app.register(adminkey);
 
   //register the admin api routes
   await app.register(adminRoutes, { prefix: "/v1/admin" });
@@ -34,6 +34,7 @@ const buildApp = async function (serverOptions) {
       `;
     });
   });
+
   return app;
 };
 

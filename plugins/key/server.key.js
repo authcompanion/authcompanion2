@@ -60,14 +60,14 @@ const setupServerKey = async function (fastify, options) {
       //Create a JWK if one does not exist
       await generateAndExportKey();
 
-      console.log("Server key - BUILT");
+      fastify.log.info(`Generating Server Key: ${config.KEYPATH}...`);
     }
     const key = await importKey();
 
     //make available the database across the server by calling "key"
     fastify.decorate("key", key);
 
-    console.log("Server key - READY");
+    fastify.log.info(`Using Server Key: ${config.KEYPATH}`);
   } catch (error) {
     console.log(error);
     throw new Error("Failed to import the required Server key");

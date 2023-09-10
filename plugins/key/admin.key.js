@@ -26,7 +26,7 @@ const setupAdminKey = async function (fastify) {
     if (adminUser) {
       //register the admin user on the fastify instance
       fastify.decorate("registeredAdminUser", adminUser);
-      console.log("Admin API key - READY");
+      fastify.log.info(`Using Admin API Key: ${config.ADMINKEYPATH}`);
       return;
     }
 
@@ -56,12 +56,12 @@ const setupAdminKey = async function (fastify) {
 
     //export admin password to a file. Admin password is only exported once on server startup and can be traded for an access token
     writeFileSync(config.ADMINKEYPATH, `admin password: ${adminPwd}`);
-    console.log("Admin API key - BUILT");
+    fastify.log.info(`Generating Admin API Key: ${config.KEYPATH}...`);
 
     //register the admin user on the fastify instance
     fastify.decorate("registeredAdminUser", user);
 
-    console.log("Admin API key - READY");
+    fastify.log.info(`Using Admin API Key: ${config.ADMINKEYPATH}`);
   } catch (error) {
     console.log(error);
     throw new Error("Failed to export the admin key");

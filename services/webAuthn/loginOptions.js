@@ -16,7 +16,7 @@ export const loginOptionsHandler = async function (request, reply) {
     };
 
     //generate options
-    const generatedOptions = generateAuthenticationOptions(opts);
+    const generatedOptions = await generateAuthenticationOptions(opts);
 
     //fetch cookies (we'll need session id. session id is set on page load in ui.routes.js)
     const cookies = parse(request.headers.cookie);

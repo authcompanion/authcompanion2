@@ -39,7 +39,7 @@ export const registrationOptionsHandler = async function (request, reply) {
     };
 
     //generate registration options to prepare the response
-    const generatedOptions = generateRegistrationOptions(options);
+    const generatedOptions = await generateRegistrationOptions(options);
 
     //Generate user data and create user in database
     //build jwtid

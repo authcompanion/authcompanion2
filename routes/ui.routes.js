@@ -41,6 +41,21 @@ const webRoutes = async function (fastify, options) {
     });
     return homePage;
   });
+
+  fastify.get("/test", (request, reply) => {
+    const homePage = readFileSync("./ui/auth/test.html");
+    reply.headers({
+      "Content-Type": `text/html`,
+    });
+    return homePage;
+  });
+  fastify.get("/css", (request, reply) => {
+    const homePage = readFileSync("./ui/output.css");
+    reply.headers({
+      "Content-Type": `text/css`,
+    });
+    return homePage;
+  });
 };
 
 export default webRoutes;

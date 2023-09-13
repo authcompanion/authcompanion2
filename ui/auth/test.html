@@ -81,6 +81,21 @@
 
             <div class="relative">
               <input
+                type="text"
+                class="w-full p-4 text-sm border-gray-200 rounded-lg shadow-sm pe-12"
+
+                placeholder="Enter name"
+              />
+
+ 
+            </div>
+          </div>
+
+          <div class="my-4">
+            <label for="email" class="sr-only">Email</label>
+
+            <div class="relative">
+              <input
                 type="email"
                 class="w-full p-4 text-sm border-gray-200 rounded-lg shadow-sm pe-12"
                 type="email"
@@ -217,16 +232,6 @@
         </form>
       </div>
     </div>
-    <div class="fixed inset-x-0 bottom-0">
-      <div class="m-4 text-xs text-gray-400">
-        Powered by
-        <span class="underline">
-          <a href="https://github.com/authcompanion/authcompanion2"
-            >AuthCompanion</a
-          >
-        </span>
-      </div>
-    </div>
     <!-- Scripts -->
     <script type="module">
       import {
@@ -235,12 +240,13 @@
         computed,
       } from "https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.prod.js";
 
-      const { startAuthentication } = SimpleWebAuthnBrowser;
-
+      const { startRegistration } = SimpleWebAuthnBrowser;
       createApp({
         setup() {
+          const name = ref("");
           const email = ref("");
           const password = ref("");
+          const confirmPassword = ref("");
 
           const showError = ref(false);
           let errorTitle = ref(null);
@@ -248,13 +254,22 @@
 
           const submit = async () => {
             try {
-              let response = await fetch("/v1/auth/login", {
+              if (password.value !== confirmPassword.value) {
+                showError.value = true;
+                errorTitle.value = "Validation Error";
+                errorDetail.value = "Passwords do not match, please try again";
+
+                return;
+              }
+
+              let response = await fetch("/v1/auth/register", {
                 method: "POST",
                 credentials: "include",
                 body: JSON.stringify({
                   data: {
                     type: "users",
                     attributes: {
+                      name: name.value,
                       email: email.value,
                       password: password.value,
                     },
@@ -264,8 +279,9 @@
                   "content-type": "application/json",
                 },
               });
-              const appOrigin =
-                await response.headers.get("x-authc-app-origin");
+              const appOrigin = await response.headers.get(
+                "x-authc-app-origin"
+              );
               const resbody = await response.json();
 
               if (response.ok) {
@@ -273,13 +289,17 @@
                   "ACCESS_TOKEN",
                   resbody.data.attributes.access_token
                 );
+                showError.value = false;
+
+                showError.value = false;
 
                 window.location.href = appOrigin;
               } else {
-                errorTitle.value = resbody.errors[0].title;
-                errorDetail.value = resbody.errors[0].detail;
-
                 showError.value = true;
+
+                errorTitle.value = "Error";
+                errorDetail.value =
+                  "Error occured, please try registering again";
               }
             } catch (e) {
               console.log(e);
@@ -287,42 +307,42 @@
 
               errorTitle.value = "Error";
               errorDetail.value =
-                "There was an issue logging in, please try again";
+                "There was an issue connecting, please try again";
             }
-          };
-
-          const createAccount = () => {
-            window.location.href = "register";
           };
 
           const passkeySubmit = async () => {
             try {
-              let optionsResponse = await fetch("/v1/auth/login-options", {
-                method: "GET",
-                headers: {
-                  "content-type": "application/json",
-                },
-              });
+              let optionsResponse = await fetch(
+                "/v1/auth/registration-options",
+                {
+                  method: "GET",
+                  headers: {
+                    "content-type": "application/json",
+                  },
+                }
+              );
 
               if (optionsResponse.ok) {
                 const opts = await optionsResponse.json();
 
-                let attResp = await startAuthentication(opts);
+                let attResp = await startRegistration(opts);
 
                 let verificationResponse = await fetch(
-                  "/v1/auth/login-verification",
+                  "/v1/auth/registration-verification",
                   {
                     method: "POST",
                     body: JSON.stringify(attResp),
                     headers: {
                       "content-type": "application/json",
-                      "x-authc-app-challenge": opts.challenge,
+                      "x-authc-app-userid": opts.user.id,
                     },
                   }
                 );
                 const reply = await verificationResponse.json();
-                const appOrigin =
-                  await verificationResponse.headers.get("x-authc-app-origin");
+                const appOrigin = await verificationResponse.headers.get(
+                  "x-authc-app-origin"
+                );
 
                 window.localStorage.setItem(
                   "ACCESS_TOKEN",
@@ -336,7 +356,7 @@
 
                 errorTitle.value = "Error";
                 errorDetail.value =
-                  "There was an issue logging in, please try again";
+                  "Error occured, please try registering again";
               }
             } catch (e) {
               console.log(e);
@@ -347,17 +367,17 @@
                 "There was an issue connecting, please try again";
             }
           };
-
-          // expose to the html template
+          // expose to template
           return {
             showError,
             errorTitle,
             errorDetail,
-            email,
-            password,
             submit,
             passkeySubmit,
-            createAccount,
+            name,
+            email,
+            password,
+            confirmPassword,
           };
         },
       }).mount("#app");

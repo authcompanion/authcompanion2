@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" un-cloak>
   <head>
     <meta charset="UTF-8" />
@@ -22,9 +22,6 @@
 
   <body class="flex flex-col h-full bg-gray-50">
     <div id="app" class="">
-      <div class="w-full my-8 text-center">
-        <p>Placeholder Home Page</p>
-      </div>
       <div class="w-full my-8 text-center">
         <p class="py-3 text-3xl italic font-semibold text-green-700">
           Success!
@@ -50,12 +47,21 @@
             </div>
             <!-- Main -->
             <div class="max-w-md grid-cols-1 gap-6 break-words">
+              <p class="py-3 text-black">
+                For a full guide on how to integrate and launch AuthCompanion,
+                check the docs:
+                <a
+                  class="text-blue-600 underline hover:text-blue-800"
+                  href="https://docs.authcompanion.com/"
+                  >https://docs.authcompanion.com/</a
+                >
+              </p>
+
               <p class="text-black">
                 After a successful login or account registration, AuthC provides
                 developers a user's access token.
               </p>
-              <p class="py-3">{{ jwt }}</p>
-
+              <br />
               <p class="text-black">
                 The access token contains information about the user.
                 <a
@@ -66,7 +72,7 @@
               </p>
               <p class="pt-8 text-black">
                 When you're ready, tell AuthC to redirect users after they login
-                to your application's home page (instead of this one).
+                to your application's home page (instead of this temporary one).
               </p>
               <p class="pt-3 text-black">
                 In AuthCompanion's .env file change "APPLICATION_ORIGIN" to the
@@ -74,15 +80,6 @@
               </p>
               <p class="py-3 text-sm">
                 APPLICATION_ORIGIN=http://localhost:3002/client/v1/home
-              </p>
-              <p class="py-3 text-black">
-                For a full guide on how to integrate and launch AuthCompanion,
-                check the docs:
-                <a
-                  class="text-blue-600 underline hover:text-blue-800"
-                  href="https://docs.authcompanion.com/"
-                  >https://docs.authcompanion.com/</a
-                >
               </p>
             </div>
           </div>

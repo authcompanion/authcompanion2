@@ -52,8 +52,8 @@
           action=""
           class="p-4 mt-6 mb-0 rounded-lg shadow-lg sm:p-6 lg:p-8"
         >
-          <div class="flex flex-row text-xl font-semibold">
-            <span class="mr-1 -rotate-90">
+          <div class="flex flex-row text-xl font-semibold text-gray-700">
+            <span class="mr-1">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -65,29 +65,26 @@
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
+                  d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
                 />
               </svg>
             </span>
-            Login
+            Register
           </div>
 
           <p class="my-4 text-lg font-medium mx-4text-left">
-            Sign in to your account
+            Create an account
           </p>
 
           <div class="my-4">
-            <label for="email" class="sr-only">Email</label>
-
+            <label for="name" class="sr-only">Email</label>
             <div class="relative">
               <input
                 type="text"
                 class="w-full p-4 text-sm border-gray-200 rounded-lg shadow-sm pe-12"
-
+                v-model="name"
                 placeholder="Enter name"
               />
-
- 
             </div>
           </div>
 
@@ -131,11 +128,47 @@
               <input
                 type="password"
                 class="w-full p-4 text-sm border-gray-200 rounded-lg shadow-sm pe-12"
-                type="password"
                 v-model="password"
                 placeholder="Enter password"
               />
 
+              <span
+                class="absolute inset-y-0 grid px-4 end-0 place-content-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-4 h-4 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <div class="my-4">
+            <label for="password" class="sr-only">Password</label>
+
+            <div class="relative">
+              <input
+                class="w-full p-4 text-sm border-gray-200 rounded-lg shadow-sm pe-12"
+                type="password"
+                v-model="confirmPassword"
+                placeholder="Confirm password"
+              />
               <span
                 class="absolute inset-y-0 grid px-4 end-0 place-content-center"
               >
@@ -185,7 +218,7 @@
                 ></path>
               </svg>
             </span>
-            Sign in
+            Register
           </button>
 
           <div class="relative flex items-center py-2 my-2">
@@ -218,16 +251,10 @@
             Passkey
           </button>
 
-          <button
-            type="submit"
-            class="block w-full px-5 py-3 mt-10 text-sm font-medium border border-gray-400 rounded-lg"
-            @click="createAccount"
-          >
-            Create a new account
-          </button>
-
           <p class="my-4 text-sm text-center text-gray-500">
-            <a class="underline" href="/v1/web/recovery">Lost your Password?</a>
+            <a class="underline" href="/v1/web/login"
+              >Have an account? Login.</a
+            >
           </p>
         </form>
       </div>
@@ -279,9 +306,8 @@
                   "content-type": "application/json",
                 },
               });
-              const appOrigin = await response.headers.get(
-                "x-authc-app-origin"
-              );
+              const appOrigin =
+                await response.headers.get("x-authc-app-origin");
               const resbody = await response.json();
 
               if (response.ok) {
@@ -340,9 +366,8 @@
                   }
                 );
                 const reply = await verificationResponse.json();
-                const appOrigin = await verificationResponse.headers.get(
-                  "x-authc-app-origin"
-                );
+                const appOrigin =
+                  await verificationResponse.headers.get("x-authc-app-origin");
 
                 window.localStorage.setItem(
                   "ACCESS_TOKEN",

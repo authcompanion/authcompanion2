@@ -1,102 +1,77 @@
 <!doctype html>
-<html lang="en" un-cloak>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@unocss/reset/tailwind.min.css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/uno.global.js"></script>
+    <link rel="stylesheet" href="/v1/web/styles/main.css" />
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     <style>
       html {
         font-family: "Inter var", sans-serif;
       }
-      [un-cloak] {
+      [v-cloak] {
         display: none;
       }
     </style>
-    <title>Login</title>
+
+    <title>Home</title>
   </head>
+  <body id="app">
+    <!-- Form -->
+    <div class="max-w-screen-xl px-4 py-16 mx-auto sm:px-6 lg:px-8">
+      <div class="max-w-lg mx-auto">
+        <form
+          @submit.prevent
+          action=""
+          class="p-4 mt-6 mb-0 rounded-lg shadow-lg sm:p-6 lg:p-8"
+        >
+          <p class="text-2xl text-green-500">Success 🎉 !</p>
+          <p class="py-3 text-black">
+            Nice job getting started with AuthCompanion.
+          </p>
 
-  <body class="flex flex-col h-full bg-gray-50">
-    <div id="app" class="">
-      <div class="w-full my-8 text-center">
-        <p class="py-3 text-3xl italic font-semibold text-green-700">
-          Success!
-        </p>
-        <p class="py-3 text-sm font-semibold text-gray-700">
-          Great job getting started with AuthCompanion
-        </p>
-      </div>
-      <div
-        class="w-full max-w-md px-8 py-6 mx-auto mt-8 bg-white rounded shadow-md"
-      >
-        <div class="px-4 sm:px-0">
-          <div class="text-gray-400 rounded-lg">
-            <!-- Toast Notification -->
-            <div v-if="showError">
-              <div class="pb-4">
-                <div
-                  class="inline-flex items-center p-2 text-sm leading-none text-red-600 bg-white rounded-full shadow"
-                >
-                  <span class="inline-flex px-2">{{ errorDetail }}</span>
-                </div>
-              </div>
-            </div>
-            <!-- Main -->
-            <div class="max-w-md grid-cols-1 gap-6 break-words">
-              <p class="py-3 text-black">
-                For a full guide on how to integrate and launch AuthCompanion,
-                check the docs:
-                <a
-                  class="text-blue-600 underline hover:text-blue-800"
-                  href="https://docs.authcompanion.com/"
-                  >https://docs.authcompanion.com/</a
-                >
-              </p>
+          <p class="pt-8 text-black">
+            When you're ready, tell AuthC to redirect users after successful
+            login to your application's home page (instead of this temporary
+            one).
+          </p>
 
-              <p class="text-black">
-                After a successful login or account registration, AuthC provides
-                developers a user's access token.
-              </p>
-              <br />
-              <p class="text-black">
-                The access token contains information about the user.
-                <a
-                  class="text-blue-600 underline hover:text-blue-800"
-                  :href="jwtDebugUrl"
-                  >Decode the token's payload here to find out.</a
-                >
-              </p>
-              <p class="pt-8 text-black">
-                When you're ready, tell AuthC to redirect users after they login
-                to your application's home page (instead of this temporary one).
-              </p>
-              <p class="pt-3 text-black">
-                In AuthCompanion's .env file change "APPLICATION_ORIGIN" to the
-                URL of your application. Example:
-              </p>
-              <p class="py-3 text-sm">
-                APPLICATION_ORIGIN=http://localhost:3002/client/v1/home
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="flex justify-end">
-        <div class="m-4 text-xs text-gray-400">
-          Powered by
-          <span class="underline">
-            <a href="https://github.com/authcompanion/authcompanion2"
-              >AuthCompanion</a
+          <p class="py-3 text-black">
+            For a full guide on how to integrate and launch AuthCompanion, check
+            those sections in the docs:
+            <a
+              class="text-blue-600 underline hover:text-blue-800"
+              href="https://docs.authcompanion.com/"
+              >https://docs.authcompanion.com/</a
             >
-          </span>
-        </div>
+          </p>
+
+          <p class="text-black">
+            After a successful login or account registration, AuthC provides
+            developers a user's access token which is used for managing your
+            user's session. The access token contains helpful information about
+            the user.
+            <a
+              class="text-blue-600 underline hover:text-blue-800"
+              :href="jwtDebugUrl"
+              >Decode the token's payload here to find out.</a
+            >
+          </p>
+          <br />
+        </form>
       </div>
     </div>
-    <!-- scripts -->
+    <div class="fixed inset-x-0 bottom-0">
+      <div class="m-4 text-xs text-gray-400">
+        Powered by
+        <span class="underline">
+          <a href="https://github.com/authcompanion/authcompanion2"
+            >AuthCompanion</a
+          >
+        </span>
+      </div>
+    </div>
+    <!-- Scripts -->
     <script type="module">
       import {
         createApp,

@@ -121,17 +121,13 @@ When ready, read the [Launch Guide](https://docs.authcompanion.com/guide/launch.
 
 Authcompanion provides built-in web forms for user authentiation.
 
-The web forms use CSS-in-JS - making them easily customizable for
-your specific branding and authentication needs. No build step required to make
-changes to the Web Form's look and feel.
-
-|             Login Screen             |            Registration Screen             |
-| :----------------------------------: | :----------------------------------------: |
-| ![Login](./.github/public/login.png) | ![Register](./.github/public/register.png) |
-
 After a user authenticates with AuthC's web forms, we pass them to your web application.
 
 For a full list of AuthC's Web Forms, see the [Web Form Guide](https://docs.authcompanion.com/guide/webforms.html).
+
+![Login](./.github/public/login.png)
+
+![Register](./.github/public/register.png)
 
 ---
 

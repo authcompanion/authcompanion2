@@ -275,10 +275,11 @@
 
                 window.location.href = appOrigin;
               } else {
-                errorTitle.value = resbody.errors[0].title;
-                errorDetail.value = resbody.errors[0].detail;
-
                 showError.value = true;
+
+                errorTitle.value = "Error";
+                errorDetail.value =
+                  "Login failed, please check your credentials and try again.";
               }
             } catch (e) {
               console.log(e);
@@ -286,7 +287,7 @@
 
               errorTitle.value = "Error";
               errorDetail.value =
-                "There was an issue logging in, please try again";
+                "There was an issue connecting, please refresh your browser and try again.";
             }
           };
 
@@ -328,7 +329,6 @@
                   reply.data.attributes.access_token
                 );
                 showError.value = false;
-                showError.value = false;
                 window.location.href = appOrigin;
               } else {
                 showError.value = true;
@@ -343,7 +343,7 @@
 
               errorTitle.value = "Error";
               errorDetail.value =
-                "There was an issue connecting, please try again";
+                "There was an issue connecting, please refresh your browser and try again.";
             }
           };
 

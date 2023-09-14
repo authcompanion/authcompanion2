@@ -327,15 +327,13 @@
                 );
                 showError.value = false;
 
-                showError.value = false;
-
                 window.location.href = appOrigin;
               } else {
                 showError.value = true;
 
                 errorTitle.value = "Error";
                 errorDetail.value =
-                  "Error occured, please try registering again";
+                  "An issue occured, please try registering again.";
               }
             } catch (e) {
               console.log(e);
@@ -343,7 +341,7 @@
 
               errorTitle.value = "Error";
               errorDetail.value =
-                "There was an issue connecting, please try again";
+                "There was an issue connecting, please refresh your browser and try again.";
             }
           };
 
@@ -399,7 +397,7 @@
 
               errorTitle.value = "Error";
               errorDetail.value =
-                "There was an issue connecting, please try again";
+                "There was an issue connecting, please refresh your browser and try again.";
             }
           };
           // expose to template

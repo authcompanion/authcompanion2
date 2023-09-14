@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/v1/web/css" />
+    <link rel="stylesheet" href="/v1/web/styles/main.css" />
     <script src="https://cdn.jsdelivr.net/npm/@simplewebauthn/browser@8.0.2/dist/bundle/index.es5.umd.min.js"></script>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     <style>
@@ -53,7 +53,7 @@
           class="p-4 mt-6 mb-0 rounded-lg shadow-lg sm:p-6 lg:p-8"
         >
           <div class="flex flex-row text-xl font-semibold">
-            <span class="mr-1 -rotate-90">
+            <span class="mr-1">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -65,16 +65,28 @@
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
+                  d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
                 />
               </svg>
             </span>
-            Login
+            Profile
           </div>
 
           <p class="my-4 text-lg font-medium mx-4text-left">
-            Sign in to your account
+            Update you account
           </p>
+
+          <div class="my-4">
+            <label for="name" class="sr-only">Name</label>
+            <div class="relative">
+              <input
+                type="text"
+                class="w-full p-4 text-sm border-gray-200 rounded-lg shadow-sm pe-12"
+                v-model="name"
+                placeholder="Enter name"
+              />
+            </div>
+          </div>
 
           <div class="my-4">
             <label for="email" class="sr-only">Email</label>
@@ -117,9 +129,46 @@
                 type="password"
                 class="w-full p-4 text-sm border-gray-200 rounded-lg shadow-sm pe-12"
                 v-model="password"
-                placeholder="Enter password"
+                placeholder="New password"
               />
 
+              <span
+                class="absolute inset-y-0 grid px-4 end-0 place-content-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-4 h-4 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <div class="my-4">
+            <label for="password" class="sr-only">Password</label>
+
+            <div class="relative">
+              <input
+                class="w-full p-4 text-sm border-gray-200 rounded-lg shadow-sm pe-12"
+                type="password"
+                v-model="confirmPassword"
+                placeholder="Confirm password"
+              />
               <span
                 class="absolute inset-y-0 grid px-4 end-0 place-content-center"
               >
@@ -155,36 +204,6 @@
           >
             <span class="absolute flex items-center">
               <svg
-                class="w-5 h-5 text-white group-hover:text-indigo-400"
-                x-description="Heroicon name: mini/lock-closed"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-            </span>
-            Sign in
-          </button>
-
-          <div class="relative flex items-center py-2 my-2">
-            <div class="flex-grow border-t border-gray-400"></div>
-            <span class="flex-shrink mx-4 text-gray-700">Or</span>
-            <div class="flex-grow border-t border-gray-400"></div>
-          </div>
-
-          <button
-            type=""
-            class="block w-full px-5 py-3 mb-4 text-sm font-medium text-white bg-gray-800 rounded-lg"
-            @click="passkeySubmit"
-          >
-            <span class="absolute flex items-center">
-              <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -195,23 +214,17 @@
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  d="M7.864 4.243A7.5 7.5 0 0119.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 004.5 10.5a7.464 7.464 0 01-1.15 3.993m1.989 3.559A11.209 11.209 0 008.25 10.5a3.75 3.75 0 117.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 01-3.6 9.75m6.633-4.596a18.666 18.666 0 01-2.485 5.33"
+                  d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
                 />
               </svg>
             </span>
-            Passkey
-          </button>
-
-          <button
-            type="submit"
-            class="block w-full px-5 py-3 mt-10 text-sm font-medium border border-gray-400 rounded-lg"
-            @click="createAccount"
-          >
-            Create a new account
+            Update
           </button>
 
           <p class="my-4 text-sm text-center text-gray-500">
-            <a class="underline" href="/v1/web/recovery">Lost your Password?</a>
+            <a class="underline" href="/v1/web/login"
+              >Have an account? Login.</a
+            >
           </p>
         </form>
       </div>
@@ -234,129 +247,137 @@
         computed,
       } from "https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.prod.js";
 
-      const { startAuthentication } = SimpleWebAuthnBrowser;
+      import jwtDecode from "https://cdn.skypack.dev/jwt-decode";
 
       createApp({
         setup() {
+          const name = ref("");
           const email = ref("");
           const password = ref("");
+          const confirmPassword = ref("");
 
           const showError = ref(false);
           let errorTitle = ref(null);
           let errorDetail = ref(null);
 
+          const token = computed(() => {
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+
+            if (urlParams.has("token")) {
+              const tokenParam = urlParams.get("token");
+              return tokenParam;
+            } else {
+              return localStorage.getItem("ACCESS_TOKEN");
+            }
+          });
+
+          try {
+            var decoded = jwtDecode(token.value);
+            email.value = decoded.email;
+            name.value = decoded.name;
+          } catch (e) {
+            console.log(e);
+          }
+          async function updateUser() {
+            //make an API request to your web service. Include the ACCESS_TOKEN.
+            const response = await fetch("/v1/auth/users/me", {
+              method: "POST",
+              headers: {
+                "Content-type": "application/json",
+                Authorization: `Bearer ${token.value}`,
+              },
+              body: JSON.stringify({
+                data: {
+                  type: "users",
+                  attributes: {
+                    name: name.value,
+                    email: email.value,
+                    password: password.value,
+                  },
+                },
+              }),
+            });
+
+            return response;
+          }
+
           const submit = async () => {
             try {
-              let response = await fetch("/v1/auth/login", {
-                method: "POST",
-                credentials: "include",
-                body: JSON.stringify({
-                  data: {
-                    type: "users",
-                    attributes: {
-                      email: email.value,
-                      password: password.value,
-                    },
+              if (password.value !== confirmPassword.value) {
+                showError.value = true;
+                errorTitle.value = "Validation Error";
+                errorDetail.value = "Passwords do not match, please try again";
+                return;
+              }
+              //make a normal request to your web service
+              const response = await updateUser();
+
+              const webserviceResponse = await response.json();
+
+              //if the response comes back as unauthorized (the access_token was expired), let's fetch from AuthC a new ACCESS_TOKEN
+              if (response.status === 401) {
+                //AuthC's refresh endpoint requires the Refresh Token (set by AuthC as a cookie when user logs in) in order to provide you a new ACCESS_TOKEN
+                const refreshResponse = await fetch("/v1/auth/refresh", {
+                  method: "POST",
+                  headers: {
+                    "Content-type": "application/json",
                   },
-                }),
-                headers: {
-                  "content-type": "application/json",
-                },
-              });
-              const appOrigin =
-                await response.headers.get("x-authc-app-origin");
-              const resbody = await response.json();
+                  body: JSON.stringify({}),
+                });
+                //AuthC will store the ACCESS_TOKEN in local storage or you can access it from the response itself!
+                const refreshBody = await refreshResponse.json();
+
+                if (refreshResponse.ok) {
+                  window.localStorage.setItem(
+                    "ACCESS_TOKEN",
+                    refreshBody.data.attributes.access_token
+                  );
+
+                  //make another request to your web service, this time with a new ACCESS_TOKEN
+                  const updatedResponse = await updateUser();
+
+                  errorTitle.value = "Success";
+                  errorDetail.value =
+                    "Your account has been updated, thank you!";
+                  showError.value = true;
+                } else {
+                  showError.value = true;
+                  errorTitle.value = "Error";
+                  errorDetail.value =
+                    "An issue with your account has occured, please try again";
+                }
+              }
 
               if (response.ok) {
                 window.localStorage.setItem(
                   "ACCESS_TOKEN",
-                  resbody.data.attributes.access_token
+                  webserviceResponse.data.attributes.access_token
                 );
-
-                window.location.href = appOrigin;
-              } else {
-                errorTitle.value = resbody.errors[0].title;
-                errorDetail.value = resbody.errors[0].detail;
-
+                errorTitle.value = "Success";
+                errorDetail.value = "Your account has been updated, thank you!";
                 showError.value = true;
               }
-            } catch (e) {
-              console.log(e);
+            } catch (error) {
+              //catch any errors
+              console.error(error);
               showError.value = true;
-
               errorTitle.value = "Error";
               errorDetail.value =
-                "There was an issue logging in, please try again";
+                "An issue with your account has occured, please try again";
             }
           };
 
-          const createAccount = () => {
-            window.location.href = "register";
-          };
-
-          const passkeySubmit = async () => {
-            try {
-              let optionsResponse = await fetch("/v1/auth/login-options", {
-                method: "GET",
-                headers: {
-                  "content-type": "application/json",
-                },
-              });
-
-              if (optionsResponse.ok) {
-                const opts = await optionsResponse.json();
-
-                let attResp = await startAuthentication(opts);
-
-                let verificationResponse = await fetch(
-                  "/v1/auth/login-verification",
-                  {
-                    method: "POST",
-                    body: JSON.stringify(attResp),
-                    headers: {
-                      "content-type": "application/json",
-                      "x-authc-app-challenge": opts.challenge,
-                    },
-                  }
-                );
-                const reply = await verificationResponse.json();
-                const appOrigin =
-                  await verificationResponse.headers.get("x-authc-app-origin");
-
-                window.localStorage.setItem(
-                  "ACCESS_TOKEN",
-                  reply.data.attributes.access_token
-                );
-                showError.value = false;
-                showError.value = false;
-                window.location.href = appOrigin;
-              } else {
-                showError.value = true;
-
-                errorTitle.value = "Error";
-                errorDetail.value =
-                  "There was an issue logging in, please try again";
-              }
-            } catch (e) {
-              console.log(e);
-              showError.value = true;
-
-              errorTitle.value = "Error";
-              errorDetail.value =
-                "There was an issue connecting, please try again";
-            }
-          };
-
-          // expose to the html template
+          // expose to template
           return {
             showError,
             errorTitle,
             errorDetail,
+            submit,
+            name,
             email,
             password,
-            submit,
-            passkeySubmit,
-            createAccount,
+            confirmPassword,
           };
         },
       }).mount("#app");

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/v1/web/css" />
+    <link rel="stylesheet" href="/v1/web/styles/main.css" />
     <script src="https://cdn.jsdelivr.net/npm/@simplewebauthn/browser@8.0.2/dist/bundle/index.es5.umd.min.js"></script>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     <style>
@@ -65,19 +65,19 @@
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
+                  d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
                 />
               </svg>
             </span>
-            Profile
+            Register
           </div>
 
           <p class="my-4 text-lg font-medium mx-4text-left">
-            Update you account
+            Create an account
           </p>
 
           <div class="my-4">
-            <label for="name" class="sr-only">Name</label>
+            <label for="name" class="sr-only">Email</label>
             <div class="relative">
               <input
                 type="text"
@@ -129,7 +129,7 @@
                 type="password"
                 class="w-full p-4 text-sm border-gray-200 rounded-lg shadow-sm pe-12"
                 v-model="password"
-                placeholder="New password"
+                placeholder="Enter password"
               />
 
               <span
@@ -204,6 +204,36 @@
           >
             <span class="absolute flex items-center">
               <svg
+                class="w-5 h-5 text-white group-hover:text-indigo-400"
+                x-description="Heroicon name: mini/lock-closed"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+            </span>
+            Register
+          </button>
+
+          <div class="relative flex items-center py-2 my-2">
+            <div class="flex-grow border-t border-gray-400"></div>
+            <span class="flex-shrink mx-4 text-gray-700">Or</span>
+            <div class="flex-grow border-t border-gray-400"></div>
+          </div>
+
+          <button
+            type=""
+            class="block w-full px-5 py-3 mb-4 text-sm font-medium text-white bg-gray-800 rounded-lg"
+            @click="passkeySubmit"
+          >
+            <span class="absolute flex items-center">
+              <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -214,11 +244,11 @@
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
+                  d="M7.864 4.243A7.5 7.5 0 0119.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 004.5 10.5a7.464 7.464 0 01-1.15 3.993m1.989 3.559A11.209 11.209 0 008.25 10.5a3.75 3.75 0 117.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 01-3.6 9.75m6.633-4.596a18.666 18.666 0 01-2.485 5.33"
                 />
               </svg>
             </span>
-            Update
+            Passkey
           </button>
 
           <p class="my-4 text-sm text-center text-gray-500">
@@ -247,8 +277,7 @@
         computed,
       } from "https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.prod.js";
 
-      import jwtDecode from "https://cdn.skypack.dev/jwt-decode";
-
+      const { startRegistration } = SimpleWebAuthnBrowser;
       createApp({
         setup() {
           const name = ref("");
@@ -260,120 +289,126 @@
           let errorTitle = ref(null);
           let errorDetail = ref(null);
 
-          const token = computed(() => {
-            const queryString = window.location.search;
-            const urlParams = new URLSearchParams(queryString);
-
-            if (urlParams.has("token")) {
-              const tokenParam = urlParams.get("token");
-              return tokenParam;
-            } else {
-              return localStorage.getItem("ACCESS_TOKEN");
-            }
-          });
-
-          try {
-            var decoded = jwtDecode(token.value);
-            email.value = decoded.email;
-            name.value = decoded.name;
-          } catch (e) {
-            console.log(e);
-          }
-          async function updateUser() {
-            //make an API request to your web service. Include the ACCESS_TOKEN.
-            const response = await fetch("/v1/auth/users/me", {
-              method: "POST",
-              headers: {
-                "Content-type": "application/json",
-                Authorization: `Bearer ${token.value}`,
-              },
-              body: JSON.stringify({
-                data: {
-                  type: "users",
-                  attributes: {
-                    name: name.value,
-                    email: email.value,
-                    password: password.value,
-                  },
-                },
-              }),
-            });
-
-            return response;
-          }
-
           const submit = async () => {
             try {
               if (password.value !== confirmPassword.value) {
                 showError.value = true;
                 errorTitle.value = "Validation Error";
                 errorDetail.value = "Passwords do not match, please try again";
+
                 return;
               }
-              //make a normal request to your web service
-              const response = await updateUser();
 
-              const webserviceResponse = await response.json();
-
-              //if the response comes back as unauthorized (the access_token was expired), let's fetch from AuthC a new ACCESS_TOKEN
-              if (response.status === 401) {
-                //AuthC's refresh endpoint requires the Refresh Token (set by AuthC as a cookie when user logs in) in order to provide you a new ACCESS_TOKEN
-                const refreshResponse = await fetch("/v1/auth/refresh", {
-                  method: "POST",
-                  headers: {
-                    "Content-type": "application/json",
+              let response = await fetch("/v1/auth/register", {
+                method: "POST",
+                credentials: "include",
+                body: JSON.stringify({
+                  data: {
+                    type: "users",
+                    attributes: {
+                      name: name.value,
+                      email: email.value,
+                      password: password.value,
+                    },
                   },
-                  body: JSON.stringify({}),
-                });
-                //AuthC will store the ACCESS_TOKEN in local storage or you can access it from the response itself!
-                const refreshBody = await refreshResponse.json();
-
-                if (refreshResponse.ok) {
-                  window.localStorage.setItem(
-                    "ACCESS_TOKEN",
-                    refreshBody.data.attributes.access_token
-                  );
-
-                  //make another request to your web service, this time with a new ACCESS_TOKEN
-                  const updatedResponse = await updateUser();
-
-                  errorTitle.value = "Success";
-                  errorDetail.value =
-                    "Your account has been updated, thank you!";
-                  showError.value = true;
-                } else {
-                  showError.value = true;
-                  errorTitle.value = "Error";
-                  errorDetail.value =
-                    "An issue with your account has occured, please try again";
-                }
-              }
+                }),
+                headers: {
+                  "content-type": "application/json",
+                },
+              });
+              const appOrigin =
+                await response.headers.get("x-authc-app-origin");
+              const resbody = await response.json();
 
               if (response.ok) {
                 window.localStorage.setItem(
                   "ACCESS_TOKEN",
-                  webserviceResponse.data.attributes.access_token
+                  resbody.data.attributes.access_token
                 );
-                errorTitle.value = "Success";
-                errorDetail.value = "Your account has been updated, thank you!";
+                showError.value = false;
+
+                showError.value = false;
+
+                window.location.href = appOrigin;
+              } else {
                 showError.value = true;
+
+                errorTitle.value = "Error";
+                errorDetail.value =
+                  "Error occured, please try registering again";
               }
-            } catch (error) {
-              //catch any errors
-              console.error(error);
+            } catch (e) {
+              console.log(e);
               showError.value = true;
+
               errorTitle.value = "Error";
               errorDetail.value =
-                "An issue with your account has occured, please try again";
+                "There was an issue connecting, please try again";
             }
           };
 
+          const passkeySubmit = async () => {
+            try {
+              let optionsResponse = await fetch(
+                "/v1/auth/registration-options",
+                {
+                  method: "GET",
+                  headers: {
+                    "content-type": "application/json",
+                  },
+                }
+              );
+
+              if (optionsResponse.ok) {
+                const opts = await optionsResponse.json();
+
+                let attResp = await startRegistration(opts);
+
+                let verificationResponse = await fetch(
+                  "/v1/auth/registration-verification",
+                  {
+                    method: "POST",
+                    body: JSON.stringify(attResp),
+                    headers: {
+                      "content-type": "application/json",
+                      "x-authc-app-userid": opts.user.id,
+                    },
+                  }
+                );
+                const reply = await verificationResponse.json();
+                const appOrigin =
+                  await verificationResponse.headers.get("x-authc-app-origin");
+
+                window.localStorage.setItem(
+                  "ACCESS_TOKEN",
+                  reply.data.attributes.access_token
+                );
+                showError.value = false;
+                showError.value = false;
+                window.location.href = appOrigin;
+              } else {
+                showError.value = true;
+
+                errorTitle.value = "Error";
+                errorDetail.value =
+                  "Error occured, please try registering again";
+              }
+            } catch (e) {
+              console.log(e);
+              showError.value = true;
+
+              errorTitle.value = "Error";
+              errorDetail.value =
+                "There was an issue connecting, please try again";
+            }
+          };
           // expose to template
           return {
             showError,
             errorTitle,
             errorDetail,
             submit,
+            passkeySubmit,
             name,
             email,
             password,

@@ -8,6 +8,7 @@
     "dev": "node --watch --no-warnings server.js",
     "test": "ava",
     "start": "node --no-warnings server.js",
+    "generate:css": "npx tailwindcss -i ./client/dist/index.css -o ./client/dist/main.css",
     "release:changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "keywords": [],

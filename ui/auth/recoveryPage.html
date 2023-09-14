@@ -1,119 +1,148 @@
-<!DOCTYPE html>
-<html lang="en" un-cloak>
+<!doctype html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@unocss/reset/tailwind.min.css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/uno.global.js"></script>
+    <link rel="stylesheet" href="/v1/web/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@simplewebauthn/browser@8.0.2/dist/bundle/index.es5.umd.min.js"></script>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     <style>
       html {
         font-family: "Inter var", sans-serif;
       }
-      [un-cloak] {
+      [v-cloak] {
         display: none;
       }
     </style>
-    <title>Recovery</title>
+
+    <title>Login</title>
   </head>
+  <body id="app">
+    <!-- Alert -->
+    <div
+      v-cloak
+      v-if="showError"
+      role="alert"
+      class="p-4 border-red-500 rounded border-s-4 bg-red-50"
+    >
+      <div class="flex items-center gap-2 text-red-800">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="w-5 h-5"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+            clip-rule="evenodd"
+          />
+        </svg>
 
-  <body class="flex flex-col h-full bg-gray-50">
-    <div id="app" class="">
-      <div
-        class="w-full max-w-md px-8 py-6 mx-auto mt-5 bg-white rounded shadow-md md:mt-20"
-      >
-        <div class="px-0 md:px-4">
-          <div class="text-gray-400 rounded-lg">
-            <!-- Toast Notification -->
-            <div v-if="showError">
-              <div class="pb-4">
-                <div
-                  class="inline-flex items-center p-2 text-sm leading-none text-green-600 bg-white rounded-full shadow"
-                >
-                  <span class="inline-flex px-2">{{ errorDetail }}</span>
-                </div>
-              </div>
-            </div>
-            <!-- Navigation -->
-            <div class="flex flex-row justify-between mb-6">
-              <div class="flex flex-row text-xl font-semibold text-gray-700">
-                <span class="mr-1">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="w-6 h-6"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859m-19.5.338V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H6.911a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661z"
-                    />
-                  </svg>
-                </span>
-                Account Recovery
-              </div>
-            </div>
-            <div class="my-4 text-black">
-              An email will be sent to your address containing a link to login.
-            </div>
+        <strong class="block font-medium"> Something went wrong </strong>
+      </div>
 
-            <!-- Form -->
-            <div class="grid max-w-md grid-cols-1 gap-4 md:gap-6">
-              <label class="block">
-                <span class="font-bold text-gray-700">Email</span>
-                <input
-                  type="email"
-                  v-model="email"
-                  class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
-                  placeholder="hello@example.com"
-                />
-              </label>
-              <button
-                type=""
-                class="block w-full px-6 py-3 text-base font-semibold text-white bg-gray-800 border rounded-lg shadow-xl hover:text-white hover:bg-gray-900"
-                @click="submit"
-                @keyup.enter="submit"
+      <p class="mt-2 text-sm text-red-700">{{ errorDetail }}</p>
+    </div>
+    <!-- Form -->
+    <div class="max-w-screen-xl px-4 py-16 mx-auto sm:px-6 lg:px-8">
+      <div class="max-w-lg mx-auto">
+        <form
+          @submit.prevent
+          action=""
+          class="p-4 mt-6 mb-0 rounded-lg shadow-lg sm:p-6 lg:p-8"
+        >
+          <div class="flex flex-row text-xl font-semibold text-gray-700">
+            <span class="mr-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
               >
-                <span class="absolute flex items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="w-6 h-6"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M9 3.75H6.912a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H15M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859M12 3v8.25m0 0l-3-3m3 3l3-3"
-                    />
-                  </svg>
-                </span>
-                Submit
-              </button>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859m-19.5.338V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H6.911a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661z"
+                />
+              </svg>
+            </span>
+            Account Recovery
+          </div>
+
+          <p class="my-4 text-sm font-normal mx-4text-left">
+            An email will be sent to your address containing a link to login.
+          </p>
+
+          <div class="my-4">
+            <label for="email" class="sr-only">Email</label>
+
+            <div class="relative">
+              <input
+                type="email"
+                class="w-full p-4 text-sm border-gray-200 rounded-lg shadow-sm pe-12"
+                type="email"
+                v-model="email"
+                placeholder="Enter email"
+              />
+
+              <span
+                class="absolute inset-y-0 grid px-4 end-0 place-content-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-4 h-4 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                  />
+                </svg>
+              </span>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="fixed inset-x-0 bottom-0">
-        <div class="m-4 text-xs text-gray-400">
-          Powered by
-          <span class="underline">
-            <a href="https://github.com/authcompanion/authcompanion2"
-              >AuthCompanion</a
+
+          <button
+            type=""
+            class="block w-full px-5 py-3 mt-4 text-sm font-medium text-white bg-gray-800 rounded-lg"
+            @click="submit"
+            @keyup.enter="submit"
+          >
+            <span class="absolute flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9 3.75H6.912a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H15M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859M12 3v8.25m0 0l-3-3m3 3l3-3"
+                />
+              </svg>
+            </span>
+            Submit
+          </button>
+
+          <p class="my-4 text-sm text-center text-gray-500">
+            <a class="underline" href="/v1/web/login"
+              >Have an account? Login.</a
             >
-          </span>
-        </div>
+          </p>
+        </form>
       </div>
     </div>
-    <!-- scripts -->
+    <!-- Scripts -->
     <script type="module">
       import {
         createApp,

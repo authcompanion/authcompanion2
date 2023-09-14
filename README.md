@@ -119,15 +119,16 @@ When ready, read the [Launch Guide](https://docs.authcompanion.com/guide/launch.
 
 ### Web Forms for Authentication
 
-Authcompanion provides built-in web forms for user authentiation.
+Authcompanion provides built-in web forms for user authentiation including both login and registration pages below:
+
+
+|             Login Screen             |            Registration Screen             |
+| :----------------------------------: | :----------------------------------------: |
+| ![Login](./.github/public/login.png) | ![Register](./.github/public/register.png) |
 
 After a user authenticates with AuthC's web forms, we pass them to your web application.
 
 For a full list of AuthC's Web Forms, see the [Web Form Guide](https://docs.authcompanion.com/guide/webforms.html).
-
-![Login](./.github/public/login.png)
-
-![Register](./.github/public/register.png)
 
 ---
 

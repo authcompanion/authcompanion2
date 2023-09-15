@@ -2,9 +2,7 @@
 
 AuthCompanion provides built-in web forms for your application users to login with their account, register new accounts, and trigger forgotten password should they can't login. In this way you don't have to build your own - simply host AuthC.
 
-These forms are built using [Vue.js](https://v3.vuejs.org/) and [Tailwindcss](https://tailwindcss.com/) - making them easily customizable for your specific branding and auth needs if you have a little coding knowledge.
-
-What's great about these forms is that no build step required to make changes to the web forms themselves; simply refresh the browser to view your style changes. 👍
+These forms are built using [Vue.js](https://v3.vuejs.org/) and [Tailwindcss](https://tailwindcss.com/) - making them easily customizable for your specific branding and auth needs.
 
 ## Available Web Form Paths
 

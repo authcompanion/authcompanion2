@@ -167,61 +167,69 @@ Implementing the "Silent Refresh" follows three steps:
 3. Retry step 1 using the new access token
 
 ```javascript
-// Function to call the backend API with the current access token
-async function callBackend() {
-  // Retrieve the access token from the browser's local storage
+async function fetchResourceWithToken() {
   const token = localStorage.getItem("ACCESS_TOKEN");
+  const headers = {
+    "Content-type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
 
-  // Make an API request to the web service, including the access token
-  const response = await fetch("/private/resource", {
+  return await fetch("/private/resource", {
+    method: "POST",
+    headers,
+    body: JSON.stringify(yourRequestData),
+  });
+}
+
+async function refreshAccessToken() {
+  const refreshResponse = await fetch("http://127.0.0.1:3002/v1/auth/refresh", {
     method: "POST",
     headers: {
       "Content-type": "application/json",
-      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(yourRequestData),
+    body: JSON.stringify({}),
   });
 
-  return response;
-}
+  const refreshBody = await refreshResponse.json();
 
-try {
-  // Make a normal request to the web service
-  const response = await callBackend();
-
-  // Parse the response as JSON
-  const webserviceResponse = await response.json();
-
-  // Check if the response is unauthorized (access token expired)
-  if (response.status === 401) {
-    // Request a new access token from the AuthC refresh endpoint
-    const refreshResponse = await fetch(
-      "http://127.0.0.1:3002/v1/auth/refresh",
-      {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({}),
-      }
-    ).then((response) => response.json());
-
-    // Update the access token in the local storage with the new token from AuthC
+  if (refreshResponse.ok) {
     localStorage.setItem(
       "ACCESS_TOKEN",
-      refreshResponse.data.attributes.access_token
+      refreshBody.data.attributes.access_token
     );
-
-    // Make another request to the web service using the new access token
-    const refreshedResponse = await callBackend();
-    const refreshedWebserviceResponse = await refreshedResponse.json();
-
-    // Use the refreshedWebserviceResponse as needed
   }
-} catch (error) {
-  // Catch any errors that occur during the API calls
-  console.error(error);
+
+  return refreshResponse.ok;
 }
+
+async function handleResourceResponse() {
+  try {
+    const response = await fetchResourceWithToken();
+    const webserviceResponse = await response.json();
+
+    if (response.status === 401) {
+      const refreshTokenSuccess = await refreshAccessToken();
+
+      if (refreshTokenSuccess) {
+        const refreshedResponse = await fetchResourceWithToken();
+        const refreshedWebserviceResponse = await refreshedResponse.json();
+
+        // Use refreshedWebserviceResponse as needed
+      } else {
+        // Handle refreshToken failure
+        console.error("Refresh token failed");
+      }
+    } else {
+      // Use webserviceResponse as needed
+    }
+  } catch (error) {
+    // Catch any errors that occur during the API calls
+    console.error(error);
+  }
+}
+
+// Call the function to handle API responses
+handleResourceResponse();
 ```
 
 ## Reference Architecture

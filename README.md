@@ -119,11 +119,8 @@ When ready, read the [Launch Guide](https://docs.authcompanion.com/guide/launch.
 
 ### Web Forms for Authentication
 
-Authcompanion provides built-in web forms for user authentiation.
+Authcompanion provides built-in web forms for user authentiation including both login and registration pages below:
 
-The web forms use CSS-in-JS - making them easily customizable for
-your specific branding and authentication needs. No build step required to make
-changes to the Web Form's look and feel.
 
 |             Login Screen             |            Registration Screen             |
 | :----------------------------------: | :----------------------------------------: |

@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/v1/web/styles/main.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@simplewebauthn/browser@8.0.2/dist/bundle/index.es5.umd.min.js"></script>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <style>
+      html {
+        font-family: "Inter var", sans-serif;
+      }
+      [v-cloak] {
+        display: none;
+      }
+    </style>
+
+    <title>Profile</title>
+  </head>
+  <body id="app">
+    <!-- Alert -->
+    <div
+      v-cloak
+      v-if="showError"
+      role="alert"
+      :class="{ 'bg-red-50': isError, 'bg-green-50': isSuccess }"
+      class="p-4 border rounded border-s-4"
+    >
+      <div class="flex items-center gap-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="w-5 h-5"
+          :class="{ 'text-red-800': isError, 'text-green-800': isSuccess }"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+            clip-rule="evenodd"
+          />
+        </svg>
+
+        <strong
+          class="block font-medium"
+          :class="{ 'text-red-800': isError, 'text-green-800': isSuccess }"
+        >
+          {{ errorTitle }}
+        </strong>
+      </div>
+
+      <p
+        class="mt-2 text-sm"
+        :class="{ 'text-red-800': isError, 'text-green-800': isSuccess }"
+      >
+        {{ errorDetail }}
+      </p>
+    </div>
+    <!-- Form -->
+    <div class="max-w-screen-xl px-4 py-16 mx-auto sm:px-6 lg:px-8">
+      <div class="max-w-lg mx-auto">
+        <form
+          @submit.prevent
+          action=""
+          class="p-4 mt-6 mb-0 rounded-lg shadow-lg sm:p-6 lg:p-8"
+        >
+          <div class="flex flex-row text-xl font-semibold">
+            <span class="mr-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
+                />
+              </svg>
+            </span>
+            Profile
+          </div>
+
+          <p class="my-4 text-lg font-medium mx-4text-left">
+            Update your account
+          </p>
+
+          <div class="my-4">
+            <label for="name" class="sr-only">Name</label>
+            <div class="relative">
+              <input
+                type="text"
+                class="w-full p-4 text-sm border-gray-200 rounded-lg shadow-sm pe-12"
+                v-model="name"
+                placeholder="Enter name"
+              />
+            </div>
+          </div>
+
+          <div class="my-4">
+            <label for="email" class="sr-only">Email</label>
+
+            <div class="relative">
+              <input
+                type="email"
+                class="w-full p-4 text-sm border-gray-200 rounded-lg shadow-sm pe-12"
+                type="email"
+                v-model="email"
+                placeholder="Enter email"
+              />
+
+              <span
+                class="absolute inset-y-0 grid px-4 end-0 place-content-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-4 h-4 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <div class="my-4">
+            <label for="password" class="sr-only">Password</label>
+
+            <div class="relative">
+              <input
+                type="password"
+                class="w-full p-4 text-sm border-gray-200 rounded-lg shadow-sm pe-12"
+                v-model="password"
+                placeholder="New password"
+              />
+
+              <span
+                class="absolute inset-y-0 grid px-4 end-0 place-content-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-4 h-4 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <div class="my-4">
+            <label for="password" class="sr-only">Password</label>
+
+            <div class="relative">
+              <input
+                class="w-full p-4 text-sm border-gray-200 rounded-lg shadow-sm pe-12"
+                type="password"
+                v-model="confirmPassword"
+                placeholder="Confirm password"
+              />
+              <span
+                class="absolute inset-y-0 grid px-4 end-0 place-content-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-4 h-4 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <button
+            type=""
+            class="block w-full px-5 py-3 mt-4 text-sm font-medium text-white bg-gray-800 rounded-lg"
+            @click="submit"
+            @keyup.enter="submit"
+          >
+            <span class="absolute flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15"
+                />
+              </svg>
+            </span>
+            Update
+          </button>
+
+          <!-- <p class="my-4 text-sm text-center text-gray-500">
+            <a class="underline" href="/v1/web/login">Take me back to Home</a>
+          </p> -->
+        </form>
+      </div>
+    </div>
+    <div class="fixed inset-x-0 bottom-0">
+      <div class="m-4 text-xs text-gray-400">
+        Powered by
+        <span class="underline">
+          <a href="https://github.com/authcompanion/authcompanion2"
+            >AuthCompanion</a
+          >
+        </span>
+      </div>
+    </div>
+    <!-- Scripts -->
+    <script type="module">
+      import {
+        createApp,
+        ref,
+        computed,
+      } from "https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.prod.js";
+
+      import jwtDecode from "https://cdn.skypack.dev/jwt-decode";
+
+      createApp({
+        setup() {
+          const name = ref("");
+          const email = ref("");
+          const password = ref("");
+          const confirmPassword = ref("");
+
+          const showError = ref(false);
+          let errorTitle = ref(null);
+          let errorDetail = ref(null);
+
+          // Define a computed property for success
+          const isSuccess = computed(() => errorTitle.value === "Success");
+
+          // Define a computed property for error
+          const isError = computed(() => errorTitle.value === "Error");
+
+          const token = computed(() => {
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+
+            if (urlParams.has("token")) {
+              const tokenParam = urlParams.get("token");
+              return tokenParam;
+            } else {
+              return localStorage.getItem("ACCESS_TOKEN");
+            }
+          });
+
+          try {
+            var decoded = jwtDecode(token.value);
+            email.value = decoded.email;
+            name.value = decoded.name;
+          } catch (e) {
+            console.log(e);
+          }
+          async function updateUser() {
+            //make an API request to your web service. Include the ACCESS_TOKEN.
+            const response = await fetch("/v1/auth/users/me", {
+              method: "POST",
+              headers: {
+                "Content-type": "application/json",
+                Authorization: `Bearer ${token.value}`,
+              },
+              body: JSON.stringify({
+                data: {
+                  type: "users",
+                  attributes: {
+                    name: name.value,
+                    email: email.value,
+                    password: password.value,
+                  },
+                },
+              }),
+            });
+
+            return response;
+          }
+
+          const submit = async () => {
+            try {
+              if (password.value !== confirmPassword.value) {
+                showError.value = true;
+                errorTitle.value = "Validation Error";
+                errorDetail.value = "Passwords do not match, please try again";
+                return;
+              }
+
+              const response = await updateUser();
+              const webserviceResponse = await response.json();
+
+              if (response.status === 401) {
+                const refreshResponse = await fetch("/v1/auth/refresh", {
+                  method: "POST",
+                  headers: {
+                    "Content-type": "application/json",
+                  },
+                  body: JSON.stringify({}),
+                });
+
+                if (refreshResponse.ok) {
+                  const refreshBody = await refreshResponse.json();
+                  window.localStorage.setItem(
+                    "ACCESS_TOKEN",
+                    refreshBody.data.attributes.access_token
+                  );
+                  const updatedResponse = await updateUser();
+
+                  if (updatedResponse.ok) {
+                    showError.value = true;
+                    errorTitle.value = "Success";
+                    errorDetail.value =
+                      "Your account has been updated, thank you!";
+                  }
+                }
+              } else if (response.ok) {
+                window.localStorage.setItem(
+                  "ACCESS_TOKEN",
+                  webserviceResponse.data.attributes.access_token
+                );
+                showError.value = true;
+                errorTitle.value = "Success";
+                errorDetail.value = "Your account has been updated, thank you!";
+              }
+            } catch (error) {
+              console.error(error);
+              showError.value = true;
+              errorTitle.value = "Error";
+              errorDetail.value =
+                "An issue with your account has occurred, please try again";
+            }
+          };
+
+          // expose to template
+          return {
+            showError,
+            errorTitle,
+            errorDetail,
+            submit,
+            name,
+            email,
+            password,
+            confirmPassword,
+            isSuccess,
+            isError,
+          };
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

@@ -8,6 +8,7 @@
     "dev": "node --watch --no-warnings server.js",
     "test": "ava",
     "start": "node --no-warnings server.js",
+    "generate:css": "npx tailwindcss -i ./client/dist/index.css -o ./client/dist/main.css",
     "release:changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "keywords": [],
@@ -22,14 +23,16 @@
     "cookie": "^0.5.0",
     "dotenv": "^16.3.1",
     "emailjs": "^4.0.3",
-    "fastify": "^4.22.2",
+    "fastify": "^4.23.2",
     "fastify-plugin": "^4.5.1",
     "jose": "^4.14.6"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.6",
     "ava": "^5.3.1",
     "conventional-changelog-cli": "^3.0.0",
-    "prettier": "^3.0.3"
+    "prettier": "^3.0.3",
+    "tailwindcss": "^3.3.3"
   },
   "engines": {
     "node": ">=18.16",

@@ -44,13 +44,6 @@ const webRoutes = async function (fastify, options) {
     return homePage;
   });
 
-  fastify.get("/test", (request, reply) => {
-    const homePage = readFileSync("./client/auth/test.html");
-    reply.headers({
-      "Content-Type": `text/html`,
-    });
-    return homePage;
-  });
   fastify.get("/styles/main.css", (request, reply) => {
     const homePage = readFileSync("./client/dist/main.css");
     reply.headers({

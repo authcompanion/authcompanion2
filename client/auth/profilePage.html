@@ -23,14 +23,16 @@
       v-cloak
       v-if="showError"
       role="alert"
-      class="p-4 border-red-500 rounded border-s-4 bg-red-50"
+      :class="{ 'bg-red-50': isError, 'bg-green-50': isSuccess }"
+      class="p-4 border rounded border-s-4"
     >
-      <div class="flex items-center gap-2 text-red-800">
+      <div class="flex items-center gap-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="currentColor"
           class="w-5 h-5"
+          :class="{ 'text-red-800': isError, 'text-green-800': isSuccess }"
         >
           <path
             fill-rule="evenodd"
@@ -39,10 +41,20 @@
           />
         </svg>
 
-        <strong class="block font-medium"> Something went wrong </strong>
+        <strong
+          class="block font-medium"
+          :class="{ 'text-red-800': isError, 'text-green-800': isSuccess }"
+        >
+          {{ errorTitle }}
+        </strong>
       </div>
 
-      <p class="mt-2 text-sm text-red-700">{{ errorDetail }}</p>
+      <p
+        class="mt-2 text-sm"
+        :class="{ 'text-red-800': isError, 'text-green-800': isSuccess }"
+      >
+        {{ errorDetail }}
+      </p>
     </div>
     <!-- Form -->
     <div class="max-w-screen-xl px-4 py-16 mx-auto sm:px-6 lg:px-8">
@@ -73,7 +85,7 @@
           </div>
 
           <p class="my-4 text-lg font-medium mx-4text-left">
-            Update you account
+            Update your account
           </p>
 
           <div class="my-4">
@@ -221,11 +233,9 @@
             Update
           </button>
 
-          <p class="my-4 text-sm text-center text-gray-500">
-            <a class="underline" href="/v1/web/login"
-              >Have an account? Login.</a
-            >
-          </p>
+          <!-- <p class="my-4 text-sm text-center text-gray-500">
+            <a class="underline" href="/v1/web/login">Take me back to Home</a>
+          </p> -->
         </form>
       </div>
     </div>
@@ -259,6 +269,12 @@
           const showError = ref(false);
           let errorTitle = ref(null);
           let errorDetail = ref(null);
+
+          // Define a computed property for success
+          const isSuccess = computed(() => errorTitle.value === "Success");
+
+          // Define a computed property for error
+          const isError = computed(() => errorTitle.value === "Error");
 
           const token = computed(() => {
             const queryString = window.location.search;
@@ -310,14 +326,11 @@
                 errorDetail.value = "Passwords do not match, please try again";
                 return;
               }
-              //make a normal request to your web service
-              const response = await updateUser();
 
+              const response = await updateUser();
               const webserviceResponse = await response.json();
 
-              //if the response comes back as unauthorized (the access_token was expired), let's fetch from AuthC a new ACCESS_TOKEN
               if (response.status === 401) {
-                //AuthC's refresh endpoint requires the Refresh Token (set by AuthC as a cookie when user logs in) in order to provide you a new ACCESS_TOKEN
                 const refreshResponse = await fetch("/v1/auth/refresh", {
                   method: "POST",
                   headers: {
@@ -325,46 +338,37 @@
                   },
                   body: JSON.stringify({}),
                 });
-                //AuthC will store the ACCESS_TOKEN in local storage or you can access it from the response itself!
-                const refreshBody = await refreshResponse.json();
 
                 if (refreshResponse.ok) {
+                  const refreshBody = await refreshResponse.json();
                   window.localStorage.setItem(
                     "ACCESS_TOKEN",
                     refreshBody.data.attributes.access_token
                   );
-
-                  //make another request to your web service, this time with a new ACCESS_TOKEN
                   const updatedResponse = await updateUser();
 
-                  errorTitle.value = "Success";
-                  errorDetail.value =
-                    "Your account has been updated, thank you!";
-                  showError.value = true;
-                } else {
-                  showError.value = true;
-                  errorTitle.value = "Error";
-                  errorDetail.value =
-                    "An issue with your account has occured, please try again";
+                  if (updatedResponse.ok) {
+                    showError.value = true;
+                    errorTitle.value = "Success";
+                    errorDetail.value =
+                      "Your account has been updated, thank you!";
+                  }
                 }
-              }
-
-              if (response.ok) {
+              } else if (response.ok) {
                 window.localStorage.setItem(
                   "ACCESS_TOKEN",
                   webserviceResponse.data.attributes.access_token
                 );
+                showError.value = true;
                 errorTitle.value = "Success";
                 errorDetail.value = "Your account has been updated, thank you!";
-                showError.value = true;
               }
             } catch (error) {
-              //catch any errors
               console.error(error);
               showError.value = true;
               errorTitle.value = "Error";
               errorDetail.value =
-                "An issue with your account has occured, please try again";
+                "An issue with your account has occurred, please try again";
             }
           };
 
@@ -378,6 +382,8 @@
             email,
             password,
             confirmPassword,
+            isSuccess,
+            isError,
           };
         },
       }).mount("#app");

@@ -55,7 +55,7 @@ const adminRoutes = async function (fastify, options) {
     "/dashboard",
     { onRequest: [authenticateWebAdminRequest] },
     (request, reply) => {
-      const adminPage = readFileSync("./ui/admin/dashboardPage.html");
+      const adminPage = readFileSync("./client/admin/dashboardPage.html");
       reply.headers({
         "Content-Type": `text/html`,
       });
@@ -65,7 +65,7 @@ const adminRoutes = async function (fastify, options) {
 
   //login page for the admin web user interface
   fastify.get("/login", (request, reply) => {
-    const loginPage = readFileSync("./ui/admin/loginAdminPage.html");
+    const loginPage = readFileSync("./client/admin/loginAdminPage.html");
     reply.headers({
       "Content-Type": `text/html`,
     });

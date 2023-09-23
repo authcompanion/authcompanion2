@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./client/auth/*.html"],
+  content: ["./client/**/*.html"],
   theme: {
     extend: {},
   },

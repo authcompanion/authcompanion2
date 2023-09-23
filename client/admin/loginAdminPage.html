@@ -1,139 +1,160 @@
-<!DOCTYPE html>
-<html lang="en" un-cloak>
+<!doctype html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@unocss/reset/tailwind.min.css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/uno.global.js"></script>
+    <link rel="stylesheet" href="/v1/web/styles/main.css" />
     <script src="https://cdn.jsdelivr.net/npm/@simplewebauthn/browser@8.0.2/dist/bundle/index.es5.umd.min.js"></script>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     <style>
       html {
         font-family: "Inter var", sans-serif;
       }
-      [un-cloak] {
+      [v-cloak] {
         display: none;
       }
     </style>
 
     <title>Login</title>
   </head>
+  <body id="app">
+    <!-- Alert -->
+    <div
+      v-cloak
+      v-if="showError"
+      role="alert"
+      class="p-4 border-red-500 rounded border-s-4 bg-red-50"
+    >
+      <div class="flex items-center gap-2 text-red-800">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="w-5 h-5"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
+            clip-rule="evenodd"
+          />
+        </svg>
 
-  <body class="flex flex-col h-full bg-gray-50">
-    <div id="app" class="">
-      <div
-        class="w-full max-w-md px-8 py-6 mx-auto mt-5 bg-white rounded shadow-md md:mt-20"
-      >
-        <div class="px-0 md:px-4">
-          <div class="text-gray-400 rounded-lg">
-            <!-- Toast Notification -->
-            <div v-if="showError">
-              <div class="pb-4">
-                <div
-                  class="inline-flex items-center p-2 text-sm leading-none text-red-600 bg-white rounded-full shadow"
+        <strong class="block font-medium"> Something went wrong </strong>
+      </div>
+
+      <p class="mt-2 text-sm text-red-700">{{ errorDetail }}</p>
+    </div>
+    <!-- Form -->
+    <div class="max-w-screen-xl px-4 py-16 mx-auto sm:px-6 lg:px-8">
+      <div class="max-w-lg mx-auto">
+        <form
+          @submit.prevent
+          action=""
+          class="p-4 mt-6 mb-0 rounded-lg shadow-lg sm:p-6 lg:p-8"
+        >
+          <div class="flex flex-row text-xl font-semibold">
+            <span class="mr-1 -rotate-90">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-6 h-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
+                />
+              </svg>
+            </span>
+            Admin Dashboard Login
+          </div>
+
+          <p class="my-4 text-lg mx-4text-left">
+            Welcome, sign in with your admin credentials.
+          </p>
+
+          <div class="my-4">
+            <label for="password" class="sr-only">Password</label>
+
+            <div class="relative">
+              <input
+                type="password"
+                class="w-full p-4 text-sm border-gray-200 rounded-lg shadow-sm pe-12"
+                v-model="password"
+                placeholder="Enter password"
+              />
+
+              <span
+                class="absolute inset-y-0 grid px-4 end-0 place-content-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-4 h-4 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  <span class="inline-flex px-2">{{ errorDetail }}</span>
-                </div>
-              </div>
-            </div>
-            <div class="w-full my-8 text-center">
-              <p class="py-3 text-3xl italic font-semibold text-gray-700">
-                Admin Dashboard
-              </p>
-              <p class="py-3 text-sm font-semibold text-gray-700">
-                Please log in with your admin credentials to continue.
-              </p>
-            </div>
-            <!-- Navigation -->
-            <div class="flex flex-row justify-between mb-6">
-              <div class="flex flex-row text-xl font-semibold text-gray-700">
-                <span class="mr-1 -rotate-90">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="w-6 h-6"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
-                    />
-                  </svg>
-                </span>
-                Login
-              </div>
-            </div>
-            <!-- Form -->
-            <div class="grid max-w-md grid-cols-1 gap-4 md:gap-6">
-              <!-- <label class="block">
-                <span class="font-bold text-gray-700">Email</span>
-                <input
-                  disabled
-                  type="email"
-                  v-model="email"
-                  class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
-                  placeholder="admin@localhost"
-                />
-              </label> -->
-              <label class="block">
-                <span class="font-bold text-gray-700"> Password</span>
-                <input
-                  type="password"
-                  v-model="password"
-                  class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
-                  placeholder="********"
-                  @keyup.enter="submit"
-                />
-              </label>
-              <button
-                class="block w-full px-6 py-3 text-base font-semibold text-white bg-gray-800 border rounded-lg shadow-xl hover:text-white hover:bg-gray-900"
-                @click="submit"
-              >
-                <span class="absolute flex items-center">
-                  <svg
-                    class="w-5 h-5 text-white group-hover:text-indigo-400"
-                    x-description="Heroicon name: mini/lock-closed"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </span>
-                Login
-              </button>
-
-              <a
-                href="#"
-                class="tracking-tighter text-blue-700 border-gray-200 cursor-pointer hover:border-gray-400"
-                @click="forgotPassword"
-              >
-                <span>Forgot Password?</span>
-              </a>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+              </span>
             </div>
           </div>
-        </div>
+
+          <button
+            type=""
+            class="block w-full px-5 py-3 mt-4 text-sm font-medium text-white bg-gray-800 rounded-lg"
+            @click="submit"
+            @keyup.enter="submit"
+          >
+            <span class="absolute flex items-center">
+              <svg
+                class="w-5 h-5 text-white group-hover:text-indigo-400"
+                x-description="Heroicon name: mini/lock-closed"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+            </span>
+            Sign in
+          </button>
+
+          <!-- <div class="relative flex items-center py-2 my-2">
+            <div class="flex-grow border-t border-gray-400"></div>
+            <span class="flex-shrink mx-4 text-gray-700">Or</span>
+            <div class="flex-grow border-t border-gray-400"></div>
+          </div> -->
+        </form>
       </div>
-      <div class="fixed inset-x-0 bottom-0">
-        <div class="m-4 text-xs text-gray-400">
-          Powered by
-          <span class="underline">
-            <a href="https://github.com/authcompanion/authcompanion2"
-              >AuthCompanion</a
-            >
-          </span>
-        </div>
+    </div>
+    <div class="fixed inset-x-0 bottom-0">
+      <div class="m-4 text-xs text-gray-400">
+        Powered by
+        <span class="underline">
+          <a href="https://github.com/authcompanion/authcompanion2"
+            >AuthCompanion</a
+          >
+        </span>
       </div>
     </div>
     <!-- scripts -->
@@ -170,9 +191,8 @@
                   "content-type": "application/json",
                 },
               });
-              const appOrigin = await response.headers.get(
-                "x-authc-app-origin"
-              );
+              const appOrigin =
+                await response.headers.get("x-authc-app-origin");
               const resbody = await response.json();
 
               if (response.ok) {

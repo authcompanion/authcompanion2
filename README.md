@@ -134,11 +134,9 @@ For a full list of AuthC's Web Forms, see the [Web Form Guide](https://docs.auth
 
 ## Admin Dashboard
 
-The Admin Dashboard is a tool that allows administrators or web application owners to manage the users of their web application.
+The Admin Dashboard is a tool that allows administrators or web application owners to manage the users of their web application. It provides a range of functions that administrators can use to create, edit, and delete user accounts; ALL via a friendly and intuitive interface.
 
-It provides a range of functions that administrators can use to create, edit, and delete user accounts via a friendly and intuitive interface.
-
-Check out the Admin Dashboard in the documentation here: [Administer](https://docs.authcompanion.com/guide/administer.html). You can find the initial admin password on the `./adminkey` file.
+Check out the Admin Dashboard in the documentation to learn how to access it: [Administer](https://docs.authcompanion.com/guide/administer.html).
 
 ![Admin](./.github/public/admin_dashboard.png)
 

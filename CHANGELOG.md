@@ -1,3 +1,18 @@
+# [3.0.0-beta.17](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.16...3.0.0-beta.17) (2023-09-23)
+
+This release of AuthCompanion features a new and improved UI for the Admin Dashboard! 💎
+
+### Bug Fixes
+
+* update admin route for new folder structure ([27ebd2d](https://github.com/authcompanion/authcompanion2/commit/27ebd2d88f12a8818da92c31dfb87a8393bb3aef))
+
+
+### Features
+
+* refresh admin dashboard ui ([#13](https://github.com/authcompanion/authcompanion2/issues/13)) ([7924501](https://github.com/authcompanion/authcompanion2/commit/7924501fb89a6d9f3b9157c0635dc39b9c511ea8))
+
+
+
 # [3.0.0-beta.16](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.15...3.0.0-beta.16) (2023-09-15)
 
 This release of AuthCompanion features a new and improved UI for all authentication web forms!

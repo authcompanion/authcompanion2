@@ -1,287 +1,206 @@
-<!DOCTYPE html>
-<html lang="en" un-cloak>
+<!doctype html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@unocss/reset/tailwind.min.css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/uno.global.js"></script>
+    <link rel="stylesheet" href="/v1/web/styles/main.css" />
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     <style>
       html {
         font-family: "Inter var", sans-serif;
       }
-
-      [un-cloak] {
+      [v-cloak] {
         display: none;
       }
     </style>
-    <!-- <script>
-      // pass unocss options
-      window.__unocss = {
-        rules: [
-          // custom rules...
-        ],
-        presets: [
-          // custom presets...
-        ],
-        // ...
-      } 
-      </script>-->
-    <title>Admin</title>
+
+    <title>Home</title>
   </head>
+  <body id="app">
+    <div class="flex flex-row">
+      <div class="">
+        <!-- Left Nav -->
+        <div
+          class="flex flex-col justify-between w-16 h-screen bg-gray-100 border-e"
+        >
+          <div>
+            <div
+              class="inline-flex items-center justify-center w-16 h-16 cursor-pointer"
+            >
+              <span
+                class="grid w-12 h-12 text-xs font-semibold text-white bg-gray-900 rounded-lg place-content-center"
+              >
+                Admin
+              </span>
+            </div>
 
-  <body class="">
-    <div id="app" class="">
-      <div class="min-h-full">
-        <nav class="bg-gray-800">
-          <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-              <div class="flex items-center">
-                <div class="flex-shrink-0">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1"
-                    stroke="currentColor"
-                    class="text-white w-9 h-9"
+            <div class="border-t border-gray-200">
+              <div class="px-2">
+                <div class="py-4">
+                  <a
+                    href=""
+                    class="t group relative flex justify-center rounded bg-blue-50 px-2 py-1.5 text-blue-700"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25"
-                    />
-                  </svg>
-                </div>
-                <div class="hidden md:block">
-                  <div class="flex items-baseline ml-8 space-x-4">
-                    <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                    <a
-                      href="#"
-                      class="px-3 py-2 text-base font-medium text-white rounded-md hover:text-gray-400"
-                      aria-current="page"
-                      >Admin Home</a
-                    >
-                  </div>
-                </div>
-              </div>
-              <div class="hidden md:block">
-                <div class="flex items-center ml-4 md:ml-6">
-                  <button
-                    type="button"
-                    class="p-1 text-gray-400 bg-gray-800 rounded-full hover:text-white"
-                  >
-                    <span class="sr-only">View notifications</span>
-                    <!-- Heroicon name: outline/bell -->
                     <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
                       class="w-6 h-6"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      aria-hidden="true"
                     >
                       <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                      />
-                    </svg>
-                  </button>
-
-                  <!-- Profile dropdown -->
-                  <div class="flex flex-row items-center ml-3">
-                    <a
-                      href="#"
-                      class="px-1 py-2 text-base font-medium text-white rounded-md hover:text-gray-400"
-                      aria-current="page"
-                      @click="logout()"
-                      >Logout</a
-                    >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="2"
-                      stroke="currentColor"
-                      class="w-4 h-4 text-gray-400"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                        d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0112 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125M13.125 12h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125M20.625 12c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5M12 14.625v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 14.625c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m0 1.5v-1.5m0 0c0-.621.504-1.125 1.125-1.125m0 0h7.5"
                       />
                     </svg>
 
-                    <!-- <Transition
-                      un-cloak
-                      enter-from-class="transform scale-95 opacity-0"
-                      enter-active-class="transition duration-100 ease-out"
-                      enter-to-class="transform scale-100 opacity-100"
-                      leave-from-class="transform scale-100 opacity-100"
-                      leave-active-class="transition duration-75 ease-in"
-                      leave-to-class="transform scale-95 opacity-0"
+                    <span
+                      class="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white opacity-0 group-hover:opacity-100"
                     >
-                      <div
-                        v-if="showProfileMenu"
-                        class="absolute right-0 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                        role="menu"
-                        aria-orientation="vertical"
-                        aria-labelledby="user-menu-button"
-                        tabindex="-1"
-                      >
-                        <a
-                          href="/v1/admin/profile"
-                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          role="menuitem"
-                          tabindex="-1"
-                          id="user-menu-item-0"
-                          >Your Profile</a
-                        >
-                        <a
-                          href="#"
-                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          role="menuitem"
-                          tabindex="-1"
-                          id="user-menu-item-2"
-                          >Sign out</a
-                        >
-                      </div>
-                    </Transition> -->
-                  </div>
+                      Users
+                    </span>
+                  </a>
                 </div>
+
+                <!-- section break -->
+                <ul class="pt-4 space-y-1 border-t border-gray-200"></ul>
               </div>
-              <div class="flex -mr-2 md:hidden">
-                <!-- Mobile menu button -->
-                <button
-                  type="button"
-                  class="inline-flex items-center justify-center p-2 text-gray-400 bg-gray-800 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                  aria-controls="mobile-menu"
-                  aria-expanded="false"
+            </div>
+          </div>
+
+          <div
+            class="sticky inset-x-0 bottom-0 p-2 bg-gray-100 border-t border-gray-100"
+          >
+            <form>
+              <button
+                type="submit"
+                class="group relative flex w-full justify-center rounded-lg px-2 py-1.5 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                @click="logout()"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-6 h-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
                 >
-                  <span class="sr-only">Open main menu</span>
-                  <!--
-                    Heroicon name: outline/menu
-      
-                    Menu open: "hidden", Menu closed: "block"
-                  -->
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+
+                <span
+                  class="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white opacity-0 group-hover:opacity-100"
+                >
+                  Logout
+                </span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="">
+        <header>
+          <div
+            class="max-w-screen-xl px-4 pt-8 mx-auto sm:px-6 sm:pt-8 lg:px-8"
+          >
+            <div class="sm:flex sm:items-center sm:justify-between">
+              <div class="text-center sm:text-left">
+                <h1 class="text-2xl font-bold text-gray-900 sm:text-3xl">
+                  Admin Panel
+                </h1>
+
+                <p class="mt-1.5 text-sm text-gray-500">
+                  Manage and oversee your application's user accounts
+                </p>
+              </div>
+              <div
+                class="flex flex-col gap-4 mt-4 sm:mt-0 sm:flex-row sm:items-center"
+              >
+                <button
+                  class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 px-5 py-3 text-gray-500 transition hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring"
+                  type="button"
+                  @click="redirect"
+                >
+                  <span class="text-sm font-medium"> View Auth Site</span>
+
                   <svg
-                    class="block w-6 h-6"
                     xmlns="http://www.w3.org/2000/svg"
+                    class="w-4 h-4"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
-                    aria-hidden="true"
+                    stroke-width="2"
                   >
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M4 6h16M4 12h16M4 18h16"
-                    />
-                  </svg>
-                  <!--
-                    Heroicon name: outline/x
-      
-                    Menu open: "block", Menu closed: "hidden"
-                  -->
-                  <svg
-                    class="hidden w-6 h-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M6 18L18 6M6 6l12 12"
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                     />
                   </svg>
                 </button>
+
+                <button
+                  class="block px-5 py-3 text-sm font-medium text-white transition bg-gray-800 rounded-lg hover:bg-gray-900 focus:outline-none focus:ring"
+                  type="button"
+                  @click="toggleCreatePanel()"
+                >
+                  Create User
+                </button>
               </div>
             </div>
-          </div>
-
-          <!-- Mobile menu, show/hide based on menu state. -->
-        </nav>
-
-        <header class="bg-white shadow-sm">
-          <div
-            class="flex flex-row justify-between px-4 py-4 mx-auto max-w-7xl place-items-center"
-          >
-            <div class="w-1/3">
-              <div>
-                <label
-                  for="default-search"
-                  class="mb-2 text-sm font-medium text-gray-900 sr-only"
-                  >Search</label
-                >
-                <div class="relative">
-                  <input
-                    type="search"
-                    id="default-search"
-                    class="block w-full p-4 pl-5 pr-12 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Search Email"
-                    v-model="searchValue"
-                    @keyup.enter="searchUser()"
-                    @input="handleSearchInputChange()"
-                  />
-                  <button
-                    type="button"
-                    @click="searchUser(10)"
-                    class="absolute inset-y-0 right-0 flex items-center px-3 bg-gray-400 rounded hover:bg-gray-400"
+            <div
+              class="flex flex-row justify-between pt-8 max-w-7xl place-items-center"
+            >
+              <div class="w-1/4">
+                <div>
+                  <label
+                    for="default-search"
+                    class="mb-2 text-sm font-medium text-gray-900 sr-only"
+                    >Search</label
                   >
-                    <svg
-                      aria-hidden="true"
-                      class="w-5 h-5 text-gray-800 cursor-pointer"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
+                  <div class="relative">
+                    <input
+                      type="search"
+                      id="default-search"
+                      class="block w-full p-4 pl-5 pr-12 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Search Email"
+                      v-model="searchValue"
+                      @keyup.enter="searchUser()"
+                      @input="handleSearchInputChange()"
+                    />
+                    <button
+                      type="button"
+                      @click="searchUser(10)"
+                      class="absolute inset-y-0 right-0 flex items-center px-3 rounded hover:bg-gray-200"
                     >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      ></path>
-                    </svg>
-                  </button>
+                      <svg
+                        aria-hidden="true"
+                        class="w-5 h-5 text-gray-800 cursor-pointer"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        ></path>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-            <button
-              class="inline-flex items-center px-4 py-2 font-bold text-gray-800 bg-gray-300 rounded h-11 hover:bg-gray-400"
-              @click="toggleCreatePanel()"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="w-6 h-6 mr-2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 4.5v15m7.5-7.5h-15"
-                />
-              </svg>
-
-              <span>Create</span>
-            </button>
           </div>
         </header>
-
-        <!-- Main Content Area -->
         <main>
           <div class="py-6 mx-auto max-w-fit sm:px-6 lg:px-8">
             <div class="flex flex-col">
@@ -293,7 +212,7 @@
                     class="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg"
                   >
                     <table class="min-w-full divide-y divide-gray-200">
-                      <thead class="bg-gray-50">
+                      <thead class="bg-gray-100">
                         <tr>
                           <th
                             scope="col"
@@ -370,9 +289,9 @@
                           >
                             <span
                               :class="[
-                            'inline-flex', 'items-center', 'rounded-full', 'px-3', 'py-0.5', 'text-sm', 'font-medium',
-                            user.attributes.active ? 'text-green-800 bg-green-100' : 'text-red-800 bg-red-100'
-                          ]"
+                              'inline-flex', 'items-center', 'rounded-full', 'px-3', 'py-0.5', 'text-sm', 'font-medium',
+                              user.attributes.active ? 'text-green-800 bg-green-100' : 'text-red-800 bg-red-100'
+                            ]"
                             >
                               {{ user.attributes.active == 1 ? 'Active (1)' :
                               'Inactive (0)' }}
@@ -596,7 +515,7 @@
                             Cancel
                           </button>
                           <button
-                            class="inline-flex justify-center px-4 py-2 ml-4 text-sm font-medium text-gray-700 bg-gray-300 border border-gray-300 rounded-md shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-grey-500 hover:text-white focus:ring-offset-2"
+                            class="inline-flex justify-center px-4 py-2 ml-4 text-sm font-medium text-white bg-gray-900 border border-gray-300 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-grey-500 hover:text-white focus:ring-offset-2"
                             @click="showCreateMenu ? createUserRecord(userRecord) : updateUserRecord(selectedUser.id, userRecord)"
                           >
                             Save
@@ -613,131 +532,130 @@
           <!-- Pagination Area -->
           <paginate class="bg-white shadow-sm">
             <div
-              class="flex flex-row justify-between px-4 mx-auto text-sm max-w-7xl place-items-center"
+              class="flex flex-row justify-between px-5 text-sm max-w-8xl place-items-center"
             >
-              <div class="flex flex-row place-items-center">
-                <div>
-                  <label class="mx-3">Page size:</label>
-                </div>
-                <div>
-                  <select
-                    class="px-3 py-2 border"
-                    v-model="pageSize"
-                    @change="handlePageSizeInputChange()"
-                  >
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="30">30</option>
-                  </select>
-                </div>
+              <div class="flex flex-row ml-4">
+                <select
+                  name="pagesize"
+                  v-model="pageSize"
+                  @change="handlePageSizeInputChange()"
+                  class="w-full text-gray-700 border-gray-300 rounded-lg sm:text-sm"
+                >
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="30">30</option>
+                </select>
               </div>
-              <div class="flex items-center">
-                <button
-                  class="flex items-center space-x-1 text-gray-600 hover:text-gray-800"
+
+              <div class="inline-flex justify-center gap-1">
+                <a
+                  href="#"
                   @click="previousPage"
+                  class="inline-flex items-center justify-center w-8 h-8 text-gray-900 bg-white border border-gray-100 rounded rtl:rotate-180"
                 >
+                  <span class="sr-only">Prev Page</span>
                   <svg
-                    class="w-4 h-4"
                     xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                    class="w-3 h-3"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15 19l-7-7 7-7"
-                    ></path>
+                      fill-rule="evenodd"
+                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
-                  <span>Previous Page</span>
-                </button>
-                <input
-                  class="w-5 mx-3 text-center text-black bg-gray-200 rounded"
-                  v-model="pageNumber"
-                  readonly
-                />
-                <button
-                  class="flex items-center space-x-1 text-gray-600 hover:text-gray-800"
+                </a>
+
+                <div>
+                  <input
+                    type="number"
+                    class="h-8 w-12 rounded border border-gray-100 bg-white p-0 text-center text-xs font-medium text-gray-900 [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
+                    v-model="pageNumber"
+                  />
+                </div>
+
+                <a
+                  href="#"
                   @click="nextPage"
+                  class="inline-flex items-center justify-center w-8 h-8 text-gray-900 bg-white border border-gray-100 rounded rtl:rotate-180"
                 >
-                  <span>Next Page</span>
+                  <span class="sr-only">Next Page</span>
                   <svg
-                    class="w-4 h-4"
                     xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                    class="w-3 h-3"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 5l7 7-7 7"
-                    ></path>
+                      fill-rule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
-                </button>
+                </a>
               </div>
             </div>
           </paginate>
         </main>
-        <!-- Global notification live region, render this permanently at the end of the document -->
-        <div
-          aria-live="assertive"
-          class="fixed inset-0 z-10 flex items-end px-4 py-6 pointer-events-none sm:items-start sm:p-6"
+      </div>
+    </div>
+    <!-- Global notification live region, render this permanently at the end of the document -->
+    <div
+      aria-live="assertive"
+      class="fixed inset-0 z-10 flex items-end px-4 py-6 pointer-events-none sm:items-start sm:p-6"
+    >
+      <div class="flex flex-col items-center w-full space-y-4 sm:items-end">
+        <Transition
+          un-cloak
+          enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+          enter-active-class="transition duration-300 ease-out transform"
+          enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+          leave-from-class="opacity-100"
+          leave-active-class="transition duration-100 ease-in"
+          leave-to-class="opacity-0"
         >
-          <div class="flex flex-col items-center w-full space-y-4 sm:items-end">
-            <Transition
-              un-cloak
-              enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
-              enter-active-class="transition duration-300 ease-out transform"
-              enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
-              leave-from-class="opacity-100"
-              leave-active-class="transition duration-100 ease-in"
-              leave-to-class="opacity-0"
-            >
-              <div
-                v-if="showNotification"
-                class="w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-lg pointer-events-auto ring-1 ring-black ring-opacity-5"
-              >
-                <div class="p-4">
-                  <div class="flex items-center">
-                    <div class="flex justify-between flex-1 w-0">
-                      <p class="flex-1 w-0 text-sm font-medium text-gray-900">
-                        {{ notificationMessage }}
-                      </p>
-                    </div>
-                    <div class="flex flex-shrink-0 ml-2">
-                      <button
-                        @click="showNotification = !showNotification"
-                        type="button"
-                        class="inline-flex text-gray-400 bg-white rounded-md hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      >
-                        <span class="sr-only">Close</span>
-                        <!-- Heroicon name: mini/x-mark -->
-                        <svg
-                          class="w-5 h-5"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
+          <div
+            v-if="showNotification"
+            class="w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-lg pointer-events-auto ring-1 ring-black ring-opacity-5"
+          >
+            <div class="p-4">
+              <div class="flex items-center">
+                <div class="flex justify-between flex-1 w-0">
+                  <p class="flex-1 w-0 text-sm font-medium text-gray-900">
+                    {{ notificationMessage }}
+                  </p>
+                </div>
+                <div class="flex flex-shrink-0 ml-2">
+                  <button
+                    @click="showNotification = !showNotification"
+                    type="button"
+                    class="inline-flex text-gray-400 bg-white rounded-md hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  >
+                    <span class="sr-only">Close</span>
+                    <!-- Heroicon name: mini/x-mark -->
+                    <svg
+                      class="w-5 h-5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
+                      />
+                    </svg>
+                  </button>
                 </div>
               </div>
-            </Transition>
+            </div>
           </div>
-        </div>
+        </Transition>
       </div>
     </div>
 
-    <!-- scripts -->
+    <!-- Scripts -->
     <script type="module">
       import {
         createApp,
@@ -813,6 +731,12 @@
             selectedUser.value = user;
             // toggle the edit panel
             showEditPanel.value = true;
+          };
+
+          const redirect = () => {
+            // Use Vue Router or window.location.href to navigate to the /test URL
+            // Here, we're using window.location.href
+            window.location.href = "/v1/web/login";
           };
 
           // Function to logout the user, remove the token from cookies and redirect to the login page
@@ -1069,6 +993,7 @@
             pageNumber,
             previousPage,
             nextPage,
+            redirect,
           };
         },
       }).mount("#app");

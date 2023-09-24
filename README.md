@@ -39,7 +39,12 @@ With AuthC you can:
 - Securely handle the registration, login, logout, and account recovery of user accounts.
 - Generate and verify [JWTs](https://jwt.io/introduction), a token used for your user's session and authenticating them into your web application's backend APIs.
 - Manage Users via a self-service Dashboard and confidently store and own your web application's user accounts, on your terms.
-- Help users create accounts and login with a passkey on their mobile device (aka passwordless) or by using traditional username/passwords instead
+- Help users create accounts and login with a passkey on their mobile device (aka passwordless) or by using traditional username/passwords instead.
+
+
+|             Login Screen             |            Registration Screen             |
+| :----------------------------------: | :----------------------------------------: |
+| ![Login](./.github/public/login.png) | ![Register](./.github/public/register.png) |
 
 ## Try it
 
@@ -119,12 +124,7 @@ When ready, read the [Launch Guide](https://docs.authcompanion.com/guide/launch.
 
 ### Web Forms for Authentication
 
-Authcompanion provides built-in web forms for user authentiation including both login and registration pages below:
-
-
-|             Login Screen             |            Registration Screen             |
-| :----------------------------------: | :----------------------------------------: |
-| ![Login](./.github/public/login.png) | ![Register](./.github/public/register.png) |
+Authcompanion provides built-in web forms for user authentiation including both login and registration pages.
 
 After a user authenticates with AuthC's web forms, we pass them to your web application.
 
@@ -134,7 +134,7 @@ For a full list of AuthC's Web Forms, see the [Web Form Guide](https://docs.auth
 
 ## Admin Dashboard
 
-The Admin Dashboard is a tool that allows administrators or web application owners to manage the users of their web application. It provides a range of functions that administrators can use to create, edit, and delete user accounts; ALL via a friendly and intuitive interface.
+The Admin Dashboard is a tool that allows administrators or web application owners to manage the users of their web application. It provides a range of functions that administrators can use to create, edit, and delete user accounts; all via a friendly and intuitive interface.
 
 Check out the Admin Dashboard in the documentation to learn how to access it: [Administer](https://docs.authcompanion.com/guide/administer.html).
 

@@ -11,7 +11,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get autoclean -y && apt-get auto
 RUN groupadd -r nodejs && useradd -g nodejs -s /bin/bash -d /home/nodejs -m nodejs
 USER nodejs
 # set right (secure) folder permissions
-RUN mkdir -p /home/nodejs/app/node_modules && chown -R nodejs:nodejs /home/nodejs/app
+RUN mkdir -p /home/nodejs/app/node_modules /home/nodejs/app/authdata && chown -R nodejs:nodejs /home/nodejs/app
 
 WORKDIR /home/nodejs/app
 

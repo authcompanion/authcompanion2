@@ -25,7 +25,7 @@ export const loginOptionsHandler = async function (request, reply) {
     const stmt = this.db.prepare(
       "INSERT INTO storage (sessionID, data) VALUES (?, ?);"
     );
-    const userObj = stmt.run(cookies.sessionID, generatedOptions.challenge);
+    await stmt.run(cookies.sessionID, generatedOptions.challenge);
 
     //send the reply
     return generatedOptions;

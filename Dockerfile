@@ -1,8 +1,10 @@
 FROM node:18-slim as builder
 
-LABEL version="3.0.0-beta.15"
-LABEL description="An admin-friendly, User Management Server (with Passkeys & JWTs) - for seamless and secure integration of user authentication"
-LABEL maintainer="Paul Fischer"
+LABEL org.opencontainers.image.title="AuthCompanion"
+LABEL org.opencontainers.image.version="3.0.0-beta.17"
+LABEL org.opencontainers.image.description="An admin-friendly, User Management Server (with Passkeys & JWTs) - for seamless and secure integration of user authentication"
+LABEL org.opencontainers.image.authors="Paul Fischer"
+LABEL org.opencontainers.image.source=https://github.com/authcompanion/authcompanion2
 
 # update packages, to reduce risk of vulnerabilities
 RUN apt-get update && apt-get upgrade -y && apt-get autoclean -y && apt-get autoremove -y

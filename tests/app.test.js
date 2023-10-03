@@ -49,6 +49,7 @@ test.before(async (t) => {
       data: {
         type: "users",
         attributes: {
+          email: "admin@localhost",
           password: t.context.adminPass,
         },
       },
@@ -174,6 +175,7 @@ test.serial("Admin Endpoint Test: POST /admin/login", async (t) => {
         data: {
           type: "users",
           attributes: {
+            email: "admin@localhost",
             password: t.context.adminPass,
           },
         },

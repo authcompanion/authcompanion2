@@ -1,3 +1,13 @@
+# [3.0.0-beta.18](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.17...3.0.0-beta.18) (2023-10-05)
+
+
+### Features
+
+* admin credentials are written to file and console on authc's first start ([97dd115](https://github.com/authcompanion/authcompanion2/commit/97dd115508db5e0995eb28b6431eabb48c2f4d61))
+* admin login to use admin table ([#14](https://github.com/authcompanion/authcompanion2/issues/14)) ([42f236a](https://github.com/authcompanion/authcompanion2/commit/42f236a3cede87aa40f9c6293c448ce02e6d1b86))
+
+
+
 # [3.0.0-beta.17](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.16...3.0.0-beta.17) (2023-09-23)
 
 This release of AuthCompanion features a new and improved UI for the Admin Dashboard! 💎

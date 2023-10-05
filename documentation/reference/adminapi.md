@@ -27,6 +27,7 @@ Description: Trades the admin credentials for an admin access token used to acce
   "data": {
     "type": "users",
     "attributes": {
+      "email": "admin@localhost",
       "password": "9ae5a568ad70f6c3ee886d72baf1e5fcec3be630"
     }
   }

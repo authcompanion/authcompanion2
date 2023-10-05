@@ -71,25 +71,12 @@ $ npm start
 
 ### With Docker
 
-Make sure to have the
-[respository cloned](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
-Then from the main directory, build the AuthC server image:
+Start the server (with the default config):
 
 ```bash
-$ git clone https://github.com/authcompanion/authcompanion2.git
+$ docker run -it -p 3002:3002 --name AuthCompanion ghcr.io/authcompanion/authcompanion2:main
 ```
-
-```bash
-$ docker build -t authc_server .
-```
-
-Start the server (default config):
-
-```bash
-$ docker run --name authcompanion \
- -p 3002:3002 \
-authc_server
-```
+Also available is the [docker-compose.yml](https://github.com/authcompanion/authcompanion2/blob/main/docker-compose.yml)
 
 ### Configure AuthCompanion
 

@@ -3,7 +3,11 @@ import buildApp from "../app.js";
 import { unlink } from "node:fs/promises";
 import { parse } from "cookie";
 import { readFile } from "node:fs/promises";
-import { makeAccesstoken, makeRefreshtoken, makeAdminToken } from "../utils/jwt.js";
+import {
+  makeAccesstoken,
+  makeRefreshtoken,
+  makeAdminToken,
+} from "../utils/jwt.js";
 import * as jose from "jose";
 
 // Setup Test
@@ -13,7 +17,7 @@ test.before(async (t) => {
 
   //set up admin password
   const adminKey = await readFile("./adminkey_test", "utf8");
-  const adminPassword = adminKey.split(":")[1].trim();
+  const adminPassword = adminKey.split("admin password:")[1].trim();
   t.context.adminPass = adminPassword;
 
   //create a user to test auth api endpoints with
@@ -340,7 +344,9 @@ test("JWT Test: makeRefreshtoken generates a valid recovery JWT token", async (t
   const secretKey = t.context.app.key;
 
   // Generate a recovery token using the function
-  const { token, expiration } = await makeRefreshtoken(userObj, secretKey, { recoveryToken: true });
+  const { token, expiration } = await makeRefreshtoken(userObj, secretKey, {
+    recoveryToken: true,
+  });
 
   // Fetch the payload
   const { payload } = await jose.jwtVerify(token, secretKey);
@@ -366,7 +372,10 @@ test("JWT Test: makeAdminToken generates a valid admin JWT token", async (t) => 
   const secretKey = t.context.app.key;
 
   // Generate an admin token using the function
-  const { token, expiration, userFingerprint } = await makeAdminToken(userObj, secretKey);
+  const { token, expiration, userFingerprint } = await makeAdminToken(
+    userObj,
+    secretKey
+  );
 
   // Fetch the payload
   const { payload } = await jose.jwtVerify(token, secretKey);

@@ -3,11 +3,7 @@ import buildApp from "../app.js";
 import { unlink } from "node:fs/promises";
 import { parse } from "cookie";
 import { readFile } from "node:fs/promises";
-import {
-  makeAccesstoken,
-  makeRefreshtoken,
-  makeAdminToken,
-} from "../utils/jwt.js";
+import { makeAccesstoken, makeRefreshtoken, makeAdminToken } from "../utils/jwt.js";
 import * as jose from "jose";
 
 // Setup Test
@@ -36,13 +32,29 @@ test.before(async (t) => {
     },
   });
 
+  const response3 = await t.context.app.inject({
+    method: "POST",
+    url: "/v1/auth/register",
+    payload: {
+      data: {
+        type: "users",
+        attributes: {
+          name: "Authy Person",
+          email: "hello_test@authcompanion.com",
+          password: "mysecretpass",
+          metadata: {
+            tenant: "tenantID",
+          },
+        },
+      },
+    },
+  });
+
   //save user details to context
   const data = await response.json();
   t.context.uuid = data.data.id;
   t.context.jwt = data.data.attributes.access_token;
-  t.context.refreshToken = parse(response.headers["set-cookie"][0])[
-    "userRefreshToken"
-  ];
+  t.context.refreshToken = parse(response.headers["set-cookie"][0])["userRefreshToken"];
   t.context.fgp = parse(response.headers["set-cookie"][1])["fgp"];
 
   //create a user to test admin api endpoints with
@@ -112,6 +124,9 @@ test.serial("Auth Endpoint Test: POST /auth/register", async (t) => {
             name: "Authy Person",
             email: "hello_test_register@authcompanion.com",
             password: "mysecretpass",
+            metadata: {
+              tenant: "12345",
+            },
           },
         },
       },
@@ -156,6 +171,9 @@ test.serial("Auth Endpoint Test: POST /auth/users/me", async (t) => {
             name: "Authy Person_update",
             email: "hello_updated@authcompanion.com",
             password: "mysecretpass1",
+            metadata: {
+              secret: "notreally",
+            },
           },
         },
       },
@@ -283,13 +301,13 @@ test("JWT Test: makeAccesstoken generates a valid JWT token", async (t) => {
     uuid: "123",
     name: "John Doe",
     email: "johndoe@example.com",
+    metadata: JSON.stringify({
+      tenant: "1234",
+    }),
   };
   const secretKey = t.context.app.key;
 
-  const { token, expiration, userFingerprint } = await makeAccesstoken(
-    userObj,
-    secretKey
-  );
+  const { token, expiration, userFingerprint } = await makeAccesstoken(userObj, secretKey);
 
   // Fetch the payload
   const { payload } = await jose.jwtVerify(token, secretKey);
@@ -298,6 +316,7 @@ test("JWT Test: makeAccesstoken generates a valid JWT token", async (t) => {
   t.is(payload.userid, userObj.uuid);
   t.is(payload.name, userObj.name);
   t.is(payload.email, userObj.email);
+  t.deepEqual(payload.metadata, JSON.parse(userObj.metadata));
 
   // Assert that the token is not empty
   t.truthy(token);
@@ -372,10 +391,7 @@ test("JWT Test: makeAdminToken generates a valid admin JWT token", async (t) => 
   const secretKey = t.context.app.key;
 
   // Generate an admin token using the function
-  const { token, expiration, userFingerprint } = await makeAdminToken(
-    userObj,
-    secretKey
-  );
+  const { token, expiration, userFingerprint } = await makeAdminToken(userObj, secretKey);
 
   // Fetch the payload
   const { payload } = await jose.jwtVerify(token, secretKey);

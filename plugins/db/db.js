@@ -4,7 +4,7 @@ import Database from "better-sqlite3";
 import config from "../../config.js";
 import fastifyPlugin from "fastify-plugin";
 
-const VERSION = 2;
+const VERSION = 3;
 
 const migrate = (db, version) => {
   const allFiles = readdirSync("./plugins/db/schema/");
@@ -57,9 +57,7 @@ const dbPlugin = async function (fastify) {
     fastify.log.info(`Using Sqlite3 Database: ${config.DBPATH}`);
   } catch (error) {
     console.log(error);
-    throw new Error(
-      "There was an error setting and connecting up the Database, please try again!"
-    );
+    throw new Error("There was an error setting and connecting up the Database, please try again!");
   }
   //make available the database across the server by calling "db"
   fastify.decorate("db", db);

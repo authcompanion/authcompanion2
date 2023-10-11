@@ -12,6 +12,7 @@ export const registrationSchema = {
                 name: { type: "string" },
                 email: { type: "string" },
                 password: { type: "string" },
+                metadata: { type: "object" },
               },
               required: ["name", "email", "password"],
             },

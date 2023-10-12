@@ -6,9 +6,7 @@ export const createUserHandler = async function (request, reply) {
   try {
     //Check the request's type attibute is set to users
     if (request.body.data.type !== "users") {
-      request.log.info(
-        "Admin API: The request's type is not set to Users, creation failed"
-      );
+      request.log.info("Admin API: The request's type is not set to Users, creation failed");
       throw { statusCode: 400, message: "Invalid Type Attribute" };
     }
 
@@ -17,34 +15,24 @@ export const createUserHandler = async function (request, reply) {
     const duplicateAccount = await stmt.get(request.body.data.attributes.email);
 
     if (duplicateAccount) {
-      request.log.info(
-        "Admin API: User's email already exists in database, creation failed"
-      );
+      request.log.info("Admin API: User's email already exists in database, creation failed");
       throw { statusCode: 400, message: "Duplicate Email Address Exists" };
     }
 
     //If the user's active status is a string, convert it to a number
     if (request.body.data.attributes.active) {
       if (typeof request.body.data.attributes.active === "string") {
-        request.body.data.attributes.active = Number(
-          request.body.data.attributes.active
-        );
+        request.body.data.attributes.active = Number(request.body.data.attributes.active);
       }
     }
 
     //Check if the user's active status is being updated and if it is, check if the new status is a valid 1 or 0
     if (request.body.data.attributes.active) {
-      if (
-        request.body.data.attributes.active !== 0 &&
-        request.body.data.attributes.active !== 1
-      ) {
-        request.log.info(
-          "Admin API: User's active status is not valid, update failed"
-        );
+      if (request.body.data.attributes.active !== 0 && request.body.data.attributes.active !== 1) {
+        request.log.info("Admin API: User's active status is not valid, update failed");
         throw {
           statusCode: 400,
-          message:
-            "Invalid Active Status, Please use 1 for true and 0 for false",
+          message: "Invalid Active Status, Please use 1 for true and 0 for false",
         };
       }
     }
@@ -55,13 +43,14 @@ export const createUserHandler = async function (request, reply) {
     const jwtid = randomUUID();
 
     const registerStmt = this.db.prepare(
-      "INSERT INTO users (uuid, name, email, password, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, active, created_at, updated_at;"
+      "INSERT INTO users (uuid, name, email, password, metadata, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, metadata, active, created_at, updated_at;"
     );
     const user = registerStmt.get(
       uuid,
       request.body.data.attributes.name,
       request.body.data.attributes.email,
       hashpwd,
+      JSON.stringify(request.body.data.attributes.metadata),
       request.body.data.attributes.active,
       jwtid
     );

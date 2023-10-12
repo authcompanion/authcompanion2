@@ -21,8 +21,7 @@ export async function makeAccesstoken(userObj, secretKey) {
     let expirationTime = "1h";
 
     //generate the client context for storing the hash in the jwt claims
-    const { userFingerprint, userFingerprintHash } =
-      await generateClientContext();
+    const { userFingerprint, userFingerprintHash } = await generateClientContext();
 
     // build the token claims
     const claims = {
@@ -32,6 +31,10 @@ export async function makeAccesstoken(userObj, secretKey) {
       userFingerprint: userFingerprintHash,
       scope: "user",
     };
+
+    if (userObj.metadata !== undefined && userObj.metadata !== null && userObj.metadata !== "{}") {
+      claims.metadata = JSON.parse(userObj.metadata);
+    }
 
     const jwt = await new jose.SignJWT(claims)
       .setProtectedHeader({ alg: "HS256", typ: "JWT" })
@@ -52,11 +55,7 @@ export async function makeAccesstoken(userObj, secretKey) {
 }
 
 //https://datatracker.ietf.org/doc/html/draft-ietf-oauth-browser-based-apps-05#section-8
-export async function makeRefreshtoken(
-  userObj,
-  secretKey,
-  { recoveryToken = false } = {}
-) {
+export async function makeRefreshtoken(userObj, secretKey, { recoveryToken = false } = {}) {
   try {
     // set default expiration time of the jwt token
     let expirationTime = "7d";
@@ -70,6 +69,10 @@ export async function makeRefreshtoken(
       name: userObj.name,
       email: userObj.email,
     };
+
+    if (userObj.metadata !== undefined && userObj.metadata !== null && userObj.metadata !== "{}") {
+      claims.metadata = JSON.parse(userObj.metadata);
+    }
 
     const db = new Database(config.DBPATH);
 
@@ -102,8 +105,7 @@ export async function makeAdminToken(userObj, secretKey) {
     let expirationTime = "2h";
 
     //generate the client context for storing the hash in the jwt claims
-    const { userFingerprint, userFingerprintHash } =
-      await generateClientContext();
+    const { userFingerprint, userFingerprintHash } = await generateClientContext();
 
     const claims = {
       userid: userObj.uuid,
@@ -142,10 +144,7 @@ export async function validateJWT(jwt, secretKey, fingerprint = null) {
       return payload;
     }
 
-    const validUserContext = await verifyValueWithHash(
-      fingerprint,
-      payload.userFingerprint
-    );
+    const validUserContext = await verifyValueWithHash(fingerprint, payload.userFingerprint);
 
     if (!validUserContext) {
       throw { statusCode: 500, message: "Server Error" };

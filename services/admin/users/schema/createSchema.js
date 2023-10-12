@@ -13,6 +13,7 @@ export const createSchema = {
                 email: { type: "string" },
                 password: { type: "string" },
                 active: { type: "string" },
+                metadata: { type: "object" },
               },
               required: ["name", "email", "password", "active"],
             },

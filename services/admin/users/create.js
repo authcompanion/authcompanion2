@@ -58,6 +58,7 @@ export const createUserHandler = async function (request, reply) {
     const userAttributes = {
       name: user.name,
       email: user.email,
+      metadata: JSON.parse(user.metadata),
       active: user.active,
       created: user.created_at,
       updated: user.updated_at,

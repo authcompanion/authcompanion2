@@ -64,9 +64,9 @@ Bearer Token Required: `Authorization: Bearer {admin access token}`
 
 Query Parameters:
 
-* page[size] (optional): The number of users to include per page.
-* page[number] (optional): The page number of users to retrieve.
-* search[email] (optional): Filter users by email address using the LIKE operator.
+- page[size] (optional): The number of users to include per page.
+- page[number] (optional): The page number of users to retrieve.
+- search[email] (optional): Filter users by email address using the LIKE operator.
 
 Response:
 
@@ -79,6 +79,9 @@ Response:
       "attributes": {
         "name": "Authy Person",
         "email": "Hello@authcompanion.com",
+				"metadata": {
+					"tenant": "tenantID"
+				},
         "active": 1,
         "created": "2023-02-02T21:33:53.926Z",
         "updated": "2023-02-02T21:33:53.926Z"
@@ -90,17 +93,20 @@ Response:
       "attributes": {
         "name": "Authy Person 2",
         "email": "Hello2@authcompanion.com",
+				"metadata": {
+					"tenant": "tenantID"
+				},
         "active": 1,
         "created": "2023-02-02T21:34:37.712Z",
         "updated": "2023-02-02T21:34:37.712Z"
       }
     }
   ],
-	"links": {
-		"next": "/v1/admin/users?page[number]=2&page[size]=2",
-		"first": "/v1/admin/users?page[number]=1&page[size]=2",
-		"last": "/v1/admin/users?page[number]=3&page[size]=2"
-	}
+  "links": {
+    "next": "/v1/admin/users?page[number]=2&page[size]=2",
+    "first": "/v1/admin/users?page[number]=1&page[size]=2",
+    "last": "/v1/admin/users?page[number]=3&page[size]=2"
+  }
 }
 ```
 
@@ -112,6 +118,8 @@ Description: Creates a new user in the Authcompanion database.
 
 Bearer Token Required: `Authorization: Bearer {admin access token}`
 
+Pass an arbitrary object to data.attributes.metdata which will be made availale as a claim on the user's JWT issued after login. 
+
 **POST** Request Body:
 
 ```json
@@ -122,7 +130,10 @@ Bearer Token Required: `Authorization: Bearer {admin access token}`
       "name": "Authy Person",
       "email": "hello@authcompanion.com",
       "password": "supersecret",
-      "active": 1
+      "metadata": {
+        "tenant": "tenantID"
+      },
+      "active": 1,
     }
   }
 }
@@ -138,6 +149,9 @@ Response:
     "attributes": {
       "name": "Authy Person",
       "email": "hello@authcompanion.com",
+      "metadata": {
+        "tenant": "tenantID"
+      },
       "active": 1,
       "created": "2023-02-02T21:33:53.926Z",
       "updated": "2023-02-02T21:33:53.926Z"
@@ -163,8 +177,11 @@ Bearer Token Required: `Authorization: Bearer {admin access token}`
     "attributes": {
       "name": "Authy Person",
       "email": "hello@authcompanion.com",
-      "password": "supersecret"
-      "active": 1
+      "password": "supersecret",
+      "active": 1,
+      "metadata": {
+          "tenant": "tenantID",
+        },
     }
   }
 }
@@ -180,6 +197,9 @@ Response:
     "attributes": {
       "name": "Authy Person",
       "email": "hello@authcompanion.com",
+      "metadata": {
+          "tenant": "tenantID",
+        },
       "active": 1,
       "created": "2023-02-02T21:33:53.926Z",
       "updated": "2023-02-02T21:33:53.926Z"

@@ -118,7 +118,7 @@ Description: Creates a new user in the Authcompanion database.
 
 Bearer Token Required: `Authorization: Bearer {admin access token}`
 
-Pass an arbitrary object to data.attributes.metdata which will be made availale as a claim on the user's JWT issued after login. 
+Pass an arbitrary object to data.attributes.metdata which will be made available as a claim on the user's JWT issued after login. 
 
 **POST** Request Body:
 
@@ -167,6 +167,8 @@ Response:
 Description: Updates a single user from the Authcompanion database with the user's ID. If a request does not include all of the attributes for a resource, the AuthCompanion interpret the missing attributes as if they were included with their current values. Authcompanion does not interpret missing attributes as null values.
 
 Bearer Token Required: `Authorization: Bearer {admin access token}`
+
+Pass an arbitrary object to data.attributes.metdata which will be made available as a claim on the user's JWT issued after login. 
 
 **PATCH** Request Body:
 

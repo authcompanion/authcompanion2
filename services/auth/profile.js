@@ -28,7 +28,7 @@ export const userProfileHandler = async function (request, reply) {
 
     //Per json-api spec: If a request does not include all of the attributes for a resource, the server MUST interpret the missing attributes as if they were included with their current values. The server MUST NOT interpret missing attributes as null values.
     const updateStmt = this.db.prepare(
-      "UPDATE users SET name = coalesce(?, name), email = coalesce(?, email), password = coalesce(?, password), metadata = coalesce(?, metadata), updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ? RETURNING uuid, name, email, metadata, jwt_id, active, created_at, updated_at;"
+      "UPDATE users SET name = coalesce(?, name), email = coalesce(?, email), password = coalesce(?, password), metadata = coalesce(?, metadata), updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ? RETURNING uuid, name, email, metadata, appdata, jwt_id, active, created_at, updated_at;"
     );
     const userObj = updateStmt.get(
       request.body.data.attributes.name,

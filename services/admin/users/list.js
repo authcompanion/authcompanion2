@@ -10,7 +10,7 @@ export const listUsersHandler = async function (request, reply) {
     const offset = (page - 1) * size;
 
     // Prepare the SQL query and parameters
-    let query = "SELECT uuid, name, email, metadata, active, created_at, updated_at FROM users";
+    let query = "SELECT uuid, name, email, metadata, appdata, active, created_at, updated_at FROM users";
     let params = [];
 
     if (searchEmail) {
@@ -35,6 +35,7 @@ export const listUsersHandler = async function (request, reply) {
           name: user.name,
           email: user.email,
           metadata: JSON.parse(user.metadata),
+          app: JSON.parse(user.appdata),
           active: user.active,
           created: user.created_at,
           updated: user.updated_at,

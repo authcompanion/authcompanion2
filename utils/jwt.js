@@ -36,6 +36,10 @@ export async function makeAccesstoken(userObj, secretKey) {
       claims.metadata = JSON.parse(userObj.metadata);
     }
 
+    if (userObj.appdata !== undefined && userObj.appdata !== null && userObj.appdata !== "{}") {
+      claims.app = JSON.parse(userObj.appdata);
+    }
+
     const jwt = await new jose.SignJWT(claims)
       .setProtectedHeader({ alg: "HS256", typ: "JWT" })
       .setIssuedAt()
@@ -72,6 +76,10 @@ export async function makeRefreshtoken(userObj, secretKey, { recoveryToken = fal
 
     if (userObj.metadata !== undefined && userObj.metadata !== null && userObj.metadata !== "{}") {
       claims.metadata = JSON.parse(userObj.metadata);
+    }
+
+    if (userObj.appdata !== undefined && userObj.appdata !== null && userObj.appdata !== "{}") {
+      claims.app = JSON.parse(userObj.appdata);
     }
 
     const db = new Database(config.DBPATH);

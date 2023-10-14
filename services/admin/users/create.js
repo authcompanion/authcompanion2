@@ -43,7 +43,7 @@ export const createUserHandler = async function (request, reply) {
     const jwtid = randomUUID();
 
     const registerStmt = this.db.prepare(
-      "INSERT INTO users (uuid, name, email, password, metadata, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, metadata, active, created_at, updated_at;"
+      "INSERT INTO users (uuid, name, email, password, metadata, appdata, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, metadata, appdata, active, created_at, updated_at;"
     );
     const user = registerStmt.get(
       uuid,
@@ -51,6 +51,7 @@ export const createUserHandler = async function (request, reply) {
       request.body.data.attributes.email,
       hashpwd,
       JSON.stringify(request.body.data.attributes.metadata),
+      JSON.stringify(request.body.data.attributes.app),
       request.body.data.attributes.active,
       jwtid
     );
@@ -59,6 +60,7 @@ export const createUserHandler = async function (request, reply) {
       name: user.name,
       email: user.email,
       metadata: JSON.parse(user.metadata),
+      app: JSON.parse(user.appdata),
       active: user.active,
       created: user.created_at,
       updated: user.updated_at,

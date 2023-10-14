@@ -12,7 +12,7 @@ export const loginHandler = async function (request, reply) {
 
     // Fetch user from database
     const stmt = this.db.prepare(
-      "SELECT uuid, name, email, jwt_id, password, active, created_at, updated_at, metadata FROM users WHERE email = ?;"
+      "SELECT uuid, name, email, jwt_id, password, active, created_at, updated_at, metadata, appdata FROM users WHERE email = ?;"
     );
     const userObj = await stmt.get(request.body.data.attributes.email);
 

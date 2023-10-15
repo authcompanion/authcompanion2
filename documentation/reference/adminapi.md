@@ -80,8 +80,11 @@ Response:
         "name": "Authy Person",
         "email": "Hello@authcompanion.com",
 				"metadata": {
-					"tenant": "tenantID"
+					"company": "Auth Co"
 				},
+        "app": {
+          "tenantID": "1234"
+        },
         "active": 1,
         "created": "2023-02-02T21:33:53.926Z",
         "updated": "2023-02-02T21:33:53.926Z"
@@ -94,8 +97,11 @@ Response:
         "name": "Authy Person 2",
         "email": "Hello2@authcompanion.com",
 				"metadata": {
-					"tenant": "tenantID"
+					"company": "Auth Co"
 				},
+        "app": {
+          "tenantID": "5678"
+        },
         "active": 1,
         "created": "2023-02-02T21:34:37.712Z",
         "updated": "2023-02-02T21:34:37.712Z"
@@ -118,7 +124,7 @@ Description: Creates a new user in the Authcompanion database.
 
 Bearer Token Required: `Authorization: Bearer {admin access token}`
 
-Pass an arbitrary object to data.attributes.metdata which will be made available as a claim on the user's JWT issued after login. 
+Optional: Pass an arbitrary object to data.attributes.metadata which will be made available as a claim on the user's JWT issued after login, this claim is changable using the user token.  Pass an arbitrary object to data.attributes.app which will be made available as a claim on the user's JWT issued after login, this claim is changable only using the admin token.
 
 **POST** Request Body:
 
@@ -131,8 +137,11 @@ Pass an arbitrary object to data.attributes.metdata which will be made available
       "email": "hello@authcompanion.com",
       "password": "supersecret",
       "metadata": {
-        "tenant": "tenantID"
+        "company": "Auth Co"
       },
+      "app": {
+          "tenantID": "1234"
+        },
       "active": 1,
     }
   }
@@ -150,7 +159,10 @@ Response:
       "name": "Authy Person",
       "email": "hello@authcompanion.com",
       "metadata": {
-        "tenant": "tenantID"
+        "company": "Auth Co"
+      },
+      "app": {
+          "tenantID": "1234"
       },
       "active": 1,
       "created": "2023-02-02T21:33:53.926Z",
@@ -168,7 +180,7 @@ Description: Updates a single user from the Authcompanion database with the user
 
 Bearer Token Required: `Authorization: Bearer {admin access token}`
 
-Pass an arbitrary object to data.attributes.metdata which will be made available as a claim on the user's JWT issued after login. 
+Optional: Pass an arbitrary object to data.attributes.metadata which will be made available as a claim on the user's JWT issued after login, this claim is changable using the user token.  Pass an arbitrary object to data.attributes.app which will be made available as a claim on the user's JWT issued after login, this claim is changable only using the admin token.
 
 **PATCH** Request Body:
 
@@ -183,7 +195,10 @@ Pass an arbitrary object to data.attributes.metdata which will be made available
       "active": 1,
       "metadata": {
           "tenant": "tenantID",
-        },
+      },
+      "app": {
+          "tenantID": "1234"
+      },
     }
   }
 }
@@ -201,7 +216,10 @@ Response:
       "email": "hello@authcompanion.com",
       "metadata": {
           "tenant": "tenantID",
-        },
+      },
+      "app": {
+          "tenantID": "1234"
+      },
       "active": 1,
       "created": "2023-02-02T21:33:53.926Z",
       "updated": "2023-02-02T21:33:53.926Z"

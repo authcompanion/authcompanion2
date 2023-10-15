@@ -30,7 +30,7 @@ Optional: Pass an arbitrary object to data.attributes.metdata which will be made
       "email": "hello@authcompanion.com",
       "password": "mysecretpass",
 			"metadata": {
-        "tenant": "tenantID"
+        "company": "Auth Co"
       }
     }
   }
@@ -105,7 +105,7 @@ Bearer Token Required: `Authorization: Bearer {user's access token}`
 
 All fields in the user's attributes are optional.
 
-Pass an arbitrary object to data.attributes.metdata which will be made available as a claim on the user's JWT issued after login.
+Optional: Pass an arbitrary object to data.attributes.metdata which will be made available as a claim on the user's JWT issued after login.
 
 **POST** Request Body:
 
@@ -118,7 +118,7 @@ Pass an arbitrary object to data.attributes.metdata which will be made available
       "email": "hello@authcompanion.com",
       "password": "mysecretpass",
       "metadata": {
-        "tenant": "tenantID"
+        "company": "Auth Co"
       }
     }
   }

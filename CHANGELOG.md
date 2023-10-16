@@ -1,3 +1,19 @@
+# [3.0.0-beta.19](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.18...3.0.0-beta.19) (2023-10-16)
+
+This release of AuthCompanion features the ability to set custom claims on the user's JWT including setting the value for a public claim (called `metadata`) and a private claim (called `app`). Custom claims can be set via the AuthC APIs, please see API Developer Reference documentation for examples. 
+
+### Bug Fixes
+
+* add metadata user field to admin api response ([7f85566](https://github.com/authcompanion/authcompanion2/commit/7f8556679604ee6427d07692b1beb76bbe5ddbf5))
+
+
+### Features
+
+* add ability to pass value to a new metadata claim ([#15](https://github.com/authcompanion/authcompanion2/issues/15)) ([e1dca1f](https://github.com/authcompanion/authcompanion2/commit/e1dca1f20c5943cc60c84ace7a7ca53e85cfca5a))
+* add ability to pass value to jwt claim called app ([#16](https://github.com/authcompanion/authcompanion2/issues/16)) ([c344b1a](https://github.com/authcompanion/authcompanion2/commit/c344b1a8d62b351232f6b2be614f45cc7dd6081b))
+
+
+
 # [3.0.0-beta.18](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.17...3.0.0-beta.18) (2023-10-05)
 
 

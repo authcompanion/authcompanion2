@@ -4,7 +4,7 @@ import Database from "better-sqlite3";
 import config from "../../config.js";
 import fastifyPlugin from "fastify-plugin";
 
-const VERSION = 3;
+const VERSION = 4;
 
 const migrate = (db, version) => {
   const allFiles = readdirSync("./plugins/db/schema/");

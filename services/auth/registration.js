@@ -27,7 +27,7 @@ export const registrationHandler = async function (request, reply) {
     const jwtid = randomUUID();
 
     const registerStmt = this.db.prepare(
-      "INSERT INTO users (uuid, name, email, password, metadata, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, metadata, jwt_id, created_at, updated_at;"
+      "INSERT INTO users (uuid, name, email, password, metadata, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, metadata, appdata, jwt_id, created_at, updated_at;"
     );
     const userObj = registerStmt.get(
       uuid,

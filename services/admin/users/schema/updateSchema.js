@@ -13,6 +13,7 @@ export const updateSchema = {
                 email: { type: "string" },
                 password: { type: "string" },
                 metadata: { type: "object" },
+                app: { type: "object" },
                 active: { type: "string" },
               },
             },

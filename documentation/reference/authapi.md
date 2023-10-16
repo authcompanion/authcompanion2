@@ -17,7 +17,7 @@ Returns Content-Type: application/json
 
 Description: Register a user. Returns a JWT access token and sets a refresh token (as a http only cookie). JWTs are used by your web application to authenticate a user with your backend APIs.
 
-Optional: Pass an arbitrary object to data.attributes.metdata which will be made available as a claim on the user's JWT issued after login.  
+Optional: Pass an arbitrary object to data.attributes.metdata which will be made available as a claim on the user's JWT issued after login (aka a "public" claim).
 
 **POST** Request Body:
 
@@ -29,8 +29,8 @@ Optional: Pass an arbitrary object to data.attributes.metdata which will be made
       "name": "Authy Person",
       "email": "hello@authcompanion.com",
       "password": "mysecretpass",
-			"metadata": {
-        "tenant": "tenantID"
+      "metadata": {
+        "company": "Auth Co"
       }
     }
   }
@@ -105,7 +105,7 @@ Bearer Token Required: `Authorization: Bearer {user's access token}`
 
 All fields in the user's attributes are optional.
 
-Pass an arbitrary object to data.attributes.metdata which will be made available as a claim on the user's JWT issued after login.
+Optional: Pass an arbitrary object to data.attributes.metdata which will be made available as a claim on the user's JWT issued after login.
 
 **POST** Request Body:
 
@@ -118,7 +118,7 @@ Pass an arbitrary object to data.attributes.metdata which will be made available
       "email": "hello@authcompanion.com",
       "password": "mysecretpass",
       "metadata": {
-        "tenant": "tenantID"
+        "company": "Auth Co"
       }
     }
   }

@@ -1,39 +1,46 @@
-import { verifyValueWithHash } from '../../../utils/credential.js';
-import { makeAdminToken } from '../../../utils/jwt.js';
-import config from '../../../config.js';
+import { verifyValueWithHash } from "../../../utils/credential.js";
+import { makeAdminToken } from "../../../utils/jwt.js";
+import config from "../../../config.js";
 
 export const loginHandler = async function (request, reply) {
   try {
     // Check the request's type attibute is set to users
-    if (request.body.data.type !== 'users') {
-      request.log.info("Auth API: The request's type is not set to Users, creation failed");
-      throw { statusCode: 400, message: 'Invalid Type Attribute' };
+    if (request.body.data.type !== "users") {
+      request.log.info(
+        "Auth API: The request's type is not set to Users, creation failed"
+      );
+      throw { statusCode: 400, message: "Invalid Type Attribute" };
     }
 
     // Fetch the registered admin user from the database with
     const stmt = this.db.prepare(
-      'SELECT uuid, name, email, jwt_id, password, active, created_at, updated_at FROM admin WHERE email = ?;'
+      "SELECT uuid, name, email, jwt_id, password, active, created_at, updated_at FROM admin WHERE email = ?;"
     );
     const userObj = await stmt.get(request.body.data.attributes.email);
 
     // Check if admin user does not exist in the database
     if (!userObj) {
-      request.log.info('Auth API: User does not exist in database, login failed');
-      throw { statusCode: 400, message: 'Login Failed' };
+      request.log.info(
+        "Auth API: User does not exist in database, login failed"
+      );
+      throw { statusCode: 400, message: "Login Failed" };
     }
 
     // Check if user has an 'active' account
     if (!userObj.active) {
-      request.log.info('Auth API: User account is not active, login failed');
-      throw { statusCode: 400, message: 'Login Failed' };
+      request.log.info("Auth API: User account is not active, login failed");
+      throw { statusCode: 400, message: "Login Failed" };
     }
 
-    const passwordCheckResult = await verifyValueWithHash(request.body.data.attributes.password, userObj.password);
+    const passwordCheckResult = await verifyValueWithHash(
+      request.body.data.attributes.password,
+      userObj.password
+    );
 
     // Check if user has the correct password
     if (!passwordCheckResult) {
-      request.log.info('Auth API: User password is incorrect, login failed');
-      throw { statusCode: 400, message: 'Login Failed' };
+      request.log.info("Auth API: User password is incorrect, login failed");
+      throw { statusCode: 400, message: "Login Failed" };
     }
 
     // Looks good! Let's prepare the reply
@@ -50,16 +57,15 @@ export const loginHandler = async function (request, reply) {
     expireDate.setTime(expireDate.getTime() + 7 * 24 * 60 * 60 * 1000); // TODO: Make configurable now, set to 7 days
 
     reply.headers({
-      'set-cookie': [
+      "set-cookie": [
         `adminAccessToken=${adminAccessToken.token}; Path=/; Expires=${expireDate}; SameSite=None; Secure; HttpOnly`,
-        `Fgp=${adminAccessToken.userFingerprint}; Path=/; Max-Age=7200; SameSite=None; Secure; HttpOnly`,
       ],
-      'x-authc-app-origin': config.ADMINORIGIN,
+      "x-authc-app-origin": config.ADMINORIGIN,
     });
 
     return {
       data: {
-        type: 'users',
+        type: "users",
         id: userObj.uuid,
         attributes: userAttributes,
       },

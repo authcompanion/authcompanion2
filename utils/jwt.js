@@ -131,7 +131,7 @@ export async function makeRefreshtoken(
 export async function makeAdminToken(userObj, secretKey) {
   try {
     // set default expiration time of the jwt token
-    let expirationTime = "2h";
+    let expirationTime = "1h";
 
     //generate the client context for storing the hash in the jwt claims
     const { userFingerprint, userFingerprintHash } =

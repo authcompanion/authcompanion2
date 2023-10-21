@@ -44,6 +44,8 @@ export default {
           items: [
             { text: "Authentication API", link: "/reference/authapi" },
             { text: "Admin API", link: "/reference/adminapi" },
+            { text: "Tokens & Claims", link: "/reference/tokens" },
+
           ],
         },
       ],

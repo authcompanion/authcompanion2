@@ -1,5 +1,5 @@
 import { verifyValueWithHash } from "../../../utils/credential.js";
-import { makeAdminToken } from "../../../utils/jwt.js";
+import { makeAdminToken, makeAdminRefreshtoken } from "../../../utils/jwt.js";
 import config from "../../../config.js";
 
 export const loginHandler = async function (request, reply) {
@@ -12,7 +12,7 @@ export const loginHandler = async function (request, reply) {
       throw { statusCode: 400, message: "Invalid Type Attribute" };
     }
 
-    // Fetch the registered admin user from the database with
+    // Fetch the registered admin user from the database
     const stmt = this.db.prepare(
       "SELECT uuid, name, email, jwt_id, password, active, created_at, updated_at FROM admin WHERE email = ?;"
     );
@@ -45,6 +45,7 @@ export const loginHandler = async function (request, reply) {
 
     // Looks good! Let's prepare the reply
     const adminAccessToken = await makeAdminToken(userObj, this.key);
+    const adminRefreshToken = await makeAdminRefreshtoken(userObj, this.key);
 
     const userAttributes = {
       name: userObj.name,
@@ -52,6 +53,7 @@ export const loginHandler = async function (request, reply) {
       created: userObj.created_at,
       access_token: adminAccessToken.token,
       access_token_expiry: adminAccessToken.expiration,
+      refresh_token: adminRefreshToken.token,
     };
     const expireDate = new Date();
     expireDate.setTime(expireDate.getTime() + 7 * 24 * 60 * 60 * 1000); // TODO: Make configurable now, set to 7 days
@@ -60,7 +62,7 @@ export const loginHandler = async function (request, reply) {
       "set-cookie": [
         `adminAccessToken=${adminAccessToken.token}; Path=/; Expires=${expireDate}; SameSite=None; Secure; HttpOnly`,
       ],
-      "x-authc-app-origin": config.ADMINORIGIN,
+      "x-authc-app-origin": config.APPLICATIONORIGIN,
     });
 
     return {

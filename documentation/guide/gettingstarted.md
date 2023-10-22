@@ -42,7 +42,7 @@ $ cp env.example .env
 
 Then restart the server to apply your new settings.
 
-## With Docker
+## Docker
 
 Make sure to have the
 [respository cloned](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
@@ -64,6 +64,19 @@ authc_server
 
 If you have your own configuration file you can pass it into your docker command
 with: `--env-file .env \` but this is optional. 
+
+### AuthC Container Image
+
+Container images are published for both the main branch and for the latest tagged version. 
+
+Please see the container registry [here](https://github.com/authcompanion/authcompanion2/pkgs/container/authcompanion2)
+
+Start the server (with the default config):
+
+```bash
+$ docker run -it -p 3002:3002 --name AuthCompanion ghcr.io/authcompanion/authcompanion2:main
+```
+Also available is the [docker-compose.yml](https://github.com/authcompanion/authcompanion2/blob/main/docker-compose.yml)
 
 ## Using AuthCompanion
 

@@ -243,3 +243,37 @@ Response: 204 No Content
 or 404 Not Found if no user is found.
 
 ---
+
+### admin/refresh
+
+Description: Your admin user's access token (JWTs) will expire according the exp date. When it does, you can refresh the access token without having to login your admin user again. 
+
+If the request has a valid refresh token AuthCompanion will return a new access token and a new refresh token.
+
+Bearer Token Required: `Authorization: Bearer {admin access token}`
+**POST** Request Body:
+```json
+{
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJ3ejVkY3RvMmJqNW9lb2Q2N2VoajN0dmwiLCJuYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsInVzZXJGaW5nZXJwcmludCI6bnVsbCwic2NvcGUiOiJhZG1pbiIsImlhdCI6MTY5Nzk5MTYyNiwiZXhwIjoxNjk4NTk2NDI2LCJqdGkiOiI0YjVjNmU1Ni1jMzA1LTQ3ZjQtYjEyNC01YzgwMGFjY2Y2YTgifQ.q4U0smkirdBKdsUBQMcszuqg4IXIpM49lHzdE6WEeLE"
+}
+```
+Response:
+
+```json
+{
+	"data": {
+		"id": "wz5dcto2bj5oeod67ehj3tvl",
+		"type": "users",
+		"attributes": {
+			"name": "Admin",
+			"email": "admin@localhost",
+			"created": "2023-10-12T16:10:17.709Z",
+			"access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJ3ejVkY3RvMmJqNW9lb2Q2N2VoajN0dmwiLCJuYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsInVzZXJGaW5nZXJwcmludCI6IiRhcmdvbjJpZCR2PTE5JG09NjQwMDAsdD0zLHA9MSQ2ZXV6U2xEbkQ1NmpJb3BkVVNHZ0RBJEZFZ1VRWm9WckJDLytpSmV6ZHlxR2FVelFDTXIyUEhmbmg0TkdIL3lOYTAiLCJzY29wZSI6ImFkbWluIiwiaWF0IjoxNjk3OTkxNjYxLCJleHAiOjE2OTc5OTUyNjF9.-EiyNfFFeHKpUCyEZZXvVcQ1vxqO-D34NWfS3HKF3jU",
+			"access_token_expiry": 1697995261,
+			"refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJ3ejVkY3RvMmJqNW9lb2Q2N2VoajN0dmwiLCJuYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsInVzZXJGaW5nZXJwcmludCI6bnVsbCwic2NvcGUiOiJhZG1pbiIsImlhdCI6MTY5Nzk5MTY2MSwiZXhwIjoxNjk4NTk2NDYxLCJqdGkiOiJiMTY3ODEzOS0yNGY0LTQ0YjctOTE0MC05NThlNDY0NjIyZWIifQ.v3QweztMbJLINqh9iWUahyUnOPC1EqefmEbc_IuK-Zk"
+		}
+	}
+}
+```
+
+---

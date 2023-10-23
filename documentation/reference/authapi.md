@@ -43,7 +43,7 @@ Response:
 {
   "data": {
     "type": "users",
-    "id": "f1b84e9c-4e5d-4c4a-8571-e1577aefa968",
+    "id": "wz5dcto2bj5oeod67ehj3tvl",
     "attributes": {
       "name": "Authy Person",
       "email": "hello@authcompanion.com",
@@ -82,7 +82,7 @@ Response:
 {
   "data": {
     "type": "users",
-    "id": "f1b84e9c-4e5d-4c4a-8571-e1577aefa968",
+    "id": "wz5dcto2bj5oeod67ehj3tvl",
     "attributes": {
       "name": "Authy Person",
       "email": "hello@authcompanion.com",
@@ -131,7 +131,7 @@ Response:
 {
   "data": {
     "type": "users",
-    "id": "d6978388-07d4-4c79-ad7f-e26ee758eebc",
+    "id": "wz5dcto2bj5oeod67ehj3tvl",
     "attributes": {
       "name": "Authy Person_update",
       "email": "hello_update@authcompanion.com",

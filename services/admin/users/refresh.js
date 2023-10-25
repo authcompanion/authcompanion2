@@ -31,6 +31,17 @@ export const tokenRefreshHandler = async function (request, reply) {
     );
     const userObj = await stmt.get(jwtClaims.userid);
 
+    // Check if the "jiti" value in the JWT payload matches the admin's "jwt_id"
+    if (jwtClaims.jti !== userObj.jwt_id) {
+      request.log.info(
+        "Admin API: JWT jiti value does not match the admin's jwt_id"
+      );
+      throw {
+        statusCode: 401,
+        message: "Server Error",
+      };
+    }
+
     // Looks good! Let's prepare the reply
     const adminAccessToken = await makeAdminToken(userObj, this.key);
     const adminRefreshToken = await makeAdminRefreshtoken(userObj, this.key);

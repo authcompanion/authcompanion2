@@ -52,11 +52,7 @@ const adminRoutes = async function (fastify, options) {
     { onRequest: [authenticateAdminRequest] },
     logoutHandler
   );
-  fastify.post(
-    "/refresh",
-    { onRequest: [authenticateAdminRequest], ...refreshSchema },
-    tokenRefreshHandler
-  );
+  fastify.post("/refresh", refreshSchema, tokenRefreshHandler);
 
   //admin web user interface routes
   fastify.get(

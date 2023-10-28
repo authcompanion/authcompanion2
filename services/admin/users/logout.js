@@ -6,9 +6,7 @@ export const logoutHandler = async function (request, reply) {
     const userId = jwtPayload.userid;
 
     //Check if the user exists in the database
-    const stmt = this.db.prepare(
-      "UPDATE admin SET jwt_id = NULL WHERE uuid = ?;"
-    );
+    const stmt = this.db.prepare("UPDATE admin SET jwt_id = 0 WHERE uuid = ?;");
     const result = await stmt.run(userId);
 
     reply.headers({

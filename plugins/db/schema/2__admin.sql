@@ -6,7 +6,7 @@ CREATE TABLE admin (
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     challenge TEXT,
-    jwt_id TEXT,
+    jwt_id TEXT NOT NULL,
     active INTEGER NOT NULL,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL

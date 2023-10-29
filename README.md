@@ -41,7 +41,6 @@ With AuthC you can:
 - Manage Users via a self-service Dashboard and confidently store and own your web application's user accounts, on your terms.
 - Help users create accounts and login with a passkey on their mobile device (aka passwordless) or by using traditional username/passwords instead.
 
-
 |             Login Screen             |            Registration Screen             |
 | :----------------------------------: | :----------------------------------------: |
 | ![Login](./.github/public/login.png) | ![Register](./.github/public/register.png) |
@@ -76,6 +75,7 @@ Start the server (with the default config):
 ```bash
 $ docker run -it -p 3002:3002 --name AuthCompanion ghcr.io/authcompanion/authcompanion2:main
 ```
+
 Also available is the [docker-compose.yml](https://github.com/authcompanion/authcompanion2/blob/main/docker-compose.yml)
 
 ### Configure AuthCompanion

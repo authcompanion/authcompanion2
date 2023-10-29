@@ -6,19 +6,23 @@ export const loginHandler = async function (request, reply) {
   try {
     // Check the request's type attibute is set to users
     if (request.body.data.type !== "users") {
-      request.log.info("Auth API: The request's type is not set to Users, creation failed");
+      request.log.info(
+        "Auth API: The request's type is not set to Users, creation failed",
+      );
       throw { statusCode: 400, message: "Invalid Type Attribute" };
     }
 
     // Fetch user from database
     const stmt = this.db.prepare(
-      "SELECT uuid, name, email, jwt_id, password, active, created_at, updated_at, metadata, appdata FROM users WHERE email = ?;"
+      "SELECT uuid, name, email, jwt_id, password, active, created_at, updated_at, metadata, appdata FROM users WHERE email = ?;",
     );
     const userObj = await stmt.get(request.body.data.attributes.email);
 
     // Check if user does not exist in the database
     if (!userObj) {
-      request.log.info("Auth API: User does not exist in database, login failed");
+      request.log.info(
+        "Auth API: User does not exist in database, login failed",
+      );
       throw { statusCode: 400, message: "Login Failed" };
     }
 
@@ -28,7 +32,10 @@ export const loginHandler = async function (request, reply) {
       throw { statusCode: 400, message: "Login Failed" };
     }
 
-    const passwordCheckResult = await verifyValueWithHash(request.body.data.attributes.password, userObj.password);
+    const passwordCheckResult = await verifyValueWithHash(
+      request.body.data.attributes.password,
+      userObj.password,
+    );
 
     // Check if user has the correct password
     if (!passwordCheckResult) {

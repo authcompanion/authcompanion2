@@ -23,7 +23,7 @@ export const loginOptionsHandler = async function (request, reply) {
 
     //persist the challenge with the associated session id for the verification step in loginVerification.js
     const stmt = this.db.prepare(
-      "INSERT INTO storage (sessionID, data) VALUES (?, ?);"
+      "INSERT INTO storage (sessionID, data) VALUES (?, ?);",
     );
     await stmt.run(cookies.sessionID, generatedOptions.challenge);
 

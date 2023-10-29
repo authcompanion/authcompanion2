@@ -13,7 +13,7 @@ export const tokenRefreshHandler = async function (request, reply) {
       refreshToken = request.body.refreshToken;
     } else {
       request.log.info(
-        "Admin API: The request does not include a refresh token in the request body, refresh token failed"
+        "Admin API: The request does not include a refresh token in the request body, refresh token failed",
       );
       throw {
         statusCode: 400,
@@ -27,14 +27,14 @@ export const tokenRefreshHandler = async function (request, reply) {
 
     // Fetch the registered admin user from the database
     const stmt = this.db.prepare(
-      "SELECT uuid, name, email, jwt_id, password, active, created_at, updated_at FROM admin WHERE uuid = ?;"
+      "SELECT uuid, name, email, jwt_id, password, active, created_at, updated_at FROM admin WHERE uuid = ?;",
     );
     const userObj = await stmt.get(jwtClaims.userid);
 
     // Check if the "jiti" value in the JWT payload matches the admin's "jwt_id"
     if (jwtClaims.jti !== userObj.jwt_id) {
       request.log.info(
-        "Admin API: JWT jiti value does not match the admin's jwt_id"
+        "Admin API: JWT jiti value does not match the admin's jwt_id",
       );
       throw {
         statusCode: 401,

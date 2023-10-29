@@ -270,7 +270,7 @@
               if (response.ok) {
                 window.localStorage.setItem(
                   "ACCESS_TOKEN",
-                  resbody.data.attributes.access_token
+                  resbody.data.attributes.access_token,
                 );
 
                 window.location.href = appOrigin;
@@ -318,7 +318,7 @@
                       "content-type": "application/json",
                       "x-authc-app-challenge": opts.challenge,
                     },
-                  }
+                  },
                 );
                 const reply = await verificationResponse.json();
                 const appOrigin =
@@ -326,7 +326,7 @@
 
                 window.localStorage.setItem(
                   "ACCESS_TOKEN",
-                  reply.data.attributes.access_token
+                  reply.data.attributes.access_token,
                 );
                 showError.value = false;
                 window.location.href = appOrigin;

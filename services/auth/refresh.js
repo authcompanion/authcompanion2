@@ -14,7 +14,7 @@ export const tokenRefreshHandler = async function (request, reply) {
       request.refreshToken = cookies.userRefreshToken;
     } else {
       request.log.info(
-        "Auth API: The request does not include a refresh token as cookie, refresh failed"
+        "Auth API: The request does not include a refresh token as cookie, refresh failed",
       );
       throw { statusCode: 400, message: "Refresh Token Failed" };
     }
@@ -24,7 +24,7 @@ export const tokenRefreshHandler = async function (request, reply) {
 
     //Fetch user from Database
     const stmt = this.db.prepare(
-      "SELECT uuid, name, email, jwt_id, created_at, updated_at FROM users WHERE jwt_id = ?;"
+      "SELECT uuid, name, email, jwt_id, created_at, updated_at FROM users WHERE jwt_id = ?;",
     );
     const userObj = await stmt.get(jwtClaims.jti);
 

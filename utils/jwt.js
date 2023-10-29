@@ -71,7 +71,7 @@ export async function makeAccesstoken(userObj, secretKey) {
 export async function makeRefreshtoken(
   userObj,
   secretKey,
-  { recoveryToken = false } = {}
+  { recoveryToken = false } = {},
 ) {
   try {
     // set default expiration time of the jwt token
@@ -108,7 +108,7 @@ export async function makeRefreshtoken(
     const jwtid = randomUUID();
 
     const stmt = db.prepare(
-      "UPDATE users SET jwt_id = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ?;"
+      "UPDATE users SET jwt_id = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ?;",
     );
     stmt.run(jwtid, userObj.uuid);
 
@@ -186,7 +186,7 @@ export async function makeAdminRefreshtoken(adminObj, secretKey) {
 
     // Update the admin table with the new JWT ID and update timestamp
     const stmt = db.prepare(
-      "UPDATE admin SET jwt_id = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ?;"
+      "UPDATE admin SET jwt_id = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ?;",
     );
     stmt.run(jwtid, adminObj.uuid);
 
@@ -220,7 +220,7 @@ export async function validateJWT(jwt, secretKey, fingerprint = null) {
 
     const validUserContext = await verifyValueWithHash(
       fingerprint,
-      payload.userFingerprint
+      payload.userFingerprint,
     );
 
     if (!validUserContext) {

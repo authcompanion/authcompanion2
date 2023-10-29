@@ -66,7 +66,7 @@ export const authenticateWebAdminRequest = async function (request, reply) {
     const payload = await validateJWT(
       cookies.adminAccessToken,
       this.key,
-      fingerPrint
+      fingerPrint,
     );
 
     // Check if the payload contains the admin scope

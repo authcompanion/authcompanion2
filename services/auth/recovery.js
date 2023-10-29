@@ -3,7 +3,6 @@ import config from "../../config.js";
 import { SMTPClient } from "emailjs";
 
 export const profileRecoveryHandler = async function (request, reply) {
-
   //Create the SMTP client
   const client = new SMTPClient({
     user: config.SMTPUSER,
@@ -21,10 +20,12 @@ export const profileRecoveryHandler = async function (request, reply) {
     //Check if the user exists in the database, before issuing recovery token
     if (!userObj) {
       request.log.info(
-        "User was not found in the Database - Profile Recovery failed"
+        "User was not found in the Database - Profile Recovery failed",
       );
       // send a request to the client
-      reply.code(200).send({ statusCode: 200, message: "Recovery email issued" });
+      reply
+        .code(200)
+        .send({ statusCode: 200, message: "Recovery email issued" });
     }
 
     //Prepare & send the recovery email
@@ -216,8 +217,7 @@ export const profileRecoveryHandler = async function (request, reply) {
     return {
       data: {
         type: "users",
-        detail:
-          "Recovery email sent",
+        detail: "Recovery email sent",
       },
     };
   } catch (err) {

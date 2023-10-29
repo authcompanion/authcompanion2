@@ -8,7 +8,9 @@ export const registrationHandler = async function (request, reply) {
   try {
     //Check the request's type attibute is set to users
     if (request.body.data.type !== "users") {
-      request.log.info("Auth API: The request's type is not set to Users, registration failed");
+      request.log.info(
+        "Auth API: The request's type is not set to Users, registration failed",
+      );
       throw { statusCode: 400, message: "Invalid Type Attribute" };
     }
 
@@ -17,7 +19,9 @@ export const registrationHandler = async function (request, reply) {
     const requestedAccount = await stmt.get(request.body.data.attributes.email);
 
     if (requestedAccount) {
-      request.log.info("Auth API: User already exists in database, registration failed");
+      request.log.info(
+        "Auth API: User already exists in database, registration failed",
+      );
 
       throw { statusCode: 400, message: "Registration Failed" };
     }
@@ -27,7 +31,7 @@ export const registrationHandler = async function (request, reply) {
     const jwtid = randomUUID();
 
     const registerStmt = this.db.prepare(
-      "INSERT INTO users (uuid, name, email, password, metadata, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, metadata, appdata, jwt_id, created_at, updated_at;"
+      "INSERT INTO users (uuid, name, email, password, metadata, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, metadata, appdata, jwt_id, created_at, updated_at;",
     );
     const userObj = registerStmt.get(
       uuid,
@@ -36,7 +40,7 @@ export const registrationHandler = async function (request, reply) {
       hashpwd,
       JSON.stringify(request.body.data.attributes.metadata),
       "1",
-      jwtid
+      jwtid,
     );
     //Prepare the reply
     const userAccessToken = await makeAccesstoken(userObj, this.key);

@@ -909,7 +909,7 @@
                     "Content-type": "application/json",
                     Authorization: `Bearer ${token}`,
                   },
-                }
+                },
               );
               const data = await response.json();
               // If the response is not ok, throw an error
@@ -922,7 +922,7 @@
 
               // Call the showNotificationMessage function to show a success message
               showNotificationMessage(
-                `Found ${users.value.data.length} user(s) matching the search.`
+                `Found ${users.value.data.length} user(s) matching the search.`,
               );
             } catch (e) {
               console.log("Search User Failed");

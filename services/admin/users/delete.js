@@ -6,7 +6,7 @@ export const deleteUserHandler = async function (request, reply) {
 
     if (!user) {
       request.log.info(
-        "Admin API: User does not exist in database, delete failed"
+        "Admin API: User does not exist in database, delete failed",
       );
       throw { statusCode: 404, message: "User Not Found" };
     }
@@ -14,7 +14,7 @@ export const deleteUserHandler = async function (request, reply) {
     //check if the user's uuid is equal to the admin this.registeredAdminUser.uuid (the admin user cannot be deleted)
     if (user.uuid === this.registeredAdminUser.uuid) {
       request.log.info(
-        "Admin API: Admin user cannot be deleted, delete failed"
+        "Admin API: Admin user cannot be deleted, delete failed",
       );
       throw { statusCode: 400, message: "Admin User Cannot Be Deleted" };
     }

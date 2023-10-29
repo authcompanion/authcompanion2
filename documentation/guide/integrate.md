@@ -54,7 +54,7 @@ export async function importKey() {
         hash: "SHA-256",
       },
       true,
-      ["sign", "verify"]
+      ["sign", "verify"],
     );
     return key;
   } catch (error) {
@@ -195,7 +195,7 @@ async function refreshAccessToken() {
   if (refreshResponse.ok) {
     localStorage.setItem(
       "ACCESS_TOKEN",
-      refreshBody.data.attributes.access_token
+      refreshBody.data.attributes.access_token,
     );
   }
 

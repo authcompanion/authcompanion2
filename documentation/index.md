@@ -46,21 +46,21 @@ With AuthC you can:
 ## Features
 
 - **Web Forms for User Authentication:** Use pre-built and customizable web
-      forms for your application users to: log in with their credentials,
-      register an account, update their profile, and issue forgotten passwords.
+  forms for your application users to: log in with their credentials,
+  register an account, update their profile, and issue forgotten passwords.
 
 - **Manage User Profiles and JWTs:** Update the password and profile
-      information of your users - all account information is stored in a SQLite
-      database. Easily manage the life-cycle of your user's JWT used for
-      authentication.
+  information of your users - all account information is stored in a SQLite
+  database. Easily manage the life-cycle of your user's JWT used for
+  authentication.
 
 - **User Account Recovery:** Restore a user's access to their account using
-      the **Forgot Password** flow which sends a special link via email for
-      helping users quickly recover their account.
+  the **Forgot Password** flow which sends a special link via email for
+  helping users quickly recover their account.
 
 - **Extensible Platform:** AuthC supports a
-      [plugin system](https://www.fastify.io/docs/latest/Reference/Plugins/) for
-      easily adding new functionality to cover more of your authentication needs.
+  [plugin system](https://www.fastify.io/docs/latest/Reference/Plugins/) for
+  easily adding new functionality to cover more of your authentication needs.
 
 - **Passwordless Flow:** Streamline user Login and Registration without passwords with a user's computer or mobile phone with passkey.
 

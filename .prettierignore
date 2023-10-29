@@ -1,0 +1,10 @@
+.github
+.vscode
+documentation/.vitepress
+adminkey
+CHANGELOG.md
+LICSENSE.md
+package-lock.json
+package.json
+pnpm-lock.yaml
+serverkey

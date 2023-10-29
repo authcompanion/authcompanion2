@@ -232,7 +232,7 @@
               if (response.ok) {
                 window.localStorage.setItem(
                   "ACCESS_TOKEN",
-                  resbody.data.attributes.access_token
+                  resbody.data.attributes.access_token,
                 );
 
                 window.location.href = appOrigin;

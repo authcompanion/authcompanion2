@@ -323,7 +323,7 @@
               if (response.ok) {
                 window.localStorage.setItem(
                   "ACCESS_TOKEN",
-                  resbody.data.attributes.access_token
+                  resbody.data.attributes.access_token,
                 );
                 showError.value = false;
 
@@ -354,7 +354,7 @@
                   headers: {
                     "content-type": "application/json",
                   },
-                }
+                },
               );
 
               if (optionsResponse.ok) {
@@ -371,7 +371,7 @@
                       "content-type": "application/json",
                       "x-authc-app-userid": opts.user.id,
                     },
-                  }
+                  },
                 );
                 const reply = await verificationResponse.json();
                 const appOrigin =
@@ -379,7 +379,7 @@
 
                 window.localStorage.setItem(
                   "ACCESS_TOKEN",
-                  reply.data.attributes.access_token
+                  reply.data.attributes.access_token,
                 );
                 showError.value = false;
                 showError.value = false;

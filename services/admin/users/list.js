@@ -1,6 +1,10 @@
 export const listUsersHandler = async function (request, reply) {
   try {
-    const { "page[number]": pageNumber = 1, "page[size]": pageSize = 10, "search[email]": searchEmail } = request.query;
+    const {
+      "page[number]": pageNumber = 1,
+      "page[size]": pageSize = 10,
+      "search[email]": searchEmail,
+    } = request.query;
 
     // Convert the page number and size to integers
     const page = parseInt(pageNumber);
@@ -10,7 +14,8 @@ export const listUsersHandler = async function (request, reply) {
     const offset = (page - 1) * size;
 
     // Prepare the SQL query and parameters
-    let query = "SELECT uuid, name, email, metadata, appdata, active, created_at, updated_at FROM users";
+    let query =
+      "SELECT uuid, name, email, metadata, appdata, active, created_at, updated_at FROM users";
     let params = [];
 
     if (searchEmail) {
@@ -50,7 +55,9 @@ export const listUsersHandler = async function (request, reply) {
     }
 
     const countStmt = this.db.prepare(countQuery);
-    const totalCount = await countStmt.get(...(searchEmail ? [`%${searchEmail}%`] : [])); // Spread the searchEmail param if provided
+    const totalCount = await countStmt.get(
+      ...(searchEmail ? [`%${searchEmail}%`] : []),
+    ); // Spread the searchEmail param if provided
 
     // Calculate pagination metadata
     const totalPages = Math.ceil(totalCount.count / size);
@@ -61,16 +68,24 @@ export const listUsersHandler = async function (request, reply) {
     const paginationLinks = {};
 
     if (hasNextPage) {
-      paginationLinks.next = `${request.raw.url.split("?")[0]}?page[number]=${page + 1}&page[size]=${size}`;
+      paginationLinks.next = `${request.raw.url.split("?")[0]}?page[number]=${
+        page + 1
+      }&page[size]=${size}`;
     }
 
     if (hasPreviousPage) {
-      paginationLinks.prev = `${request.raw.url.split("?")[0]}?page[number]=${page - 1}&page[size]=${size}`;
+      paginationLinks.prev = `${request.raw.url.split("?")[0]}?page[number]=${
+        page - 1
+      }&page[size]=${size}`;
     }
 
     if (totalPages > 0) {
-      paginationLinks.first = `${request.raw.url.split("?")[0]}?page[number]=1&page[size]=${size}`;
-      paginationLinks.last = `${request.raw.url.split("?")[0]}?page[number]=${totalPages}&page[size]=${size}`;
+      paginationLinks.first = `${
+        request.raw.url.split("?")[0]
+      }?page[number]=1&page[size]=${size}`;
+      paginationLinks.last = `${
+        request.raw.url.split("?")[0]
+      }?page[number]=${totalPages}&page[size]=${size}`;
     }
 
     // Send the server reply

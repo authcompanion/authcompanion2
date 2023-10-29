@@ -29,28 +29,28 @@ const adminRoutes = async function (fastify, options) {
   fastify.post(
     "/users",
     { onRequest: [authenticateAdminRequest], ...createSchema },
-    createUserHandler
+    createUserHandler,
   );
   fastify.get(
     "/users",
     { onRequest: [authenticateAdminRequest], ...listUsersSchema },
-    listUsersHandler
+    listUsersHandler,
   );
   fastify.delete(
     "/users/:uuid",
     { onRequest: [authenticateAdminRequest] },
-    deleteUserHandler
+    deleteUserHandler,
   );
   fastify.patch(
     "/users/:uuid",
     { onRequest: [authenticateAdminRequest], ...updateSchema },
-    updateUserHandler
+    updateUserHandler,
   );
   fastify.post("/login", loginSchema, loginHandler);
   fastify.get(
     "/logout",
     { onRequest: [authenticateAdminRequest] },
-    logoutHandler
+    logoutHandler,
   );
   fastify.post("/refresh", refreshSchema, tokenRefreshHandler);
 
@@ -64,7 +64,7 @@ const adminRoutes = async function (fastify, options) {
         "Content-Type": `text/html`,
       });
       return adminPage;
-    }
+    },
   );
 
   //login page for the admin web user interface

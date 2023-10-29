@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   authcompanion:
@@ -8,11 +8,10 @@ services:
       - DB_PATH=./authdata/authcompanion_users.db
       - ADMIN_KEY_PATH=./authdata/adminkey
       - KEY_PATH=./authdata/serverkey
-    ports: 
-    - "3002:3002"
+    ports:
+      - "3002:3002"
     volumes:
       - authdata:/home/nodejs/app/authdata
-
 
 volumes:
   authdata:

@@ -30,7 +30,7 @@ const authRoutes = async function (fastify, options) {
   fastify.post(
     "/users/me",
     { onRequest: [authenticateAuthRequest], ...userProfileSchema },
-    userProfileHandler
+    userProfileHandler,
   );
   fastify.post("/recovery", profileRecoverySchema, profileRecoveryHandler);
   fastify.post("/refresh", refreshSchema, tokenRefreshHandler);
@@ -40,13 +40,13 @@ const authRoutes = async function (fastify, options) {
   fastify.post(
     "/registration-verification",
     registerVerificationSchema,
-    registrationVerificationHandler
+    registrationVerificationHandler,
   );
   fastify.get("/login-options", loginOptionsHandler);
   fastify.post(
     "/login-verification",
     loginVerificationSchema,
-    loginVerificationHandler
+    loginVerificationHandler,
   );
 };
 

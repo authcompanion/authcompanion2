@@ -19,7 +19,7 @@ Pre-requirement:
 
 - Make sure you have [Node.js](http://nodejs.org) installed **latest TLS version - v18 **
 
-Let's install the application's packages. 
+Let's install the application's packages.
 
 ```bash
 $ npm install
@@ -46,7 +46,7 @@ Then restart the server to apply your new settings.
 
 Make sure to have the
 [respository cloned](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
-as outlined in the steps above. 
+as outlined in the steps above.
 
 Then from the main directory, build the AuthC server image:
 
@@ -63,11 +63,11 @@ authc_server
 ```
 
 If you have your own configuration file you can pass it into your docker command
-with: `--env-file .env \` but this is optional. 
+with: `--env-file .env \` but this is optional.
 
 ### AuthC Container Image
 
-Container images are published for both the main branch and for the latest tagged version. 
+Container images are published for both the main branch and for the latest tagged version.
 
 Please see the container registry [here](https://github.com/authcompanion/authcompanion2/pkgs/container/authcompanion2)
 
@@ -76,6 +76,7 @@ Start the server (with the default config):
 ```bash
 $ docker run -it -p 3002:3002 --name AuthCompanion ghcr.io/authcompanion/authcompanion2:main
 ```
+
 Also available is the [docker-compose.yml](https://github.com/authcompanion/authcompanion2/blob/main/docker-compose.yml)
 
 ## Using AuthCompanion
@@ -84,7 +85,7 @@ When the server is properly configured and running there are two main entries
 into AuthCompanion.
 
 🖥️ The web forms, available to your application users. The login starts here:
-`http://localhost:3002/v1/web/login`. 
+`http://localhost:3002/v1/web/login`.
 
 Or check out the registration page here: `http://localhost:3002/v1/web/register`
 

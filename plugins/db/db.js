@@ -62,7 +62,7 @@ const dbPlugin = async function (fastify) {
   } catch (error) {
     console.log(error);
     throw new Error(
-      "There was an error setting and connecting up the Database, please try again!"
+      "There was an error setting and connecting up the Database, please try again!",
     );
   }
   //make available the database across the server by calling "db"

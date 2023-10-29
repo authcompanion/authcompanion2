@@ -195,6 +195,22 @@ test.serial("Auth Endpoint Test: POST /auth/users/me", async (t) => {
   }
 });
 
+test.serial("Admin Endpoint Test: POST /admin/refesh", async (t) => {
+  try {
+    const response = await t.context.app.inject({
+      method: "POST",
+      url: "/v1/admin/refresh",
+      payload: {
+        refreshToken: t.context.adminRefresh,
+      },
+      headers: {},
+    });
+    t.is(response.statusCode, 200, "API - Status Code Incorrect");
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 test.serial("Admin Endpoint Test: POST /admin/login", async (t) => {
   try {
     const response = await t.context.app.inject({
@@ -299,24 +315,6 @@ test.serial("Admin Endpoint Test: DELETE /admin/users/:uuid", async (t) => {
   }
 });
 
-test.serial("Admin Endpoint Test: POST /admin/refesh", async (t) => {
-  try {
-    const response = await t.context.app.inject({
-      method: "POST",
-      url: "/v1/admin/refresh",
-      payload: {
-        refreshToken: t.context.adminRefresh,
-      },
-      headers: {
-        Authorization: `Bearer ${t.context.adminJWT}`,
-      },
-    });
-    t.is(response.statusCode, 200, "API - Status Code Incorrect");
-  } catch (error) {
-    console.log(error);
-  }
-});
-
 test("JWT Test: makeAccesstoken generates a valid JWT token", async (t) => {
   const userObj = {
     uuid: "123",
@@ -330,7 +328,7 @@ test("JWT Test: makeAccesstoken generates a valid JWT token", async (t) => {
 
   const { token, expiration, userFingerprint } = await makeAccesstoken(
     userObj,
-    secretKey,
+    secretKey
   );
 
   // Fetch the payload
@@ -417,7 +415,7 @@ test("JWT Test: makeAdminToken generates a valid admin JWT token", async (t) => 
   // Generate an admin token using the function
   const { token, expiration, userFingerprint } = await makeAdminToken(
     userObj,
-    secretKey,
+    secretKey
   );
 
   // Fetch the payload

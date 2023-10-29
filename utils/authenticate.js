@@ -34,12 +34,9 @@ export const authenticateAdminRequest = async function (request, reply) {
       : (() => {
           throw { statusCode: "401", message: "Unauthorized" };
         })();
-    //extract the specific fingerprint value from the header
-    const cookies = parse(request.headers.cookie);
-    const fingerPrint = cookies["Fgp"];
 
     //validate the JWT
-    const payload = await validateJWT(requestToken, this.key, fingerPrint);
+    const payload = await validateJWT(requestToken, this.key);
 
     //check the jwt payload in the scope claim for admin
     if (!payload.scope.includes("admin")) {
@@ -69,7 +66,7 @@ export const authenticateWebAdminRequest = async function (request, reply) {
     const payload = await validateJWT(
       cookies.adminAccessToken,
       this.key,
-      fingerPrint
+      fingerPrint,
     );
 
     // Check if the payload contains the admin scope

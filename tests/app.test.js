@@ -3,7 +3,11 @@ import buildApp from "../app.js";
 import { unlink } from "node:fs/promises";
 import { parse } from "cookie";
 import { readFile } from "node:fs/promises";
-import { makeAccesstoken, makeRefreshtoken, makeAdminToken } from "../utils/jwt.js";
+import {
+  makeAccesstoken,
+  makeRefreshtoken,
+  makeAdminToken,
+} from "../utils/jwt.js";
 import * as jose from "jose";
 
 // Setup Test
@@ -54,7 +58,9 @@ test.before(async (t) => {
   const data = await response.json();
   t.context.uuid = data.data.id;
   t.context.jwt = data.data.attributes.access_token;
-  t.context.refreshToken = parse(response.headers["set-cookie"][0])["userRefreshToken"];
+  t.context.refreshToken = parse(response.headers["set-cookie"][0])[
+    "userRefreshToken"
+  ];
   t.context.fgp = parse(response.headers["set-cookie"][1])["fgp"];
 
   //create a user to test admin api endpoints with
@@ -74,7 +80,8 @@ test.before(async (t) => {
 
   //save admin jwt to context
   t.context.adminJWT = response2.json().data.attributes.access_token;
-  t.context.adminFgp = parse(response.headers["set-cookie"][1])["fgp"];
+  t.context.adminRefresh = response2.json().data.attributes.refresh_token;
+  // t.context.adminFgp = parse(response.headers["set-cookie"][1])["fgp"];
 });
 
 // Cleanup Test
@@ -188,6 +195,22 @@ test.serial("Auth Endpoint Test: POST /auth/users/me", async (t) => {
   }
 });
 
+test.serial("Admin Endpoint Test: POST /admin/refesh", async (t) => {
+  try {
+    const response = await t.context.app.inject({
+      method: "POST",
+      url: "/v1/admin/refresh",
+      payload: {
+        refreshToken: t.context.adminRefresh,
+      },
+      headers: {},
+    });
+    t.is(response.statusCode, 200, "API - Status Code Incorrect");
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 test.serial("Admin Endpoint Test: POST /admin/login", async (t) => {
   try {
     const response = await t.context.app.inject({
@@ -217,7 +240,6 @@ test.serial("Admin Endpoint Test: GET /admin/users", async (t) => {
       url: "/v1/admin/users",
       headers: {
         Authorization: `Bearer ${t.context.adminJWT}`,
-        cookie: `${t.context.adminFgp}`,
       },
     });
     t.is(response.statusCode, 200, "API - Status Code Incorrect");
@@ -244,7 +266,6 @@ test.serial("Admin Endpoint Test: POST /admin/users", async (t) => {
       },
       headers: {
         Authorization: `Bearer ${t.context.adminJWT}`,
-        cookie: `${t.context.adminFgp}`,
       },
     });
     t.is(response.statusCode, 201, "API - Status Code Incorrect");
@@ -271,7 +292,6 @@ test.serial("Admin Endpoint Test: PATCH /admin/users/:uuid", async (t) => {
       },
       headers: {
         Authorization: `Bearer ${t.context.adminJWT}`,
-        cookie: `${t.context.adminFgp}`,
       },
     });
     t.is(response.statusCode, 200, "API - Status Code Incorrect");
@@ -287,7 +307,6 @@ test.serial("Admin Endpoint Test: DELETE /admin/users/:uuid", async (t) => {
       url: `/v1/admin/users/${t.context.uuid}`,
       headers: {
         Authorization: `Bearer ${t.context.adminJWT}`,
-        cookie: `${t.context.adminFgp}`,
       },
     });
     t.is(response.statusCode, 204, "API - Status Code Incorrect");
@@ -307,7 +326,10 @@ test("JWT Test: makeAccesstoken generates a valid JWT token", async (t) => {
   };
   const secretKey = t.context.app.key;
 
-  const { token, expiration, userFingerprint } = await makeAccesstoken(userObj, secretKey);
+  const { token, expiration, userFingerprint } = await makeAccesstoken(
+    userObj,
+    secretKey
+  );
 
   // Fetch the payload
   const { payload } = await jose.jwtVerify(token, secretKey);
@@ -391,7 +413,10 @@ test("JWT Test: makeAdminToken generates a valid admin JWT token", async (t) => 
   const secretKey = t.context.app.key;
 
   // Generate an admin token using the function
-  const { token, expiration, userFingerprint } = await makeAdminToken(userObj, secretKey);
+  const { token, expiration, userFingerprint } = await makeAdminToken(
+    userObj,
+    secretKey
+  );
 
   // Fetch the payload
   const { payload } = await jose.jwtVerify(token, secretKey);

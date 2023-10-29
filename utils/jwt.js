@@ -21,7 +21,8 @@ export async function makeAccesstoken(userObj, secretKey) {
     let expirationTime = "1h";
 
     //generate the client context for storing the hash in the jwt claims
-    const { userFingerprint, userFingerprintHash } = await generateClientContext();
+    const { userFingerprint, userFingerprintHash } =
+      await generateClientContext();
 
     // build the token claims
     const claims = {
@@ -32,11 +33,19 @@ export async function makeAccesstoken(userObj, secretKey) {
       scope: "user",
     };
 
-    if (userObj.metadata !== undefined && userObj.metadata !== null && userObj.metadata !== "{}") {
+    if (
+      userObj.metadata !== undefined &&
+      userObj.metadata !== null &&
+      userObj.metadata !== "{}"
+    ) {
       claims.metadata = JSON.parse(userObj.metadata);
     }
 
-    if (userObj.appdata !== undefined && userObj.appdata !== null && userObj.appdata !== "{}") {
+    if (
+      userObj.appdata !== undefined &&
+      userObj.appdata !== null &&
+      userObj.appdata !== "{}"
+    ) {
       claims.app = JSON.parse(userObj.appdata);
     }
 
@@ -59,7 +68,11 @@ export async function makeAccesstoken(userObj, secretKey) {
 }
 
 //https://datatracker.ietf.org/doc/html/draft-ietf-oauth-browser-based-apps-05#section-8
-export async function makeRefreshtoken(userObj, secretKey, { recoveryToken = false } = {}) {
+export async function makeRefreshtoken(
+  userObj,
+  secretKey,
+  { recoveryToken = false } = {},
+) {
   try {
     // set default expiration time of the jwt token
     let expirationTime = "7d";
@@ -74,11 +87,19 @@ export async function makeRefreshtoken(userObj, secretKey, { recoveryToken = fal
       email: userObj.email,
     };
 
-    if (userObj.metadata !== undefined && userObj.metadata !== null && userObj.metadata !== "{}") {
+    if (
+      userObj.metadata !== undefined &&
+      userObj.metadata !== null &&
+      userObj.metadata !== "{}"
+    ) {
       claims.metadata = JSON.parse(userObj.metadata);
     }
 
-    if (userObj.appdata !== undefined && userObj.appdata !== null && userObj.appdata !== "{}") {
+    if (
+      userObj.appdata !== undefined &&
+      userObj.appdata !== null &&
+      userObj.appdata !== "{}"
+    ) {
       claims.app = JSON.parse(userObj.appdata);
     }
 
@@ -87,7 +108,7 @@ export async function makeRefreshtoken(userObj, secretKey, { recoveryToken = fal
     const jwtid = randomUUID();
 
     const stmt = db.prepare(
-      "UPDATE users SET jwt_id = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ?;"
+      "UPDATE users SET jwt_id = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ?;",
     );
     stmt.run(jwtid, userObj.uuid);
 
@@ -110,10 +131,11 @@ export async function makeRefreshtoken(userObj, secretKey, { recoveryToken = fal
 export async function makeAdminToken(userObj, secretKey) {
   try {
     // set default expiration time of the jwt token
-    let expirationTime = "2h";
+    let expirationTime = "1h";
 
     //generate the client context for storing the hash in the jwt claims
-    const { userFingerprint, userFingerprintHash } = await generateClientContext();
+    const { userFingerprint, userFingerprintHash } =
+      await generateClientContext();
 
     const claims = {
       userid: userObj.uuid,
@@ -141,6 +163,50 @@ export async function makeAdminToken(userObj, secretKey) {
   }
 }
 
+export async function makeAdminRefreshtoken(adminObj, secretKey) {
+  try {
+    // Set default expiration time of the JWT token
+    let expirationTime = "7d";
+
+    // Define the token claims for the admin refresh token
+    const claims = {
+      userid: adminObj.uuid,
+      name: adminObj.name,
+      email: adminObj.email,
+      userFingerprint: null,
+      scope: "admin",
+    };
+
+    // Check if adminObj has metadata and appdata properties and add them to claims as needed
+
+    const db = new Database(config.DBPATH);
+
+    // Generate a random UUID for the token
+    const jwtid = randomUUID();
+
+    // Update the admin table with the new JWT ID and update timestamp
+    const stmt = db.prepare(
+      "UPDATE admin SET jwt_id = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ?;",
+    );
+    stmt.run(jwtid, adminObj.uuid);
+
+    // Create and sign the JWT token
+    const jwt = await new jose.SignJWT(claims)
+      .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+      .setIssuedAt()
+      .setExpirationTime(expirationTime)
+      .setJti(jwtid)
+      .sign(secretKey);
+
+    // Verify the token and retrieve its payload
+    const { payload } = await jose.jwtVerify(jwt, secretKey);
+
+    return { token: jwt, expiration: payload.exp };
+  } catch (error) {
+    throw { statusCode: 500, message: "Server Error" };
+  }
+}
+
 // Validates a JWT token
 export async function validateJWT(jwt, secretKey, fingerprint = null) {
   try {
@@ -152,7 +218,10 @@ export async function validateJWT(jwt, secretKey, fingerprint = null) {
       return payload;
     }
 
-    const validUserContext = await verifyValueWithHash(fingerprint, payload.userFingerprint);
+    const validUserContext = await verifyValueWithHash(
+      fingerprint,
+      payload.userFingerprint,
+    );
 
     if (!validUserContext) {
       throw { statusCode: 500, message: "Server Error" };

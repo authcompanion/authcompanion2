@@ -1,12 +1,11 @@
 # Admin API
 
-The RESTful Admin API helps you to manage your Authcompanion Users for administrative purposes. And can be used to power an Authcompanion Admin Panel.
+The RESTful Admin API helps you to programatically manage your Authcompanion Users for administrative purposes.
+The Admin APIs power AuthCompanions self-service Admin Dashboard.
 
 ## Admin Access Token (Bearer Token)
 
-All Admin API requests require a Bearer Token in the request's header. This token is generated when you call the `admin/login` endpoint (described below). The token is a JWT (JSON Web Token) that contains the user's ID, name, email, and scope. The scope is always `admin` for the admin user.
-
-The JWT itself has a expiration time of 2 hours. After that time, you will need to generate a new token by calling the `admin/login` endpoint again.
+All Admin API requests require a Bearer Token in the request's header. This token is generated when you call the `admin/login` endpoint (described below) and allows access to the Admin APIs.
 
 ## Server URL
 
@@ -18,7 +17,7 @@ Returns Content-Type: application/json
 
 ### admin/login
 
-Description: Trades the admin credentials for an admin access token used to access the Admin API. See more information about the admin credentials the administer section of the documentation at [Administer](/guide/administer.md). Only Admin tokens can access the Admin API.
+Description: Trades the admin credentials for an admin access token used to access the various Admin API endpoints. See more information about the admin credentials in the administer section of the documentation at [Administer](/guide/administer.md).
 
 **POST** Request Body:
 
@@ -40,13 +39,14 @@ Response:
 {
   "data": {
     "type": "users",
-    "id": "01f900ba-2c5e-4e0b-84e0-12355d731de4",
+    "id": "wz5dcto2bj5oeod67ehj3tvl",
     "attributes": {
       "name": "Admin",
       "email": "admin@localhost",
-      "created": "2023-03-12T17:33:48.636Z",
-      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiIwMWY5MDBiYS0yYzVlLTRlMGItODRlMC0xMjM1NWQ3MzFkZTQiLCJuYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsInNjb3BlIjoiYWRtaW4iLCJpYXQiOjE2Nzg2Nzc2NzksImV4cCI6MTY3ODY4NDg3OX0.d-vycADtZehogLeYSdrs0mQ_4YhHwNBuiAS7UaD1ozs",
-      "access_token_expiry": 1678684879
+      "created": "2023-10-12T16:10:17.709Z",
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJ3ejVkY3RvMmJqNW9lb2Q2N2VoajN0dmwiLCJuYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsInVzZXJGaW5nZXJwcmludCI6IiRhcmdvbjJpZCR2PTE5JG09NjQwMDAsdD0zLHA9MSRpWlpOT2MwbitJUzhnUUwxYjJ2Wld3JEJyZERpazlZR0VOTjdqZEt3ckRnMGxzRXMrVnY0OWt3c0pKOVQrTHBxSHMiLCJzY29wZSI6ImFkbWluIiwiaWF0IjoxNjk4MDIzODA3LCJleHAiOjE2OTgwMjc0MDd9.pGVrJc8rrFFyMsaE9ubUoXl_3vfNOXTs6x6q8N6ETCU",
+      "access_token_expiry": 1698027407,
+      "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJ3ejVkY3RvMmJqNW9lb2Q2N2VoajN0dmwiLCJuYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsInVzZXJGaW5nZXJwcmludCI6bnVsbCwic2NvcGUiOiJhZG1pbiIsImlhdCI6MTY5ODAyMzgwNywiZXhwIjoxNjk4NjI4NjA3LCJqdGkiOiI2YTkxOGQ5NC1jNGVmLTRjOWItODFkMy05Yjg1OGFiOWU3YWEifQ.720K2t94iC_dTwGCd2IFV1WpHY9Jsmg_iK2hh2wj5h4"
     }
   }
 }
@@ -75,7 +75,7 @@ Response:
   "data": [
     {
       "type": "users",
-      "id": "abf488a9-9627-4c95-9170-dcfe2ce6b4bf",
+      "id": "wz5dcto2bj5oeod67ehj3tvl",
       "attributes": {
         "name": "Authy Person",
         "email": "Hello@authcompanion.com",
@@ -92,7 +92,7 @@ Response:
     },
     {
       "type": "users",
-      "id": "2ca7c207-f945-4aba-9a30-f106ff42cd22",
+      "id": "wz5dcto2bj5oeod67ehj3tvl",
       "attributes": {
         "name": "Authy Person 2",
         "email": "Hello2@authcompanion.com",
@@ -154,7 +154,7 @@ Response:
 {
   "data": {
     "type": "users",
-    "id": "abf488a9-9627-4c95-9170-dcfe2ce6b4bf",
+    "id": "wz5dcto2bj5oeod67ehj3tvl",
     "attributes": {
       "name": "Authy Person",
       "email": "hello@authcompanion.com",
@@ -210,7 +210,7 @@ Response:
 {
   "data": {
     "type": "users",
-    "id": "abf488a9-9627-4c95-9170-dcfe2ce6b4bf",
+    "id": "wz5dcto2bj5oeod67ehj3tvl",
     "attributes": {
       "name": "Authy Person",
       "email": "hello@authcompanion.com",
@@ -241,5 +241,41 @@ Bearer Token Required: `Authorization: Bearer {admin access token}`
 Response: 204 No Content
 
 or 404 Not Found if no user is found.
+
+---
+
+### admin/refresh
+
+Description: Your admin user's access token (JWTs) will expire according the exp date. When it does, you can refresh the access token without having to login your admin user again.
+
+If the request has a valid refresh token AuthCompanion will return a new access token and a new refresh token.
+
+Bearer Token Required: `Authorization: Bearer {admin access token}`
+**POST** Request Body:
+
+```json
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJ3ejVkY3RvMmJqNW9lb2Q2N2VoajN0dmwiLCJuYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsInVzZXJGaW5nZXJwcmludCI6bnVsbCwic2NvcGUiOiJhZG1pbiIsImlhdCI6MTY5Nzk5MTYyNiwiZXhwIjoxNjk4NTk2NDI2LCJqdGkiOiI0YjVjNmU1Ni1jMzA1LTQ3ZjQtYjEyNC01YzgwMGFjY2Y2YTgifQ.q4U0smkirdBKdsUBQMcszuqg4IXIpM49lHzdE6WEeLE"
+}
+```
+
+Response:
+
+```json
+{
+  "data": {
+    "id": "wz5dcto2bj5oeod67ehj3tvl",
+    "type": "users",
+    "attributes": {
+      "name": "Admin",
+      "email": "admin@localhost",
+      "created": "2023-10-12T16:10:17.709Z",
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJ3ejVkY3RvMmJqNW9lb2Q2N2VoajN0dmwiLCJuYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsInVzZXJGaW5nZXJwcmludCI6IiRhcmdvbjJpZCR2PTE5JG09NjQwMDAsdD0zLHA9MSQ2ZXV6U2xEbkQ1NmpJb3BkVVNHZ0RBJEZFZ1VRWm9WckJDLytpSmV6ZHlxR2FVelFDTXIyUEhmbmg0TkdIL3lOYTAiLCJzY29wZSI6ImFkbWluIiwiaWF0IjoxNjk3OTkxNjYxLCJleHAiOjE2OTc5OTUyNjF9.-EiyNfFFeHKpUCyEZZXvVcQ1vxqO-D34NWfS3HKF3jU",
+      "access_token_expiry": 1697995261,
+      "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJ3ejVkY3RvMmJqNW9lb2Q2N2VoajN0dmwiLCJuYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsInVzZXJGaW5nZXJwcmludCI6bnVsbCwic2NvcGUiOiJhZG1pbiIsImlhdCI6MTY5Nzk5MTY2MSwiZXhwIjoxNjk4NTk2NDYxLCJqdGkiOiJiMTY3ODEzOS0yNGY0LTQ0YjctOTE0MC05NThlNDY0NjIyZWIifQ.v3QweztMbJLINqh9iWUahyUnOPC1EqefmEbc_IuK-Zk"
+    }
+  }
+}
+```
 
 ---

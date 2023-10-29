@@ -9,7 +9,11 @@ const VERSION = 4;
 const migrate = (db, version) => {
   const allFiles = readdirSync("./plugins/db/schema/");
   const sqlFiles = allFiles.filter((file) => extname(file) === ".sql");
-  sqlFiles.sort();
+  const collator = new Intl.Collator(undefined, {
+    numeric: true,
+    sensitivity: "base",
+  });
+  sqlFiles.sort(collator.compare);
   if (version === null || version === undefined) {
     version = 1;
   }
@@ -57,7 +61,9 @@ const dbPlugin = async function (fastify) {
     fastify.log.info(`Using Sqlite3 Database: ${config.DBPATH}`);
   } catch (error) {
     console.log(error);
-    throw new Error("There was an error setting and connecting up the Database, please try again!");
+    throw new Error(
+      "There was an error setting and connecting up the Database, please try again!",
+    );
   }
   //make available the database across the server by calling "db"
   fastify.decorate("db", db);

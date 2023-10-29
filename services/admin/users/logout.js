@@ -2,20 +2,21 @@ import config from "../../../config.js";
 
 export const logoutHandler = async function (request, reply) {
   try {
-    const expireDate = new Date();
-    expireDate.setTime(expireDate.getTime());
+    const jwtPayload = request.jwtRequestPayload;
+    const userId = jwtPayload.userid;
+
+    //Check if the user exists in the database
+    const stmt = this.db.prepare("UPDATE admin SET jwt_id = 0 WHERE uuid = ?;");
+    const result = await stmt.run(userId);
 
     reply.headers({
-      "set-cookie": `adminAccessToken=; Path=/; Expires=; SameSite=None; Secure; HttpOnly`,
       "x-authc-app-origin": config.ADMINORIGIN,
     });
 
     return {
-      data: {
-        logout: true,
-      },
+      logout: true,
     };
   } catch (err) {
-    throw { statusCode: err.statusCode, message: err.message };
+    throw { statusCode: err.statusCode, message: "Server Error" };
   }
 };

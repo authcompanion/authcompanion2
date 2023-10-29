@@ -20,7 +20,7 @@ export async function importKey() {
         hash: "SHA-256",
       },
       true,
-      ["sign", "verify"]
+      ["sign", "verify"],
     );
     return key;
   } catch (error) {
@@ -37,7 +37,7 @@ async function generateAndExportKey() {
         length: 512,
       },
       true,
-      ["sign", "verify"]
+      ["sign", "verify"],
     );
 
     const rawKey = await subtle.exportKey("jwk", key);

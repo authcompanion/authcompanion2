@@ -343,7 +343,7 @@
                   const refreshBody = await refreshResponse.json();
                   window.localStorage.setItem(
                     "ACCESS_TOKEN",
-                    refreshBody.data.attributes.access_token
+                    refreshBody.data.attributes.access_token,
                   );
                   const updatedResponse = await updateUser();
 
@@ -357,7 +357,7 @@
               } else if (response.ok) {
                 window.localStorage.setItem(
                   "ACCESS_TOKEN",
-                  webserviceResponse.data.attributes.access_token
+                  webserviceResponse.data.attributes.access_token,
                 );
                 showError.value = true;
                 errorTitle.value = "Success";

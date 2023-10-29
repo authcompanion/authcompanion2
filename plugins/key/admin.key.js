@@ -19,7 +19,7 @@ const setupAdminKey = async function (fastify) {
 
     //Check if the admin user already exists on server startup
     const stmt = fastify.db.prepare(
-      "SELECT uuid, name, email, active, created_at, updated_at FROM admin LIMIT 1;"
+      "SELECT uuid, name, email, active, created_at, updated_at FROM admin LIMIT 1;",
     );
     const adminUser = await stmt.get();
 
@@ -43,7 +43,7 @@ const setupAdminKey = async function (fastify) {
     };
 
     const registerStmt = fastify.db.prepare(
-      "INSERT INTO admin (uuid, name, email, password, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, active, created_at, updated_at;"
+      "INSERT INTO admin (uuid, name, email, password, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, active, created_at, updated_at;",
     );
     const user = registerStmt.get(
       uuid,
@@ -51,13 +51,13 @@ const setupAdminKey = async function (fastify) {
       userObj.email,
       hashPwd,
       1,
-      ""
+      "",
     );
 
     //export admin password to a file. Admin password is only exported once on server startup and can be traded for an access token
     writeFileSync(
       config.ADMINKEYPATH,
-      `admin email: ${userObj.email} \nadmin password: ${adminPwd}`
+      `admin email: ${userObj.email} \nadmin password: ${adminPwd}`,
     );
     fastify.log.info(`Generating Admin API Key: ${config.ADMINKEYPATH}...`);
     fastify.log.info(`Admin Email: ${userObj.email} & Password: ${adminPwd}`);

@@ -1,3 +1,14 @@
+# [3.0.0-beta.20](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.19...3.0.0-beta.20) (2023-10-29)
+
+
+### Features
+
+This release of AuthCompanion features many improvements to the Admin API to make integrating with AuthC simpler. Additionally, newly added is the /refresh endpoint for the Admin API for refreshing your admin JWT without having to login again. 
+
+* **admin api:** new /refresh api endpoint ([#17](https://github.com/authcompanion/authcompanion2/issues/17)) ([482ae8b](https://github.com/authcompanion/authcompanion2/commit/482ae8b919981d01be7fcef036fb3e4080d6f0e3))
+
+
+
 # [3.0.0-beta.19](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.18...3.0.0-beta.19) (2023-10-16)
 
 This release of AuthCompanion features the ability to set custom claims on the user's JWT including setting the value for a public claim (called `metadata`) and a private claim (called `app`). Custom claims can be set via the AuthC APIs, please see API Developer Reference documentation for examples. 

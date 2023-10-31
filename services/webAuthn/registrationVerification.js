@@ -68,6 +68,7 @@ export const registrationVerificationHandler = async function (request, reply) {
     reply.headers({
       "set-cookie": [
         `userRefreshToken=${userRefreshToken.token}; Path=/; Expires=${expireDate}; SameSite=None; Secure; HttpOnly`,
+        `userAccessToken=${userAccessToken.token}; Path=/; Expires=${expireDate}; SameSite=None; Secure; HttpOnly`,
         `Fgp=${userAccessToken.userFingerprint}; Path=/; Max-Age=7200; SameSite=None; Secure; HttpOnly`,
       ],
       "x-authc-app-origin": config.APPLICATIONORIGIN,

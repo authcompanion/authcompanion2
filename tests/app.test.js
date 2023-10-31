@@ -328,7 +328,7 @@ test("JWT Test: makeAccesstoken generates a valid JWT token", async (t) => {
 
   const { token, expiration, userFingerprint } = await makeAccesstoken(
     userObj,
-    secretKey
+    secretKey,
   );
 
   // Fetch the payload
@@ -415,7 +415,7 @@ test("JWT Test: makeAdminToken generates a valid admin JWT token", async (t) => 
   // Generate an admin token using the function
   const { token, expiration, userFingerprint } = await makeAdminToken(
     userObj,
-    secretKey
+    secretKey,
   );
 
   // Fetch the payload

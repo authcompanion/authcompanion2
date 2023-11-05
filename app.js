@@ -13,7 +13,7 @@ const buildApp = async (serverOptions) => {
   const app = Fastify(serverOptions);
 
   try {
-    // Register the defaul authc plugins and routes
+    // Register the default authc plugins and routes
     await app
       .register(sqlite3)
       .register(serverkey)

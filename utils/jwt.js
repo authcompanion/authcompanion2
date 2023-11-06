@@ -54,7 +54,7 @@ export async function makeAccesstoken(userObj, secretKey) {
       userFingerprint: userFingerprint,
     };
   } catch (error) {
-    console.log(error);
+    fastify.log.info(error);
     throw { statusCode: 500, message: "Server Error" };
   }
 }
@@ -103,7 +103,7 @@ export async function makeRefreshtoken(userObj, secretKey, { recoveryToken = fal
 
     return { token: jwt, expiration: payload.exp };
   } catch (error) {
-    console.log(error);
+    fastify.log.info(error);
     throw { statusCode: 500, message: "Server Error" };
   }
 }
@@ -139,7 +139,7 @@ export async function makeAdminToken(userObj, secretKey) {
       userFingerprint: userFingerprint,
     };
   } catch (error) {
-    console.log(error);
+    fastify.log.info(error);
     throw { statusCode: 500, message: "Server Error" };
   }
 }
@@ -207,7 +207,7 @@ export async function validateJWT(jwt, secretKey, fingerprint = null) {
 
     return payload;
   } catch (error) {
-    console.log(error);
+    fastify.log.info(error);
     throw { statusCode: 500, message: "Server Error" };
   }
 }

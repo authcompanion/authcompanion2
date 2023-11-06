@@ -251,6 +251,7 @@ Description: Your admin user's access token (JWTs) will expire according the exp
 If the request has a valid refresh token AuthCompanion will return a new access token and a new refresh token.
 
 Bearer Token Required: `Authorization: Bearer {admin access token}`
+
 **POST** Request Body:
 
 ```json
@@ -276,6 +277,22 @@ Response:
     }
   }
 }
+```
+
+Description: This endpoint revokes/invalidates the user's Refresh token, preventing the token from being used to refresh a session.
+
+**DELETE** Request Body:
+
+```json
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyaWQiOiJ3ejVkY3RvMmJqNW9lb2Q2N2VoajN0dmwiLCJuYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsInVzZXJGaW5nZXJwcmludCI6bnVsbCwic2NvcGUiOiJhZG1pbiIsImlhdCI6MTY5Nzk5MTYyNiwiZXhwIjoxNjk4NTk2NDI2LCJqdGkiOiI0YjVjNmU1Ni1jMzA1LTQ3ZjQtYjEyNC01YzgwMGFjY2Y2YTgifQ.q4U0smkirdBKdsUBQMcszuqg4IXIpM49lHzdE6WEeLE"
+}
+```
+
+Response:
+
+```
+204 (No Content)
 ```
 
 ---

@@ -5,7 +5,9 @@ const config = {
   AUTHPORT: process.env.PORT || "3002",
   ORIGIN: process.env.ORIGIN || "http://localhost:3002",
   APPLICATIONORIGIN: process.env.APPLICATION_ORIGIN || "http://localhost:3002/v1/web/home",
-  REGISTRATIONORIGIN: process.env.REGISTRATION_ORIGIN || APPLICATIONORIGIN,
+  REGISTRATIONORIGIN: process.env.REGISTRATION_ORIGIN
+    ? process.env.REGISTRATION_ORIGIN
+    : process.env.APPLICATION_ORIGIN || "http://localhost:3002/v1/web/home",
   ADMINORIGIN: process.env.ADMIN_ORIGIN || "http://localhost:3002/v1/admin/dashboard",
   DBPATH: process.env.DB_PATH || "./authcompanion_users.db",
   KEYPATH: process.env.SERVER_KEY_PATH || "./serverkey",

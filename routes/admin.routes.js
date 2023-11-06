@@ -26,7 +26,6 @@ const adminRoutes = async function (fastify, options) {
   fastify.delete("/users/:uuid", { onRequest: [authenticateAdminRequest] }, deleteUserHandler);
   fastify.patch("/users/:uuid", { onRequest: [authenticateAdminRequest], ...updateSchema }, updateUserHandler);
   fastify.post("/login", loginSchema, loginHandler);
-  fastify.get("/logout", { onRequest: [authenticateAdminRequest] }, logoutHandler);
   fastify.post("/refresh", refreshSchema, tokenRefreshHandler);
   fastify.delete("/refresh", refreshSchema, tokenRefreshDeleteHandler);
 

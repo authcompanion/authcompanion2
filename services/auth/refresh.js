@@ -87,7 +87,7 @@ export const tokenRefreshDeleteHandler = async function (request, reply) {
       throw { statusCode: 400, message: "Refresh Token Failed" };
     }
 
-    const delStmt = this.db.prepare("UPDATE users SET jwt_id = '' WHERE jwt_id = ?");
+    const delStmt = this.db.prepare("UPDATE users SET jwt_id = 0 WHERE jwt_id = ?");
     const resp = await delStmt.run(jwtClaims.jti);
     if (resp.changes !== 1) {
       request.log.info("Error deleting token id");

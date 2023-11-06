@@ -20,16 +20,10 @@
     <div class="flex flex-row">
       <div class="">
         <!-- Left Nav -->
-        <div
-          class="flex flex-col justify-between w-16 h-screen bg-gray-100 border-e"
-        >
+        <div class="flex flex-col justify-between w-16 h-screen bg-gray-100 border-e">
           <div>
-            <div
-              class="inline-flex items-center justify-center w-16 h-16 cursor-pointer"
-            >
-              <span
-                class="grid w-12 h-12 text-xs font-semibold text-white bg-gray-900 rounded-lg place-content-center"
-              >
+            <div class="inline-flex items-center justify-center w-16 h-16 cursor-pointer">
+              <span class="grid w-12 h-12 text-xs font-semibold text-white bg-gray-900 rounded-lg place-content-center">
                 Admin
               </span>
             </div>
@@ -37,10 +31,7 @@
             <div class="border-t border-gray-200">
               <div class="px-2">
                 <div class="py-4">
-                  <a
-                    href=""
-                    class="t group relative flex justify-center rounded bg-blue-50 px-2 py-1.5 text-blue-700"
-                  >
+                  <a href="" class="t group relative flex justify-center rounded bg-blue-50 px-2 py-1.5 text-blue-700">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -70,9 +61,7 @@
             </div>
           </div>
 
-          <div
-            class="sticky inset-x-0 bottom-0 p-2 bg-gray-100 border-t border-gray-100"
-          >
+          <div class="sticky inset-x-0 bottom-0 p-2 bg-gray-100 border-t border-gray-100">
             <form>
               <button
                 type="submit"
@@ -106,22 +95,14 @@
       </div>
       <div class="">
         <header>
-          <div
-            class="max-w-screen-xl px-4 pt-8 mx-auto sm:px-6 sm:pt-8 lg:px-8"
-          >
+          <div class="max-w-screen-xl px-4 pt-8 mx-auto sm:px-6 sm:pt-8 lg:px-8">
             <div class="sm:flex sm:items-center sm:justify-between">
               <div class="text-center sm:text-left">
-                <h1 class="text-2xl font-bold text-gray-900 sm:text-3xl">
-                  Admin Panel
-                </h1>
+                <h1 class="text-2xl font-bold text-gray-900 sm:text-3xl">Admin Panel</h1>
 
-                <p class="mt-1.5 text-sm text-gray-500">
-                  Manage and oversee your application's user accounts
-                </p>
+                <p class="mt-1.5 text-sm text-gray-500">Manage and oversee your application's user accounts</p>
               </div>
-              <div
-                class="flex flex-col gap-4 mt-4 sm:mt-0 sm:flex-row sm:items-center"
-              >
+              <div class="flex flex-col gap-4 mt-4 sm:mt-0 sm:flex-row sm:items-center">
                 <button
                   class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 px-5 py-3 text-gray-500 transition hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring"
                   type="button"
@@ -154,16 +135,10 @@
                 </button>
               </div>
             </div>
-            <div
-              class="flex flex-row justify-between pt-8 max-w-7xl place-items-center"
-            >
+            <div class="flex flex-row justify-between pt-8 max-w-7xl place-items-center">
               <div class="w-1/4">
                 <div>
-                  <label
-                    for="default-search"
-                    class="mb-2 text-sm font-medium text-gray-900 sr-only"
-                    >Search</label
-                  >
+                  <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
                   <div class="relative">
                     <input
                       type="search"
@@ -205,12 +180,8 @@
           <div class="py-6 mx-auto max-w-fit sm:px-6 lg:px-8">
             <div class="flex flex-col">
               <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div
-                  class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8"
-                >
-                  <div
-                    class="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg"
-                  >
+                <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                  <div class="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
                     <table class="min-w-full divide-y divide-gray-200">
                       <thead class="bg-gray-100">
                         <tr>
@@ -269,51 +240,27 @@
                           :class="index % 2 ? 'bg-gray-50' : 'bg-white'"
                           @click="toggleEditPanel(user)"
                         >
-                          <td
-                            class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap"
-                          >
-                            {{ user.id }}
-                          </td>
-                          <td
-                            class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
-                          >
-                            {{ user.attributes.name }}
-                          </td>
-                          <td
-                            class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
-                          >
-                            {{ user.attributes.email }}
-                          </td>
-                          <td
-                            class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
-                          >
+                          <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">{{ user.id }}</td>
+                          <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ user.attributes.name }}</td>
+                          <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ user.attributes.email }}</td>
+                          <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                             <span
                               :class="[
                               'inline-flex', 'items-center', 'rounded-full', 'px-3', 'py-0.5', 'text-sm', 'font-medium',
                               user.attributes.active ? 'text-green-800 bg-green-100' : 'text-red-800 bg-red-100'
                             ]"
                             >
-                              {{ user.attributes.active == 1 ? 'Active (1)' :
-                              'Inactive (0)' }}
+                              {{ user.attributes.active == 1 ? 'Active (1)' : 'Inactive (0)' }}
                             </span>
                           </td>
-                          <td
-                            class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
-                          >
+                          <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                             {{ user.attributes.created }}
                           </td>
-                          <td
-                            class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap"
-                          >
+                          <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                             {{ user.attributes.updated }}
                           </td>
-                          <td
-                            class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap"
-                          >
-                            <a
-                              href="#"
-                              class="underline text-sky-800 hover:text-sky-900"
-                              @click="toggleEditPanel(user)"
+                          <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
+                            <a href="#" class="underline text-sky-800 hover:text-sky-900" @click="toggleEditPanel(user)"
                               >Edit</a
                             >
                             <a
@@ -350,29 +297,16 @@
               v-if="showEditPanel"
             >
               <!-- Background backdrop, show/hide based on slide-over state. -->
-              <div
-                class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
-              ></div>
+              <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"></div>
               <div class="fixed inset-0 overflow-hidden">
                 <div class="absolute inset-0 overflow-hidden">
-                  <div
-                    class="fixed inset-y-0 right-0 flex max-w-full pl-10 pointer-events-none"
-                  >
+                  <div class="fixed inset-y-0 right-0 flex max-w-full pl-10 pointer-events-none">
                     <div class="w-screen max-w-md pointer-events-auto">
-                      <div
-                        class="flex flex-col h-full bg-white divide-y divide-gray-200 shadow-xl"
-                      >
-                        <div
-                          class="flex flex-col flex-1 min-h-0 py-6 overflow-y-scroll"
-                        >
+                      <div class="flex flex-col h-full bg-white divide-y divide-gray-200 shadow-xl">
+                        <div class="flex flex-col flex-1 min-h-0 py-6 overflow-y-scroll">
                           <div class="px-4 sm:px-6">
                             <div class="flex items-start justify-between">
-                              <h2
-                                class="text-lg font-medium text-gray-900"
-                                id="slide-over-title"
-                              >
-                                Details
-                              </h2>
+                              <h2 class="text-lg font-medium text-gray-900" id="slide-over-title">Details</h2>
                               <div class="flex items-center ml-3 h-7">
                                 <button
                                   @click="showEditPanel = !showEditPanel"
@@ -390,11 +324,7 @@
                                     stroke="currentColor"
                                     aria-hidden="true"
                                   >
-                                    <path
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      d="M6 18L18 6M6 6l12 12"
-                                    />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                   </svg>
                                 </button>
                               </div>
@@ -406,9 +336,7 @@
                               <form>
                                 <!-- div containing the user's id -->
                                 <div v-if="!showCreateMenu" class="mt-3">
-                                  <span class="font-medium text-gray-700"
-                                    >ID</span
-                                  >
+                                  <span class="font-medium text-gray-700">ID</span>
                                   <input
                                     disabled
                                     type="text"
@@ -418,9 +346,7 @@
                                 </div>
                                 <!-- div containing the user's name -->
                                 <div class="mt-3">
-                                  <span class="font-medium text-gray-700"
-                                    >Name</span
-                                  >
+                                  <span class="font-medium text-gray-700">Name</span>
                                   <input
                                     type="text"
                                     class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
@@ -430,9 +356,7 @@
                                 </div>
                                 <!-- div containing the user's email -->
                                 <div class="mt-3">
-                                  <span class="font-medium text-gray-700"
-                                    >Email</span
-                                  >
+                                  <span class="font-medium text-gray-700">Email</span>
                                   <input
                                     type="email"
                                     class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
@@ -442,9 +366,7 @@
                                 </div>
                                 <!-- div containing the user's password -->
                                 <div class="mt-3">
-                                  <span class="font-medium text-gray-700"
-                                    >New Password</span
-                                  >
+                                  <span class="font-medium text-gray-700">New Password</span>
                                   <input
                                     type="password"
                                     class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
@@ -453,9 +375,7 @@
                                 </div>
                                 <!-- div containing the user's password -->
                                 <div v-if="showCreateMenu" class="mt-3">
-                                  <span class="font-medium text-gray-700"
-                                    >Confirm Password</span
-                                  >
+                                  <span class="font-medium text-gray-700">Confirm Password</span>
                                   <input
                                     type="password"
                                     class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
@@ -464,9 +384,7 @@
                                 </div>
                                 <!-- div containing the user's active status -->
                                 <div class="mt-3">
-                                  <span class="font-medium text-gray-700"
-                                    >Active</span
-                                  >
+                                  <span class="font-medium text-gray-700">Active</span>
                                   <input
                                     type="number"
                                     min="0"
@@ -479,9 +397,7 @@
                                 </div>
                                 <!-- div containing the user's created date -->
                                 <div v-if="!showCreateMenu" class="mt-3">
-                                  <span class="font-medium text-gray-700"
-                                    >Created At</span
-                                  >
+                                  <span class="font-medium text-gray-700">Created At</span>
                                   <input
                                     disabled
                                     type="text"
@@ -491,9 +407,7 @@
                                 </div>
                                 <!-- div containing the user's updated at date -->
                                 <div v-if="!showCreateMenu" class="mt-3">
-                                  <span class="font-medium text-gray-700"
-                                    >Updated At</span
-                                  >
+                                  <span class="font-medium text-gray-700">Updated At</span>
                                   <input
                                     disabled
                                     type="text"
@@ -531,9 +445,7 @@
 
           <!-- Pagination Area -->
           <paginate class="bg-white shadow-sm">
-            <div
-              class="flex flex-row justify-between px-5 text-sm max-w-8xl place-items-center"
-            >
+            <div class="flex flex-row justify-between px-5 text-sm max-w-8xl place-items-center">
               <div class="flex flex-row ml-4">
                 <select
                   name="pagesize"
@@ -554,12 +466,7 @@
                   class="inline-flex items-center justify-center w-8 h-8 text-gray-900 bg-white border border-gray-100 rounded rtl:rotate-180"
                 >
                   <span class="sr-only">Prev Page</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="w-3 h-3"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 20 20" fill="currentColor">
                     <path
                       fill-rule="evenodd"
                       d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
@@ -582,12 +489,7 @@
                   class="inline-flex items-center justify-center w-8 h-8 text-gray-900 bg-white border border-gray-100 rounded rtl:rotate-180"
                 >
                   <span class="sr-only">Next Page</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="w-3 h-3"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 20 20" fill="currentColor">
                     <path
                       fill-rule="evenodd"
                       d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
@@ -623,9 +525,7 @@
             <div class="p-4">
               <div class="flex items-center">
                 <div class="flex justify-between flex-1 w-0">
-                  <p class="flex-1 w-0 text-sm font-medium text-gray-900">
-                    {{ notificationMessage }}
-                  </p>
+                  <p class="flex-1 w-0 text-sm font-medium text-gray-900">{{ notificationMessage }}</p>
                 </div>
                 <div class="flex flex-shrink-0 ml-2">
                   <button
@@ -657,10 +557,7 @@
 
     <!-- Scripts -->
     <script type="module">
-      import {
-        createApp,
-        ref,
-      } from "https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.prod.js";
+      import { createApp, ref } from "https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.prod.js";
 
       createApp({
         setup() {
@@ -909,7 +806,7 @@
                     "Content-type": "application/json",
                     Authorization: `Bearer ${token}`,
                   },
-                },
+                }
               );
               const data = await response.json();
               // If the response is not ok, throw an error
@@ -921,9 +818,7 @@
               users.value = data;
 
               // Call the showNotificationMessage function to show a success message
-              showNotificationMessage(
-                `Found ${users.value.data.length} user(s) matching the search.`,
-              );
+              showNotificationMessage(`Found ${users.value.data.length} user(s) matching the search.`);
             } catch (e) {
               console.log("Search User Failed");
               console.log(e);

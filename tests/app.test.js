@@ -94,7 +94,9 @@ test.after.always("cleanup tests", async (t) => {
 
 // Start Tests
 
-test.serial.todo("API Endpoint Test: /auth/recovery");
+test.serial.todo("Auth Endpoint Test: POST /auth/recovery");
+test.serial.todo("Auth Endpoint Test: DELETE /auth/refresh");
+test.serial.todo("Admin Endpoint Test: DELETE /auth/refresh");
 
 test.serial("Auth Endpoint Test: GET /auth/refresh", async (t) => {
   try {

@@ -32,21 +32,16 @@ export const registrationVerificationHandler = async function (request, reply) {
     }
 
     //create the returned authenticator
-    const { credentialPublicKey, credentialID, counter } =
-      verification.registrationInfo;
+    const { credentialPublicKey, credentialID, counter } = verification.registrationInfo;
 
     const authenticatorStmt = this.db.prepare(
-      "INSERT INTO Authenticator (credentialID, credentialPublicKey, counter) VALUES (?,?,?) RETURNING *;",
+      "INSERT INTO Authenticator (credentialID, credentialPublicKey, counter) VALUES (?,?,?) RETURNING *;"
     );
-    const authenticatorObj = authenticatorStmt.get(
-      credentialID,
-      credentialPublicKey,
-      counter,
-    );
+    const authenticatorObj = authenticatorStmt.get(credentialID, credentialPublicKey, counter);
 
     //associate the authenticator to the user and activate the account
     const userStmt = this.db.prepare(
-      "UPDATE users SET authenticator_id = ?, active = ? WHERE uuid = ? RETURNING uuid, name, email, jwt_id, created_at, updated_at;",
+      "UPDATE users SET authenticator_id = ?, active = ? WHERE uuid = ? RETURNING uuid, name, email, jwt_id, created_at, updated_at;"
     );
 
     const userObj = userStmt.get(authenticatorObj.id, "1", requestedAccount);

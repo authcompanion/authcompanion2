@@ -10,7 +10,7 @@ import { userProfileHandler } from "../services/auth/profile.js";
 import { profileRecoverySchema } from "../services/auth/schemas/profileRecoverySchema.js";
 import { profileRecoveryHandler } from "../services/auth/recovery.js";
 
-import { tokenRefreshHandler } from "../services/auth/refresh.js";
+import { tokenRefreshDeleteHandler, tokenRefreshHandler } from "../services/auth/refresh.js";
 import { refreshSchema } from "../services/auth/schemas/refreshSchema.js";
 
 import { registrationOptionsHandler } from "../services/webAuthn/registrationOptions.js";
@@ -27,27 +27,16 @@ const authRoutes = async function (fastify, options) {
   //authentication API routes
   fastify.post("/register", registrationSchema, registrationHandler);
   fastify.post("/login", loginSchema, loginHandler);
-  fastify.post(
-    "/users/me",
-    { onRequest: [authenticateAuthRequest], ...userProfileSchema },
-    userProfileHandler,
-  );
+  fastify.post("/users/me", { onRequest: [authenticateAuthRequest], ...userProfileSchema }, userProfileHandler);
   fastify.post("/recovery", profileRecoverySchema, profileRecoveryHandler);
   fastify.post("/refresh", refreshSchema, tokenRefreshHandler);
+  fastify.delete("/refresh", refreshSchema, tokenRefreshDeleteHandler);
 
   //webAuthn API routes
   fastify.get("/registration-options", registrationOptionsHandler);
-  fastify.post(
-    "/registration-verification",
-    registerVerificationSchema,
-    registrationVerificationHandler,
-  );
+  fastify.post("/registration-verification", registerVerificationSchema, registrationVerificationHandler);
   fastify.get("/login-options", loginOptionsHandler);
-  fastify.post(
-    "/login-verification",
-    loginVerificationSchema,
-    loginVerificationHandler,
-  );
+  fastify.post("/login-verification", loginVerificationSchema, loginVerificationHandler);
 };
 
 export default authRoutes;

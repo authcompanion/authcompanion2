@@ -16,9 +16,7 @@ export const loginVerificationHandler = async function (request, reply) {
     const cookies = parse(request.headers.cookie);
 
     //retrieve the session's challenge from storage
-    const storageStmt = this.db.prepare(
-      "SELECT data FROM storage WHERE sessionID = ?;",
-    );
+    const storageStmt = this.db.prepare("SELECT data FROM storage WHERE sessionID = ?;");
     const sessionChallenge = await storageStmt.get(cookies.sessionID);
 
     //set userID from response
@@ -26,7 +24,7 @@ export const loginVerificationHandler = async function (request, reply) {
 
     //retrieve the user's authenticator
     const stmt = this.db.prepare(
-      "SELECT credentialPublicKey, credentialID, counter, transports FROM authenticator INNER JOIN users ON users.authenticator_id = authenticator.id WHERE users.uuid = ?;",
+      "SELECT credentialPublicKey, credentialID, counter, transports FROM authenticator INNER JOIN users ON users.authenticator_id = authenticator.id WHERE users.uuid = ?;"
     );
     const userAuthenticator = await stmt.get(userID);
 
@@ -47,16 +45,14 @@ export const loginVerificationHandler = async function (request, reply) {
     }
 
     //session clean up in the storage
-    const deleteStmt = this.db.prepare(
-      "DELETE FROM storage WHERE sessionID = ?;",
-    );
+    const deleteStmt = this.db.prepare("DELETE FROM storage WHERE sessionID = ?;");
     await deleteStmt.run(cookies.sessionID);
 
     // All looks good! Let's prepare the reply
 
     // Fetch user from database
     const userStmt = this.db.prepare(
-      "SELECT uuid, name, email, jwt_id, password, active, created_at, updated_at FROM users WHERE uuid = ?;",
+      "SELECT uuid, name, email, jwt_id, password, active, created_at, updated_at FROM users WHERE uuid = ?;"
     );
     const userObj = await userStmt.get(userID);
 

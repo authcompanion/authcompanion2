@@ -1,4 +1,4 @@
-import { createHash } from "../../utils/credential.js";
+import { createHash, secureCookie } from "../../utils/credential.js";
 import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import config from "../../config.js";
 
@@ -6,9 +6,7 @@ export const userProfileHandler = async function (request, reply) {
   try {
     //Check the request's type attibute is set to users
     if (request.body.data.type !== "users") {
-      request.log.info(
-        "Auth API: The request's type is not set to Users, update failed",
-      );
+      request.log.info("Auth API: The request's type is not set to Users, update failed");
       throw { statusCode: 400, message: "Invalid Type Attribute" };
     }
 
@@ -18,9 +16,7 @@ export const userProfileHandler = async function (request, reply) {
 
     //Check if the user exists already
     if (!user) {
-      request.log.info(
-        "Auth API: User does not exist in database, update failed",
-      );
+      request.log.info("Auth API: User does not exist in database, update failed");
       throw { statusCode: 400, message: "Profile Update Failed" };
     }
 
@@ -32,14 +28,14 @@ export const userProfileHandler = async function (request, reply) {
 
     //Per json-api spec: If a request does not include all of the attributes for a resource, the server MUST interpret the missing attributes as if they were included with their current values. The server MUST NOT interpret missing attributes as null values.
     const updateStmt = this.db.prepare(
-      "UPDATE users SET name = coalesce(?, name), email = coalesce(?, email), password = coalesce(?, password), metadata = coalesce(?, metadata), updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ? RETURNING uuid, name, email, metadata, appdata, jwt_id, active, created_at, updated_at;",
+      "UPDATE users SET name = coalesce(?, name), email = coalesce(?, email), password = coalesce(?, password), metadata = coalesce(?, metadata), updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ? RETURNING uuid, name, email, metadata, appdata, jwt_id, active, created_at, updated_at;"
     );
     const userObj = updateStmt.get(
       request.body.data.attributes.name,
       request.body.data.attributes.email,
       request.body.data.attributes.password,
       JSON.stringify(request.body.data.attributes.metadata),
-      request.jwtRequestPayload.userid,
+      request.jwtRequestPayload.userid
     );
 
     //Prepare the reply
@@ -59,8 +55,12 @@ export const userProfileHandler = async function (request, reply) {
 
     reply.headers({
       "set-cookie": [
-        `userRefreshToken=${userRefreshToken.token}; Path=/; Expires=${expireDate}; SameSite=None; Secure; HttpOnly`,
-        `Fgp=${userAccessToken.userFingerprint}; Path=/; Max-Age=3600; SameSite=None; Secure; HttpOnly`,
+        `userRefreshToken=${userRefreshToken.token}; Path=/; Expires=${expireDate}; SameSite=${
+          config.SAMESITE
+        }; HttpOnly; ${secureCookie()}`,
+        `Fgp=${userAccessToken.userFingerprint}; Path=/; Max-Age=3600; SameSite=${
+          config.SAMESITE
+        }; HttpOnly; ${secureCookie()}`,
       ],
       "x-authc-app-origin": config.APPLICATIONORIGIN,
     });

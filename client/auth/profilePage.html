@@ -41,29 +41,17 @@
           />
         </svg>
 
-        <strong
-          class="block font-medium"
-          :class="{ 'text-red-800': isError, 'text-green-800': isSuccess }"
-        >
+        <strong class="block font-medium" :class="{ 'text-red-800': isError, 'text-green-800': isSuccess }">
           {{ errorTitle }}
         </strong>
       </div>
 
-      <p
-        class="mt-2 text-sm"
-        :class="{ 'text-red-800': isError, 'text-green-800': isSuccess }"
-      >
-        {{ errorDetail }}
-      </p>
+      <p class="mt-2 text-sm" :class="{ 'text-red-800': isError, 'text-green-800': isSuccess }">{{ errorDetail }}</p>
     </div>
     <!-- Form -->
     <div class="max-w-screen-xl px-4 py-16 mx-auto sm:px-6 lg:px-8">
       <div class="max-w-lg mx-auto">
-        <form
-          @submit.prevent
-          action=""
-          class="p-4 mt-6 mb-0 rounded-lg shadow-lg sm:p-6 lg:p-8"
-        >
+        <form @submit.prevent action="" class="p-4 mt-6 mb-0 rounded-lg shadow-lg sm:p-6 lg:p-8">
           <div class="flex flex-row text-xl font-semibold">
             <span class="mr-1">
               <svg
@@ -84,9 +72,7 @@
             Profile
           </div>
 
-          <p class="my-4 text-lg font-medium mx-4text-left">
-            Update your account
-          </p>
+          <p class="my-4 text-lg font-medium mx-4text-left">Update your account</p>
 
           <div class="my-4">
             <label for="name" class="sr-only">Name</label>
@@ -112,9 +98,7 @@
                 placeholder="Enter email"
               />
 
-              <span
-                class="absolute inset-y-0 grid px-4 end-0 place-content-center"
-              >
+              <span class="absolute inset-y-0 grid px-4 end-0 place-content-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="w-4 h-4 text-gray-400"
@@ -144,9 +128,7 @@
                 placeholder="New password"
               />
 
-              <span
-                class="absolute inset-y-0 grid px-4 end-0 place-content-center"
-              >
+              <span class="absolute inset-y-0 grid px-4 end-0 place-content-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="w-4 h-4 text-gray-400"
@@ -181,9 +163,7 @@
                 v-model="confirmPassword"
                 placeholder="Confirm password"
               />
-              <span
-                class="absolute inset-y-0 grid px-4 end-0 place-content-center"
-              >
+              <span class="absolute inset-y-0 grid px-4 end-0 place-content-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="w-4 h-4 text-gray-400"
@@ -243,19 +223,13 @@
       <div class="m-4 text-xs text-gray-400">
         Powered by
         <span class="underline">
-          <a href="https://github.com/authcompanion/authcompanion2"
-            >AuthCompanion</a
-          >
+          <a href="https://github.com/authcompanion/authcompanion2">AuthCompanion</a>
         </span>
       </div>
     </div>
     <!-- Scripts -->
     <script type="module">
-      import {
-        createApp,
-        ref,
-        computed,
-      } from "https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.prod.js";
+      import { createApp, ref, computed } from "https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.prod.js";
 
       import jwtDecode from "https://cdn.skypack.dev/jwt-decode";
 
@@ -341,24 +315,17 @@
 
                 if (refreshResponse.ok) {
                   const refreshBody = await refreshResponse.json();
-                  window.localStorage.setItem(
-                    "ACCESS_TOKEN",
-                    refreshBody.data.attributes.access_token,
-                  );
+                  window.localStorage.setItem("ACCESS_TOKEN", refreshBody.data.attributes.access_token);
                   const updatedResponse = await updateUser();
 
                   if (updatedResponse.ok) {
                     showError.value = true;
                     errorTitle.value = "Success";
-                    errorDetail.value =
-                      "Your account has been updated, thank you!";
+                    errorDetail.value = "Your account has been updated, thank you!";
                   }
                 }
               } else if (response.ok) {
-                window.localStorage.setItem(
-                  "ACCESS_TOKEN",
-                  webserviceResponse.data.attributes.access_token,
-                );
+                window.localStorage.setItem("ACCESS_TOKEN", webserviceResponse.data.attributes.access_token);
                 showError.value = true;
                 errorTitle.value = "Success";
                 errorDetail.value = "Your account has been updated, thank you!";
@@ -367,8 +334,7 @@
               console.error(error);
               showError.value = true;
               errorTitle.value = "Error";
-              errorDetail.value =
-                "An issue with your account has occurred, please try again";
+              errorDetail.value = "An issue with your account has occurred, please try again";
             }
           };
 

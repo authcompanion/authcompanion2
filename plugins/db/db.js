@@ -61,9 +61,7 @@ const dbPlugin = async function (fastify) {
     fastify.log.info(`Using Sqlite3 Database: ${config.DBPATH}`);
   } catch (error) {
     console.log(error);
-    throw new Error(
-      "There was an error setting and connecting up the Database, please try again!",
-    );
+    throw new Error("There was an error setting and connecting up the Database, please try again!");
   }
   //make available the database across the server by calling "db"
   fastify.decorate("db", db);

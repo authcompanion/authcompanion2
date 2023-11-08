@@ -14,58 +14,29 @@ import { updateSchema } from "../services/admin/users/schema/updateSchema.js";
 import { loginHandler } from "../services/admin/users/login.js";
 import { loginSchema } from "../services/admin/users/schema/loginSchema.js";
 
-import { logoutHandler } from "../services/admin/users/logout.js";
-
-import { tokenRefreshHandler } from "../services/admin/users/refresh.js";
+import { tokenRefreshHandler, tokenRefreshDeleteHandler } from "../services/admin/users/refresh.js";
 import { refreshSchema } from "../services/admin/users/schema/refreshSchema.js";
 
-import {
-  authenticateAdminRequest,
-  authenticateWebAdminRequest,
-} from "../utils/authenticate.js";
+import { authenticateAdminRequest, authenticateWebAdminRequest } from "../utils/authenticate.js";
 
 const adminRoutes = async function (fastify, options) {
   //admin API routes
-  fastify.post(
-    "/users",
-    { onRequest: [authenticateAdminRequest], ...createSchema },
-    createUserHandler,
-  );
-  fastify.get(
-    "/users",
-    { onRequest: [authenticateAdminRequest], ...listUsersSchema },
-    listUsersHandler,
-  );
-  fastify.delete(
-    "/users/:uuid",
-    { onRequest: [authenticateAdminRequest] },
-    deleteUserHandler,
-  );
-  fastify.patch(
-    "/users/:uuid",
-    { onRequest: [authenticateAdminRequest], ...updateSchema },
-    updateUserHandler,
-  );
+  fastify.post("/users", { onRequest: [authenticateAdminRequest], ...createSchema }, createUserHandler);
+  fastify.get("/users", { onRequest: [authenticateAdminRequest], ...listUsersSchema }, listUsersHandler);
+  fastify.delete("/users/:uuid", { onRequest: [authenticateAdminRequest] }, deleteUserHandler);
+  fastify.patch("/users/:uuid", { onRequest: [authenticateAdminRequest], ...updateSchema }, updateUserHandler);
   fastify.post("/login", loginSchema, loginHandler);
-  fastify.get(
-    "/logout",
-    { onRequest: [authenticateAdminRequest] },
-    logoutHandler,
-  );
   fastify.post("/refresh", refreshSchema, tokenRefreshHandler);
+  fastify.delete("/refresh", refreshSchema, tokenRefreshDeleteHandler);
 
   //admin web user interface routes
-  fastify.get(
-    "/dashboard",
-    { onRequest: [authenticateWebAdminRequest] },
-    (request, reply) => {
-      const adminPage = readFileSync("./client/admin/dashboardPage.html");
-      reply.headers({
-        "Content-Type": `text/html`,
-      });
-      return adminPage;
-    },
-  );
+  fastify.get("/dashboard", { onRequest: [authenticateWebAdminRequest] }, (request, reply) => {
+    const adminPage = readFileSync("./client/admin/dashboardPage.html");
+    reply.headers({
+      "Content-Type": `text/html`,
+    });
+    return adminPage;
+  });
 
   //login page for the admin web user interface
   fastify.get("/login", (request, reply) => {

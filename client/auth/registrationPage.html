@@ -19,19 +19,9 @@
   </head>
   <body id="app">
     <!-- Alert -->
-    <div
-      v-cloak
-      v-if="showError"
-      role="alert"
-      class="p-4 border-red-500 rounded border-s-4 bg-red-50"
-    >
+    <div v-cloak v-if="showError" role="alert" class="p-4 border-red-500 rounded border-s-4 bg-red-50">
       <div class="flex items-center gap-2 text-red-800">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          class="w-5 h-5"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
           <path
             fill-rule="evenodd"
             d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
@@ -47,11 +37,7 @@
     <!-- Form -->
     <div class="max-w-screen-xl px-4 py-16 mx-auto sm:px-6 lg:px-8">
       <div class="max-w-lg mx-auto">
-        <form
-          @submit.prevent
-          action=""
-          class="p-4 mt-6 mb-0 rounded-lg shadow-lg sm:p-6 lg:p-8"
-        >
+        <form @submit.prevent action="" class="p-4 mt-6 mb-0 rounded-lg shadow-lg sm:p-6 lg:p-8">
           <div class="flex flex-row text-xl font-semibold">
             <span class="mr-1">
               <svg
@@ -72,9 +58,7 @@
             Register
           </div>
 
-          <p class="my-4 text-lg font-medium mx-4text-left">
-            Create an account
-          </p>
+          <p class="my-4 text-lg font-medium mx-4text-left">Create an account</p>
 
           <div class="my-4">
             <label for="name" class="sr-only">Email</label>
@@ -100,9 +84,7 @@
                 placeholder="Enter email"
               />
 
-              <span
-                class="absolute inset-y-0 grid px-4 end-0 place-content-center"
-              >
+              <span class="absolute inset-y-0 grid px-4 end-0 place-content-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="w-4 h-4 text-gray-400"
@@ -132,9 +114,7 @@
                 placeholder="Enter password"
               />
 
-              <span
-                class="absolute inset-y-0 grid px-4 end-0 place-content-center"
-              >
+              <span class="absolute inset-y-0 grid px-4 end-0 place-content-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="w-4 h-4 text-gray-400"
@@ -169,9 +149,7 @@
                 v-model="confirmPassword"
                 placeholder="Confirm password"
               />
-              <span
-                class="absolute inset-y-0 grid px-4 end-0 place-content-center"
-              >
+              <span class="absolute inset-y-0 grid px-4 end-0 place-content-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="w-4 h-4 text-gray-400"
@@ -252,9 +230,7 @@
           </button>
 
           <p class="my-4 text-sm text-center text-gray-500">
-            <a class="underline" href="/v1/web/login"
-              >Have an account? Login.</a
-            >
+            <a class="underline" href="/v1/web/login">Have an account? Login.</a>
           </p>
         </form>
       </div>
@@ -263,19 +239,13 @@
       <div class="m-4 text-xs text-gray-400">
         Powered by
         <span class="underline">
-          <a href="https://github.com/authcompanion/authcompanion2"
-            >AuthCompanion</a
-          >
+          <a href="https://github.com/authcompanion/authcompanion2">AuthCompanion</a>
         </span>
       </div>
     </div>
     <!-- Scripts -->
     <script type="module">
-      import {
-        createApp,
-        ref,
-        computed,
-      } from "https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.prod.js";
+      import { createApp, ref, computed } from "https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.prod.js";
 
       const { startRegistration } = SimpleWebAuthnBrowser;
       createApp({
@@ -316,15 +286,11 @@
                   "content-type": "application/json",
                 },
               });
-              const appOrigin =
-                await response.headers.get("x-authc-app-origin");
+              const appOrigin = await response.headers.get("x-authc-app-origin");
               const resbody = await response.json();
 
               if (response.ok) {
-                window.localStorage.setItem(
-                  "ACCESS_TOKEN",
-                  resbody.data.attributes.access_token,
-                );
+                window.localStorage.setItem("ACCESS_TOKEN", resbody.data.attributes.access_token);
                 showError.value = false;
 
                 window.location.href = appOrigin;
@@ -332,55 +298,43 @@
                 showError.value = true;
 
                 errorTitle.value = "Error";
-                errorDetail.value =
-                  "An issue occured, please try registering again.";
+                errorDetail.value = "An issue occured, please try registering again.";
               }
             } catch (e) {
               console.log(e);
               showError.value = true;
 
               errorTitle.value = "Error";
-              errorDetail.value =
-                "There was an issue connecting, please refresh your browser and try again.";
+              errorDetail.value = "There was an issue connecting, please refresh your browser and try again.";
             }
           };
 
           const passkeySubmit = async () => {
             try {
-              let optionsResponse = await fetch(
-                "/v1/auth/registration-options",
-                {
-                  method: "GET",
-                  headers: {
-                    "content-type": "application/json",
-                  },
+              let optionsResponse = await fetch("/v1/auth/registration-options", {
+                method: "GET",
+                headers: {
+                  "content-type": "application/json",
                 },
-              );
+              });
 
               if (optionsResponse.ok) {
                 const opts = await optionsResponse.json();
 
                 let attResp = await startRegistration(opts);
 
-                let verificationResponse = await fetch(
-                  "/v1/auth/registration-verification",
-                  {
-                    method: "POST",
-                    body: JSON.stringify(attResp),
-                    headers: {
-                      "content-type": "application/json",
-                      "x-authc-app-userid": opts.user.id,
-                    },
+                let verificationResponse = await fetch("/v1/auth/registration-verification", {
+                  method: "POST",
+                  body: JSON.stringify(attResp),
+                  headers: {
+                    "content-type": "application/json",
+                    "x-authc-app-userid": opts.user.id,
                   },
-                );
+                });
                 const reply = await verificationResponse.json();
-                const appOrigin =
-                  await verificationResponse.headers.get("x-authc-app-origin");
+                const appOrigin = await verificationResponse.headers.get("x-authc-app-origin");
 
-                window.localStorage.setItem(
-                  "ACCESS_TOKEN",
-                  reply.data.attributes.access_token,
-                );
+                window.localStorage.setItem("ACCESS_TOKEN", reply.data.attributes.access_token);
                 showError.value = false;
                 showError.value = false;
                 window.location.href = appOrigin;
@@ -388,16 +342,14 @@
                 showError.value = true;
 
                 errorTitle.value = "Error";
-                errorDetail.value =
-                  "Error occured, please try registering again";
+                errorDetail.value = "Error occured, please try registering again";
               }
             } catch (e) {
               console.log(e);
               showError.value = true;
 
               errorTitle.value = "Error";
-              errorDetail.value =
-                "There was an issue connecting, please refresh your browser and try again.";
+              errorDetail.value = "There was an issue connecting, please refresh your browser and try again.";
             }
           };
           // expose to template

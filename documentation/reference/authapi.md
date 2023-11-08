@@ -204,4 +204,18 @@ Response:
 }
 ```
 
+Description: This endpoint revokes/invalidates the user's Refresh token, preventing the token from being used to refresh a session.
+
+**DELETE** Request Body:
+
+```json
+{}
+```
+
+Response:
+
+```
+204 (No Content)
+```
+
 ---

@@ -51,13 +51,11 @@ export const registrationOptionsHandler = async function (request, reply) {
     const hashpwd = await createHash(fingerprint);
 
     //build email
-    const generatedUniqueEmail = `placeholder+${Math.random()
-      .toString(36)
-      .substring(8)}@example.com`;
+    const generatedUniqueEmail = `placeholder+${Math.random().toString(36).substring(8)}@example.com`;
 
     //create user
     const registerStmt = this.db.prepare(
-      "INSERT INTO users (uuid, name, email, password, challenge, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, jwt_id, created_at, updated_at;",
+      "INSERT INTO users (uuid, name, email, password, challenge, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, jwt_id, created_at, updated_at;"
     );
     const userObj = registerStmt.get(
       userUUID,
@@ -66,7 +64,7 @@ export const registrationOptionsHandler = async function (request, reply) {
       hashpwd,
       generatedOptions.challenge,
       "0",
-      jwtid,
+      jwtid
     );
     //send the reply
     return generatedOptions;

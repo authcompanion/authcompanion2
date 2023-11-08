@@ -63,11 +63,7 @@ export const authenticateWebAdminRequest = async function (request, reply) {
 
     // Validate the adminAccessToken token and get its payload
     const fingerPrint = cookies["Fgp"];
-    const payload = await validateJWT(
-      cookies.adminAccessToken,
-      this.key,
-      fingerPrint,
-    );
+    const payload = await validateJWT(cookies.adminAccessToken, this.key, fingerPrint);
 
     // Check if the payload contains the admin scope
     if (!payload.scope.includes("admin")) {

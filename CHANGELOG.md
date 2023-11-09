@@ -1,3 +1,15 @@
+# [3.0.0-beta.21](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.20...3.0.0-beta.21) (2023-11-09)
+
+This release of AuthCompanion has two new configuration options including REGISTRATION_ORIGIN to redirect a user to a URL after registration and SAMESITE to declare if your cookie should be restricted to a first-party or same-site context. 
+
+Also, we introduce on the /refresh endpoint the ability to invalidate the user's refresh_token as a part of logging a user out. 
+
+### Features
+
+* new configuration options ([#19](https://github.com/authcompanion/authcompanion2/issues/19)) ([3e07d84](https://github.com/authcompanion/authcompanion2/commit/3e07d84e513b69a217162421b8650b20020b7b03))
+
+
+
 # [3.0.0-beta.20](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.19...3.0.0-beta.20) (2023-10-29)
 
 

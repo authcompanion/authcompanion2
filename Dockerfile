@@ -1,7 +1,7 @@
 FROM node:18-slim as builder
 
 LABEL org.opencontainers.image.title="AuthCompanion"
-LABEL org.opencontainers.image.version="3.0.0-beta.20"
+LABEL org.opencontainers.image.version="3.0.0-beta.21"
 LABEL org.opencontainers.image.description="An admin-friendly, User Management Server (with Passkeys & JWTs) - for seamless and secure integration of user authentication"
 LABEL org.opencontainers.image.authors="Paul Fischer"
 LABEL org.opencontainers.image.source=https://github.com/authcompanion/authcompanion2

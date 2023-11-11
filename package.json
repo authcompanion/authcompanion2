@@ -16,23 +16,23 @@
   "license": "Big Time Public License",
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
-    "@simplewebauthn/server": "^8.3.2",
-    "argon2": "^0.31.1",
-    "better-sqlite3": "^8.7.0",
+    "@simplewebauthn/server": "^8.3.5",
+    "argon2": "^0.31.2",
+    "better-sqlite3": "^9.1.1",
     "compadre": "^3.2.0",
-    "cookie": "^0.5.0",
+    "cookie": "^0.6.0",
     "dotenv": "^16.3.1",
     "emailjs": "^4.0.3",
     "fastify": "^4.24.3",
     "fastify-plugin": "^4.5.1",
-    "jose": "^4.15.4"
+    "jose": "^5.1.0"
   },
   "devDependencies": {
-    "@tailwindcss/forms": "^0.5.6",
+    "@tailwindcss/forms": "^0.5.7",
     "ava": "^5.3.1",
-    "conventional-changelog-cli": "^3.0.0",
+    "conventional-changelog-cli": "^4.1.0",
     "prettier": "^3.0.3",
-    "tailwindcss": "^3.3.3"
+    "tailwindcss": "^3.3.5"
   },
   "engines": {
     "node": ">=18.16",

@@ -1,4 +1,4 @@
-import { verifyValueWithHash } from "../../../utils/credential.js";
+import { verifyValueWithHash, secureCookie } from "../../../utils/credential.js";
 import { makeAdminToken, makeAdminRefreshtoken } from "../../../utils/jwt.js";
 import config from "../../../config.js";
 
@@ -52,6 +52,11 @@ export const loginHandler = async function (request, reply) {
     expireDate.setTime(expireDate.getTime() + 7 * 24 * 60 * 60 * 1000); // TODO: Make configurable now, set to 7 days
 
     reply.headers({
+      "set-cookie": [
+        `adminDashboardAccessToken=${adminAccessToken.token}; Path=/; Expires=${expireDate}; SameSite=${
+          config.SAMESITE
+        }; HttpOnly; ${secureCookie()}`,
+      ],
       "x-authc-app-origin": config.ADMINORIGIN,
     });
 

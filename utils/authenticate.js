@@ -56,14 +56,13 @@ export const authenticateWebAdminRequest = async function (request, reply) {
     const cookies = parse(request.headers.cookie);
 
     // Check if adminAccessToken token exists in the cookies
-    if (!cookies.adminAccessToken) {
+    if (!cookies.adminDashboardAccessToken) {
       reply.redirect("/v1/admin/login");
       throw { statusCode: "401", message: "Unauthorized, Please Login" };
     }
 
     // Validate the adminAccessToken token and get its payload
-    const fingerPrint = cookies["Fgp"];
-    const payload = await validateJWT(cookies.adminAccessToken, this.key, fingerPrint);
+    const payload = await validateJWT(cookies.adminDashboardAccessToken, this.key);
 
     // Check if the payload contains the admin scope
     if (!payload.scope.includes("admin")) {

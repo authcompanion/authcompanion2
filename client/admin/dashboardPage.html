@@ -641,10 +641,9 @@
             try {
               // GET request to our logout endpoint /v1/admin/logout
               let response = await fetch(`/v1/admin/logout`, {
-                method: "GET",
+                method: "DELETE",
                 headers: {
                   "Content-type": "application/json",
-                  Authorization: `Bearer ${token}`,
                 },
               });
               // if the response is not ok, throw an error

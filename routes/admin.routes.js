@@ -17,6 +17,8 @@ import { loginSchema } from "../services/admin/users/schema/loginSchema.js";
 import { tokenRefreshHandler, tokenRefreshDeleteHandler } from "../services/admin/users/refresh.js";
 import { refreshSchema } from "../services/admin/users/schema/refreshSchema.js";
 
+import { logoutHandler } from "../services/admin/users/logout.js";
+
 import { authenticateAdminRequest, authenticateWebAdminRequest } from "../utils/authenticate.js";
 
 const adminRoutes = async function (fastify, options) {
@@ -28,6 +30,7 @@ const adminRoutes = async function (fastify, options) {
   fastify.post("/login", loginSchema, loginHandler);
   fastify.post("/refresh", refreshSchema, tokenRefreshHandler);
   fastify.delete("/refresh", refreshSchema, tokenRefreshDeleteHandler);
+  fastify.delete("/logout", logoutHandler);
 
   //admin web user interface routes
   fastify.get("/dashboard", { onRequest: [authenticateWebAdminRequest] }, (request, reply) => {

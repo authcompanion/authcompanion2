@@ -12,6 +12,6 @@
   "author": "Paul Fischer",
   "license": "MIT",
   "devDependencies": {
-    "vitepress": "1.0.0-rc.23"
+    "vitepress": "1.0.0-rc.30"
   }
 }

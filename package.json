@@ -25,13 +25,13 @@
     "emailjs": "^4.0.3",
     "fastify": "^4.24.3",
     "fastify-plugin": "^4.5.1",
-    "jose": "^5.1.0"
+    "jose": "^5.1.1"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
     "ava": "^5.3.1",
     "conventional-changelog-cli": "^4.1.0",
-    "prettier": "^3.0.3",
+    "prettier": "^3.1.0",
     "tailwindcss": "^3.3.5"
   },
   "engines": {

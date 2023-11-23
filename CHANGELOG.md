@@ -1,3 +1,18 @@
+# [3.0.0-beta.22](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.21...3.0.0-beta.22) (2023-11-23)
+
+
+### Bug Fixes
+
+* correct admin unsuccessful login to dashboard ([beede9f](https://github.com/authcompanion/authcompanion2/commit/beede9f92c5509026318a49db4b358368bfb8ea7))
+
+
+### Features
+
+* add arm64v8/node dockerfile ([49542d9](https://github.com/authcompanion/authcompanion2/commit/49542d972d6eef803ac8ea31377f2f86db6a81da))
+* **admin:** enable dashboard logout ([c08bd5e](https://github.com/authcompanion/authcompanion2/commit/c08bd5e12ede288ba47f7667055b8d23ef92cb7a))
+
+
+
 # [3.0.0-beta.21](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.20...3.0.0-beta.21) (2023-11-09)
 
 This release of AuthCompanion has two new configuration options including REGISTRATION_ORIGIN to redirect a user to a URL after registration and SAMESITE to declare if your cookie should be restricted to a first-party or same-site context. 

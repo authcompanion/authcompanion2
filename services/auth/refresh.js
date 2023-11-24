@@ -1,7 +1,7 @@
 import { makeAccesstoken, makeRefreshtoken, validateJWT } from "../../utils/jwt.js";
 import config from "../../config.js";
 import { parse } from "cookie";
-import { secureCookie } from "../../utils/credential.js";
+import { refreshCookie, fgpCookie } from "../../utils/cookies.js";
 
 export const tokenRefreshHandler = async function (request, reply) {
   try {

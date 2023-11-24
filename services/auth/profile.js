@@ -1,6 +1,7 @@
-import { createHash, secureCookie } from "../../utils/credential.js";
+import { createHash } from "../../utils/credential.js";
 import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import config from "../../config.js";
+import { refreshCookie, fgpCookie } from "../../utils/cookies.js";
 
 export const userProfileHandler = async function (request, reply) {
   try {

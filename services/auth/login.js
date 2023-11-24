@@ -1,5 +1,6 @@
-import { verifyValueWithHash, secureCookie } from "../../utils/credential.js";
+import { verifyValueWithHash } from "../../utils/credential.js";
 import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
+import { refreshCookie, fgpCookie } from "../../utils/cookies.js";
 import config from "../../config.js";
 
 export const loginHandler = async function (request, reply) {

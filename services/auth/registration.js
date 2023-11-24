@@ -3,6 +3,7 @@ import { randomUUID } from "crypto";
 import { createId } from "@paralleldrive/cuid2";
 import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import config from "../../config.js";
+import { refreshCookie, fgpCookie } from "../../utils/cookies.js";
 
 export const registrationHandler = async function (request, reply) {
   try {
@@ -53,14 +54,7 @@ export const registrationHandler = async function (request, reply) {
     expireDate.setTime(expireDate.getTime() + 7 * 24 * 60 * 60 * 1000); // TODO: Make configurable now, set to 7 days
 
     reply.headers({
-      "set-cookie": [
-        `userRefreshToken=${
-          userRefreshToken.token
-        }; Path=/; Expires=${expireDate}; SameSite=None; HttpOnly; ${secureCookie()}`,
-        `Fgp=${userAccessToken.userFingerprint}; Path=/; Max-Age=3600; SameSite=${
-          config.SAMESITE
-        }; HttpOnly; ${secureCookie()}`,
-      ],
+      "set-cookie": [refreshCookie(userRefreshToken.token), fgpCookie(userAccessToken.userFingerprint)],
       "x-authc-app-origin": config.REGISTRATIONORIGIN,
     });
 

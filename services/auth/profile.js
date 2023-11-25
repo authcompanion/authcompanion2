@@ -1,6 +1,7 @@
-import { createHash, secureCookie } from "../../utils/credential.js";
+import { createHash } from "../../utils/credential.js";
 import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import config from "../../config.js";
+import { refreshCookie, fgpCookie } from "../../utils/cookies.js";
 
 export const userProfileHandler = async function (request, reply) {
   try {
@@ -50,18 +51,9 @@ export const userProfileHandler = async function (request, reply) {
       access_token: userAccessToken.token,
       access_token_expiry: userAccessToken.expiration,
     };
-    const expireDate = new Date();
-    expireDate.setTime(expireDate.getTime() + 7 * 24 * 60 * 60 * 1000); // TODO: Make configurable now, set to 7 days
 
     reply.headers({
-      "set-cookie": [
-        `userRefreshToken=${userRefreshToken.token}; Path=/; Expires=${expireDate}; SameSite=${
-          config.SAMESITE
-        }; HttpOnly; ${secureCookie()}`,
-        `Fgp=${userAccessToken.userFingerprint}; Path=/; Max-Age=3600; SameSite=${
-          config.SAMESITE
-        }; HttpOnly; ${secureCookie()}`,
-      ],
+      "set-cookie": [refreshCookie(userRefreshToken.token), fgpCookie(userAccessToken.userFingerprint)],
       "x-authc-app-origin": config.APPLICATIONORIGIN,
     });
 

@@ -200,12 +200,12 @@
                 </div>
               </a>
               <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                <a href="#" class="dropdown-item">Status</a>
+                <!-- <a href="#" class="dropdown-item">Status</a>
                 <a href="./profile.html" class="dropdown-item">Profile</a>
                 <a href="#" class="dropdown-item">Feedback</a>
                 <div class="dropdown-divider"></div>
-                <a href="./settings.html" class="dropdown-item">Settings</a>
-                <a href="./sign-in.html" class="dropdown-item">Logout</a>
+                <a href="./settings.html" class="dropdown-item">Settings</a> -->
+                <a href="" class="dropdown-item" @click="logout()">Logout</a>
               </div>
             </div>
           </div>
@@ -430,7 +430,10 @@
                     >
                   </li>
                   <li class="list-inline-item">
-                    <a href="https://docs.authcompanion.com/guide/licenseoverview.html" class="link-secondary"
+                    <a
+                      href="https://docs.authcompanion.com/guide/licenseoverview.html"
+                      target="_blank"
+                      class="link-secondary"
                       >License</a
                     >
                   </li>
@@ -470,7 +473,7 @@
                 <ul class="mb-0 list-inline list-inline-dots">
                   <li class="list-inline-item">
                     Copyright &copy; 2023
-                    <a href="." class="link-secondary">AuthCompanion</a>. All rights reserved.
+                    <a href="" class="link-secondary">AuthCompanion</a>. All rights reserved.
                   </li>
                   <li class="list-inline-item">
                     <a

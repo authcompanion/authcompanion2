@@ -500,89 +500,92 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <div v-if="showEditPanel" class="mb-3">
-              <label class="form-label">ID</label>
-              <input
-                type="text"
-                class="form-control"
-                placeholder=""
-                :value="showEditPanel ? selectedUser.id : ''"
-                disabled
-                readonly
-              />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Name</label>
-              <input
-                @input="event => userRecord.data.attributes.name = event.target.value"
-                type="text"
-                class="form-control"
-                placeholder="Your User's Name"
-                :value="showEditPanel ? selectedUser.attributes.name : ''"
-              />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Email</label>
-              <input
-                @input="event => userRecord.data.attributes.email = event.target.value"
-                type="text"
-                class="form-control"
-                placeholder="Your User's Email"
-                :value="showEditPanel ? selectedUser.attributes.email : ''"
-              />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Password</label>
-              <input
-                @input="event => userRecord.data.attributes.password = event.target.value"
-                type="password"
-                class="form-control"
-                placeholder="Your User's Password"
-              />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Confirm Password</label>
-              <input
-                value=""
-                @input="event => confirmPassword = event.target.value"
-                type="password"
-                class="form-control"
-                placeholder="Confirm Password"
-              />
-            </div>
-            <div class="mb-3">
-              <div class="form-label">Status</div>
-              <select
-                class="form-select"
-                @input="event => userRecord.data.attributes.active = event.target.value"
-                :value="showEditPanel ? selectedUser.attributes.active : ''"
-              >
-                <option value="1">Activated</option>
-                <option value="0">Deactivated</option>
-              </select>
-            </div>
-            <div v-if="showEditPanel" class="mb-3">
-              <label class="form-label">Created At</label>
-              <input
-                type="text"
-                class="form-control"
-                placeholder=""
-                :value="selectedUser.attributes.created"
-                disabled
-                readonly
-              />
-            </div>
-            <div v-if="showEditPanel" class="mb-3">
-              <label class="form-label">Updated At</label>
-              <input
-                type="text"
-                class="form-control"
-                placeholder=""
-                :value="selectedUser.attributes.updated"
-                disabled
-                readonly
-              />
-            </div>
+            <form ref="refForm">
+              <div v-if="showEditPanel" class="mb-3">
+                <label class="form-label">ID</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder=""
+                  :value="showEditPanel ? selectedUser.id : ''"
+                  disabled
+                  readonly
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input
+                  @input="event => userRecord.data.attributes.name = event.target.value"
+                  type="text"
+                  class="form-control"
+                  placeholder="Your User's Name"
+                  :value="showEditPanel ? selectedUser.attributes.name : ''"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input
+                  @input="event => userRecord.data.attributes.email = event.target.value"
+                  type="text"
+                  class="form-control"
+                  placeholder="Your User's Email"
+                  :value="showEditPanel ? selectedUser.attributes.email : ''"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input
+                  @input="event => userRecord.data.attributes.password = event.target.value"
+                  type="password"
+                  class="form-control"
+                  placeholder="Your User's Password"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Confirm Password</label>
+                <input
+                  value=""
+                  @input="event => confirmPassword = event.target.value"
+                  type="password"
+                  class="form-control"
+                  placeholder="Confirm Password"
+                />
+              </div>
+              <div class="mb-3">
+                <div class="form-label">Status</div>
+                <select
+                  class="form-select"
+                  @input="event => userRecord.data.attributes.active = event.target.value"
+                  :value="showEditPanel ? selectedUser.attributes.active : ''"
+                >
+                  <option selected>Choose Status</option>
+                  <option value="1">Activated</option>
+                  <option value="0">Deactivated</option>
+                </select>
+              </div>
+              <div v-if="showEditPanel" class="mb-3">
+                <label class="form-label">Created At</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder=""
+                  :value="selectedUser.attributes.created"
+                  disabled
+                  readonly
+                />
+              </div>
+              <div v-if="showEditPanel" class="mb-3">
+                <label class="form-label">Updated At</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder=""
+                  :value="selectedUser.attributes.updated"
+                  disabled
+                  readonly
+                />
+              </div>
+            </form>
           </div>
 
           <div class="modal-footer">
@@ -667,6 +670,12 @@
           // Variable to store the page number of the data table
           const pageNumber = ref("1");
 
+          // Function to reset forms, if values were left, for a good user experience
+          const refForm = ref(null);
+          const resetForm = () => {
+            refForm.value.reset();
+          };
+
           // Function to accept a message and show the notification, then call the dismissNotification function
           const showNotificationMessage = (message) => {
             // set the notification message to the message passed in the function
@@ -683,6 +692,9 @@
 
           // Function to toggle the edit panel and populate the form with the user data
           const toggleEditPanel = (user) => {
+            // rest the form
+            resetForm();
+
             // set the selected user to the user passed in the function
             selectedUser.value = user;
             // toggle the edit panel
@@ -691,6 +703,9 @@
 
           // Function to toggle the create modal
           const toggleCreatePanel = () => {
+            // rest the form
+            resetForm();
+
             // toggle the edit panel
             showEditPanel.value = false;
 
@@ -961,6 +976,7 @@
             previousPage,
             nextPage,
             redirect,
+            refForm,
           };
         },
       }).mount("#app");

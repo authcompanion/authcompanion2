@@ -1,572 +1,639 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/v1/web/styles/main.css" />
-    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Admin Dashboard</title>
+    <!-- CSS files -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/tabler.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/demo.min.css" />
+
     <style>
-      html {
-        font-family: "Inter var", sans-serif;
+      @import url("https://rsms.me/inter/inter.css");
+      :root {
+        --tblr-font-sans-serif: "Inter Var", -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto,
+          Helvetica Neue, sans-serif;
+      }
+      body {
+        font-feature-settings: "cv03", "cv04", "cv11";
       }
       [v-cloak] {
         display: none;
       }
     </style>
-
-    <title>Admin</title>
   </head>
   <body id="app">
-    <div class="flex flex-row">
-      <div class="">
-        <!-- Left Nav -->
-        <div class="flex flex-col justify-between w-16 h-screen bg-gray-100 border-e">
-          <div>
-            <div class="inline-flex items-center justify-center w-16 h-16 cursor-pointer">
-              <span class="grid w-12 h-12 text-xs font-semibold text-white bg-gray-900 rounded-lg place-content-center">
-                Admin
-              </span>
-            </div>
-
-            <div class="border-t border-gray-200">
-              <div class="px-2">
-                <div class="py-4">
-                  <a href="" class="t group relative flex justify-center rounded bg-blue-50 px-2 py-1.5 text-blue-700">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="w-6 h-6"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0112 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125M13.125 12h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125M20.625 12c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5M12 14.625v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 14.625c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m0 1.5v-1.5m0 0c0-.621.504-1.125 1.125-1.125m0 0h7.5"
-                      />
-                    </svg>
-
-                    <span
-                      class="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white opacity-0 group-hover:opacity-100"
-                    >
-                      Users
-                    </span>
-                  </a>
-                </div>
-
-                <!-- section break -->
-                <ul class="pt-4 space-y-1 border-t border-gray-200"></ul>
-              </div>
-            </div>
-          </div>
-
-          <div class="sticky inset-x-0 bottom-0 p-2 bg-gray-100 border-t border-gray-100">
-            <form>
-              <button
-                type="submit"
-                class="group relative flex w-full justify-center rounded-lg px-2 py-1.5 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-                @click="logout()"
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/js/demo-theme.js"></script>
+    <div class="page">
+      <!-- Navbar -->
+      <header class="navbar navbar-expand-md d-print-none">
+        <div class="container-xl">
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbar-menu"
+            aria-controls="navbar-menu"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
+            <a href="">
+              AuthCompanion
+              <!-- <img src="./static/logo.svg" width="110" height="32" alt="Tabler" class="navbar-brand-image"> -->
+            </a>
+          </h1>
+          <div class="flex-row navbar-nav order-md-last">
+            <div class="d-none d-md-flex">
+              <a
+                href="?theme=dark"
+                class="px-0 nav-link hide-theme-dark"
+                title="Enable dark mode"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
               >
+                <!-- Download SVG icon from http://tabler-icons.io/i/moon -->
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="w-6 h-6"
-                  fill="none"
+                  class="icon"
+                  width="24"
+                  height="24"
                   viewBox="0 0 24 24"
-                  stroke="currentColor"
                   stroke-width="2"
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
                 >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+                </svg>
+              </a>
+              <a
+                href="?theme=light"
+                class="px-0 nav-link hide-theme-light"
+                title="Enable light mode"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+              >
+                <!-- Download SVG icon from http://tabler-icons.io/i/sun -->
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="icon"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                    d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"
                   />
                 </svg>
-
-                <span
-                  class="absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white opacity-0 group-hover:opacity-100"
+              </a>
+              <div class="nav-item dropdown d-none d-md-flex me-3">
+                <a
+                  href="#"
+                  class="px-0 nav-link"
+                  data-bs-toggle="dropdown"
+                  tabindex="-1"
+                  aria-label="Show notifications"
                 >
-                  Logout
-                </span>
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-      <div class="">
-        <header>
-          <div class="max-w-screen-xl px-4 pt-8 mx-auto sm:px-6 sm:pt-8 lg:px-8">
-            <div class="sm:flex sm:items-center sm:justify-between">
-              <div class="text-center sm:text-left">
-                <h1 class="text-2xl font-bold text-gray-900 sm:text-3xl">Admin Panel</h1>
-
-                <p class="mt-1.5 text-sm text-gray-500">Manage and oversee your application's user accounts</p>
-              </div>
-              <div class="flex flex-col gap-4 mt-4 sm:mt-0 sm:flex-row sm:items-center">
-                <button
-                  class="inline-flex items-center justify-center gap-1.5 rounded-lg border border-gray-200 px-5 py-3 text-gray-500 transition hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring"
-                  type="button"
-                  @click="redirect"
-                >
-                  <span class="text-sm font-medium"> View Auth Site</span>
-
+                  <!-- Download SVG icon from http://tabler-icons.io/i/bell -->
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="w-4 h-4"
+                    class="icon"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
+                    <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
+                  </svg>
+                  <!-- <span class="badge bg-red"></span> -->
+                </a>
+                <!-- <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-end dropdown-menu-card">
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="card-title">Last updates</h3>
+                    </div>
+                    <div class="list-group list-group-flush list-group-hoverable">
+                      <div class="list-group-item">
+                        <div class="row align-items-center">
+                          <div class="col-auto">
+                            <span class="status-dot d-block"></span>
+                          </div>
+                          <div class="col text-truncate">
+                            <a href="#" class="text-body d-block">Welcome!</a>
+                            <div class="d-block text-muted text-truncate mt-n1">
+                              All set for now, if you need any help reach out!
+                            </div>
+                          </div>
+                          <div class="col-auto">
+                            <a href="#" class="list-group-item-actions">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="icon text-muted"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                stroke-width="2"
+                                stroke="currentColor"
+                                fill="none"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              >
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path
+                                  d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"
+                                />
+                              </svg>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+            <div class="nav-item dropdown">
+              <a
+                href="#"
+                class="p-0 nav-link d-flex lh-1 text-reset"
+                data-bs-toggle="dropdown"
+                aria-label="Open user menu"
+              >
+                <span class="text-white avatar avatar-sm bg-dark"
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
+                    stroke-width="1.5"
                     stroke="currentColor"
-                    stroke-width="2"
+                    class="w-3 h-3"
                   >
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
                     />
                   </svg>
-                </button>
-
-                <button
-                  class="block px-5 py-3 text-sm font-medium text-white transition bg-gray-800 rounded-lg hover:bg-gray-900 focus:outline-none focus:ring"
-                  type="button"
-                  @click="toggleCreatePanel()"
-                >
-                  Create User
-                </button>
+                </span>
+                <div class="d-none d-xl-block ps-2">
+                  <div>Paul Fish</div>
+                  <div class="mt-1 small text-muted">Admin</div>
+                </div>
+              </a>
+              <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <a href="#" class="dropdown-item">Status</a>
+                <a href="./profile.html" class="dropdown-item">Profile</a>
+                <a href="#" class="dropdown-item">Feedback</a>
+                <div class="dropdown-divider"></div>
+                <a href="./settings.html" class="dropdown-item">Settings</a>
+                <a href="./sign-in.html" class="dropdown-item">Logout</a>
               </div>
             </div>
-            <div class="flex flex-row justify-between pt-8 max-w-7xl place-items-center">
-              <div class="w-1/4">
-                <div>
-                  <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
-                  <div class="relative">
-                    <input
-                      type="search"
-                      id="default-search"
-                      class="block w-full p-4 pl-5 pr-12 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Search Email"
-                      v-model="searchValue"
-                      @keyup.enter="searchUser()"
-                      @input="handleSearchInputChange()"
-                    />
-                    <button
-                      type="button"
-                      @click="searchUser(10)"
-                      class="absolute inset-y-0 right-0 flex items-center px-3 rounded hover:bg-gray-200"
-                    >
+          </div>
+          <div class="collapse navbar-collapse" id="navbar-menu">
+            <div class="d-flex flex-column flex-md-row flex-fill align-items-stretch align-items-md-center">
+              <ul class="navbar-nav">
+                <li class="nav-item active">
+                  <a class="nav-link" href="/v1/admin/dashboard">
+                    <span class="nav-link-icon d-md-none d-lg-inline-block"
+                      ><!-- Download SVG icon from http://tabler-icons.io/i/home -->
                       <svg
-                        aria-hidden="true"
-                        class="w-5 h-5 text-gray-800 cursor-pointer"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg"
+                        class="icon"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        stroke-width="2"
+                        stroke="currentColor"
+                        fill="none"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
                       >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                        ></path>
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
+                        <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+                        <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
                       </svg>
-                    </button>
-                  </div>
+                    </span>
+                    <span class="nav-link-title"> Home </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div class="page-wrapper">
+        <!-- Page header -->
+        <div class="page-header d-print-none">
+          <div class="container-xl">
+            <div class="row g-2 align-items-center">
+              <div class="col">
+                <!-- Page pre-title -->
+                <div class="page-pretitle">Admin Dashboard</div>
+                <h2 class="page-title">User Management</h2>
+              </div>
+              <!-- Page title actions -->
+              <div class="col-auto ms-auto d-print-none">
+                <div class="btn-list">
+                  <a
+                    href="#"
+                    class="btn btn-primary d-none d-sm-inline-block"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modal-user"
+                    @click="toggleCreatePanel()"
+                  >
+                    <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="icon"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      stroke-width="2"
+                      stroke="currentColor"
+                      fill="none"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M12 5l0 14" />
+                      <path d="M5 12l14 0" />
+                    </svg>
+                    Create user
+                  </a>
                 </div>
               </div>
             </div>
           </div>
-        </header>
-        <main>
-          <div class="py-6 mx-auto max-w-fit sm:px-6 lg:px-8">
-            <div class="flex flex-col">
-              <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                  <div class="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
-                    <table class="min-w-full divide-y divide-gray-200">
-                      <thead class="bg-gray-100">
+        </div>
+        <!-- Page body -->
+        <div class="page-body">
+          <div class="container-xl">
+            <div class="row row-deck row-cards">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Accounts</h3>
+                  </div>
+                  <div class="py-3 card-body border-bottom">
+                    <div class="d-flex">
+                      <div class="text-muted">
+                        Show
+                        <div class="mx-2 d-inline-block">
+                          <select
+                            v-model="pageSize"
+                            @change="handlePageSizeInputChange()"
+                            class="form-select form-select-sm"
+                          >
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                          </select>
+                        </div>
+                        entries
+                      </div>
+                      <div class="ms-auto text-muted">
+                        Search:
+                        <div class="ms-2 d-inline-block">
+                          <input
+                            placeholder="User Email"
+                            v-model="searchValue"
+                            @keyup.enter="searchUser()"
+                            @input="handleSearchInputChange()"
+                            type="text"
+                            class="form-control form-control-sm"
+                            aria-label="Search users"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-cloak class="table-responsive">
+                    <table class="table table-vcenter card-table table-striped">
+                      <thead>
                         <tr>
-                          <th
-                            scope="col"
-                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-                          >
-                            ID
-                          </th>
-                          <th
-                            scope="col"
-                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-                          >
-                            Name
-                          </th>
-                          <th
-                            scope="col"
-                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-                          >
-                            Email
-                          </th>
-                          <th
-                            scope="col"
-                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-                          >
-                            Active
-                          </th>
-                          <th
-                            scope="col"
-                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-                          >
-                            Created At
-                          </th>
-                          <th
-                            scope="col"
-                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-                          >
-                            Updated At
-                          </th>
-                          <th
-                            scope="col"
-                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
-                          >
-                            Action
-                          </th>
+                          <th>ID</th>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Status</th>
+                          <th>Created At</th>
+                          <th>Updated At</th>
 
-                          <th scope="col" class="relative px-6 py-3">
-                            <span class="sr-only">Edit</span>
-                          </th>
+                          <th class="w-1"></th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr
-                          v-for="(user, index) in users.data"
-                          class="cursor-pointer hover:bg-gray-100"
-                          :class="index % 2 ? 'bg-gray-50' : 'bg-white'"
-                          @click="toggleEditPanel(user)"
-                        >
-                          <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">{{ user.id }}</td>
-                          <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ user.attributes.name }}</td>
-                          <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ user.attributes.email }}</td>
-                          <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                            <span
-                              :class="[
-                              'inline-flex', 'items-center', 'rounded-full', 'px-3', 'py-0.5', 'text-sm', 'font-medium',
-                              user.attributes.active ? 'text-green-800 bg-green-100' : 'text-red-800 bg-red-100'
-                            ]"
-                            >
-                              {{ user.attributes.active == 1 ? 'Active (1)' : 'Inactive (0)' }}
-                            </span>
-                          </td>
-                          <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                            {{ user.attributes.created }}
-                          </td>
-                          <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                            {{ user.attributes.updated }}
-                          </td>
-                          <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                            <a href="#" class="underline text-sky-800 hover:text-sky-900" @click="toggleEditPanel(user)"
+                        <tr v-for="(user, index) in users.data">
+                          <td class="">{{ user.id }}</td>
+                          <td class="text-muted">{{ user.attributes.name }}</td>
+                          <td class="text-muted">{{ user.attributes.email }}</td>
+                          <td class="text-muted">{{ user.attributes.active == 1 ? 'Activated' : 'Deactivated' }}</td>
+                          <td class="text-muted">{{ user.attributes.created }}</td>
+                          <td class="text-muted">{{ user.attributes.updated }}</td>
+                          <td class="text-muted">
+                            <a
+                              data-bs-toggle="modal"
+                              data-bs-target="#modal-user"
+                              href="#"
+                              class=""
+                              @click="toggleEditPanel(user)"
                               >Edit</a
                             >
-                            <a
-                              href="#"
-                              class="ml-2 underline text-sky-800 hover:text-sky-900"
-                              @click.stop="deleteUserRecord(user.id)"
-                              >Delete</a
-                            >
+                            <a href="#" class="mx-2" @click.stop="deleteUserRecord(user.id)">Delete</a>
                           </td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- /End replace -->
-          <!-- Start of Modify Entry Slide-in -->
-          <Transition
-            un-cloak
-            enter-from-class="opacity-0"
-            enter-active-class="duration-100 ease-in-out"
-            enter-to-class="opacity-100"
-            leave-from-class="opacity-100"
-            leave-active-class="duration-200 ease-in-out"
-            leave-to-class="opacity-0"
-          >
-            <div
-              class="relative z-10"
-              aria-labelledby="slide-over-title"
-              role="dialog"
-              aria-modal="true"
-              v-if="showEditPanel"
-            >
-              <!-- Background backdrop, show/hide based on slide-over state. -->
-              <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"></div>
-              <div class="fixed inset-0 overflow-hidden">
-                <div class="absolute inset-0 overflow-hidden">
-                  <div class="fixed inset-y-0 right-0 flex max-w-full pl-10 pointer-events-none">
-                    <div class="w-screen max-w-md pointer-events-auto">
-                      <div class="flex flex-col h-full bg-white divide-y divide-gray-200 shadow-xl">
-                        <div class="flex flex-col flex-1 min-h-0 py-6 overflow-y-scroll">
-                          <div class="px-4 sm:px-6">
-                            <div class="flex items-start justify-between">
-                              <h2 class="text-lg font-medium text-gray-900" id="slide-over-title">Details</h2>
-                              <div class="flex items-center ml-3 h-7">
-                                <button
-                                  @click="showEditPanel = !showEditPanel"
-                                  type="button"
-                                  class="text-gray-400 bg-white rounded-md hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-grey-500"
-                                >
-                                  <span class="sr-only">Close panel</span>
-                                  <!-- Heroicon name: outline/x-mark -->
-                                  <svg
-                                    class="w-6 h-6"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke-width="1.5"
-                                    stroke="currentColor"
-                                    aria-hidden="true"
-                                  >
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                  </svg>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="relative flex-1 px-4 mt-6 sm:px-6">
-                            <!-- Replace with your content -->
-                            <div class="h-full" aria-hidden="true">
-                              <form>
-                                <!-- div containing the user's id -->
-                                <div v-if="!showCreateMenu" class="mt-3">
-                                  <span class="font-medium text-gray-700">ID</span>
-                                  <input
-                                    disabled
-                                    type="text"
-                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none focus:bg-white"
-                                    :value="selectedUser.id"
-                                  />
-                                </div>
-                                <!-- div containing the user's name -->
-                                <div class="mt-3">
-                                  <span class="font-medium text-gray-700">Name</span>
-                                  <input
-                                    type="text"
-                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
-                                    :value="showCreateMenu ? '' : selectedUser.attributes.name"
-                                    @input="event => userRecord.data.attributes.name = event.target.value"
-                                  />
-                                </div>
-                                <!-- div containing the user's email -->
-                                <div class="mt-3">
-                                  <span class="font-medium text-gray-700">Email</span>
-                                  <input
-                                    type="email"
-                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
-                                    :value="showCreateMenu ? '' : selectedUser.attributes.email"
-                                    @input="event => userRecord.data.attributes.email = event.target.value"
-                                  />
-                                </div>
-                                <!-- div containing the user's password -->
-                                <div class="mt-3">
-                                  <span class="font-medium text-gray-700">New Password</span>
-                                  <input
-                                    type="password"
-                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
-                                    @input="event => userRecord.data.attributes.password = event.target.value"
-                                  />
-                                </div>
-                                <!-- div containing the user's password -->
-                                <div v-if="showCreateMenu" class="mt-3">
-                                  <span class="font-medium text-gray-700">Confirm Password</span>
-                                  <input
-                                    type="password"
-                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
-                                    @input="event => confirmPassword = event.target.value"
-                                  />
-                                </div>
-                                <!-- div containing the user's active status -->
-                                <div class="mt-3">
-                                  <span class="font-medium text-gray-700">Active</span>
-                                  <input
-                                    type="number"
-                                    min="0"
-                                    max="1"
-                                    placeholder="1"
-                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md focus:bg-white"
-                                    :value="showCreateMenu ? '' : selectedUser.attributes.active"
-                                    @input="event => userRecord.data.attributes.active = event.target.value"
-                                  />
-                                </div>
-                                <!-- div containing the user's created date -->
-                                <div v-if="!showCreateMenu" class="mt-3">
-                                  <span class="font-medium text-gray-700">Created At</span>
-                                  <input
-                                    disabled
-                                    type="text"
-                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none focus:bg-white"
-                                    :value="showCreateMenu ? '' : selectedUser.attributes.created"
-                                  />
-                                </div>
-                                <!-- div containing the user's updated at date -->
-                                <div v-if="!showCreateMenu" class="mt-3">
-                                  <span class="font-medium text-gray-700">Updated At</span>
-                                  <input
-                                    disabled
-                                    type="text"
-                                    class="block w-full px-3 py-2 mt-1 text-base text-black placeholder-gray-500 bg-gray-100 border-transparent rounded-md disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none focus:bg-white"
-                                    :value="showCreateMenu ? '' : selectedUser.attributes.updated"
-                                  />
-                                </div>
-                              </form>
-                            </div>
-                            <!-- /End replace -->
-                          </div>
-                        </div>
-                        <div class="flex justify-end flex-shrink-0 px-4 py-4">
-                          <button
-                            @click="showEditPanel = !showEditPanel"
-                            type="button"
-                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-grey-500 focus:ring-offset-2"
+                  <div class="card-footer d-flex align-items-center">
+                    <p class="m-0 text-muted"></p>
+                    <ul class="m-0 pagination ms-auto">
+                      <li class="page-item">
+                        <a class="page-link" href="#" tabindex="-1" @click="previousPage">
+                          <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="icon"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            stroke-width="2"
+                            stroke="currentColor"
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
                           >
-                            Cancel
-                          </button>
-                          <button
-                            class="inline-flex justify-center px-4 py-2 ml-4 text-sm font-medium text-white bg-gray-900 border border-gray-300 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-grey-500 hover:text-white focus:ring-offset-2"
-                            @click="showCreateMenu ? createUserRecord(userRecord) : updateUserRecord(selectedUser.id, userRecord)"
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M15 6l-6 6l6 6" />
+                          </svg>
+                          prev
+                        </a>
+                      </li>
+                      <input class="w-4 mx-2 form-control form-control-sm" type="text" v-model="pageNumber" readonly />
+
+                      <li class="page-item">
+                        <a class="page-link" href="#" @click="nextPage">
+                          next
+                          <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="icon"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            stroke-width="2"
+                            stroke="currentColor"
+                            fill="none"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
                           >
-                            Save
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M9 6l6 6l-6 6" />
+                          </svg>
+                        </a>
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
             </div>
-          </Transition>
-
-          <!-- Pagination Area -->
-          <paginate class="bg-white shadow-sm">
-            <div class="flex flex-row justify-between px-5 text-sm max-w-8xl place-items-center">
-              <div class="flex flex-row ml-4">
-                <select
-                  name="pagesize"
-                  v-model="pageSize"
-                  @change="handlePageSizeInputChange()"
-                  class="w-full text-gray-700 border-gray-300 rounded-lg sm:text-sm"
-                >
-                  <option value="10">10</option>
-                  <option value="20">20</option>
-                  <option value="30">30</option>
-                </select>
-              </div>
-
-              <div class="inline-flex justify-center gap-1">
-                <a
-                  href="#"
-                  @click="previousPage"
-                  class="inline-flex items-center justify-center w-8 h-8 text-gray-900 bg-white border border-gray-100 rounded rtl:rotate-180"
-                >
-                  <span class="sr-only">Prev Page</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 20 20" fill="currentColor">
-                    <path
-                      fill-rule="evenodd"
-                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                </a>
-
-                <div>
-                  <input
-                    type="number"
-                    class="h-8 w-12 rounded border border-gray-100 bg-white p-0 text-center text-xs font-medium text-gray-900 [-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
-                    v-model="pageNumber"
-                  />
-                </div>
-
-                <a
-                  href="#"
-                  @click="nextPage"
-                  class="inline-flex items-center justify-center w-8 h-8 text-gray-900 bg-white border border-gray-100 rounded rtl:rotate-180"
-                >
-                  <span class="sr-only">Next Page</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 20 20" fill="currentColor">
-                    <path
-                      fill-rule="evenodd"
-                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </paginate>
-        </main>
-      </div>
-    </div>
-    <!-- Global notification live region, render this permanently at the end of the document -->
-    <div
-      aria-live="assertive"
-      class="fixed inset-0 z-10 flex items-end px-4 py-6 pointer-events-none sm:items-start sm:p-6"
-    >
-      <div class="flex flex-col items-center w-full space-y-4 sm:items-end">
-        <Transition
-          un-cloak
-          enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
-          enter-active-class="transition duration-300 ease-out transform"
-          enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
-          leave-from-class="opacity-100"
-          leave-active-class="transition duration-100 ease-in"
-          leave-to-class="opacity-0"
-        >
-          <div
-            v-if="showNotification"
-            class="w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-lg pointer-events-auto ring-1 ring-black ring-opacity-5"
-          >
-            <div class="p-4">
-              <div class="flex items-center">
-                <div class="flex justify-between flex-1 w-0">
-                  <p class="flex-1 w-0 text-sm font-medium text-gray-900">{{ notificationMessage }}</p>
-                </div>
-                <div class="flex flex-shrink-0 ml-2">
-                  <button
-                    @click="showNotification = !showNotification"
-                    type="button"
-                    class="inline-flex text-gray-400 bg-white rounded-md hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  >
-                    <span class="sr-only">Close</span>
-                    <!-- Heroicon name: mini/x-mark -->
-                    <svg
-                      class="w-5 h-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
+          </div>
+        </div>
+        <footer class="footer footer-transparent d-print-none">
+          <div class="container-xl">
+            <div class="flex-row-reverse text-center row align-items-center">
+              <div class="col-lg-auto ms-lg-auto">
+                <ul class="mb-0 list-inline list-inline-dots">
+                  <li class="list-inline-item">
+                    <a href="https://docs.authcompanion.com/" target="_blank" class="link-secondary" rel="noopener"
+                      >Documentation</a
                     >
-                      <path
-                        d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
-                      />
-                    </svg>
-                  </button>
-                </div>
+                  </li>
+                  <li class="list-inline-item">
+                    <a href="https://docs.authcompanion.com/guide/licenseoverview.html" class="link-secondary"
+                      >License</a
+                    >
+                  </li>
+                  <li class="list-inline-item">
+                    <a
+                      href="https://github.com/authcompanion/authcompanion2"
+                      target="_blank"
+                      class="link-secondary"
+                      rel="noopener"
+                      >Source code</a
+                    >
+                  </li>
+                  <li class="list-inline-item">
+                    <a href="https://hachyderm.io/@paulfish" target="_blank" class="link-secondary" rel="noopener">
+                      <!-- Download SVG icon from http://tabler-icons.io/i/heart -->
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="icon text-pink icon-filled icon-inline"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        stroke-width="2"
+                        stroke="currentColor"
+                        fill="none"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
+                      </svg>
+                      Made by Paul Fish
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div class="mt-3 col-12 col-lg-auto mt-lg-0">
+                <ul class="mb-0 list-inline list-inline-dots">
+                  <li class="list-inline-item">
+                    Copyright &copy; 2023
+                    <a href="." class="link-secondary">AuthCompanion</a>. All rights reserved.
+                  </li>
+                  <li class="list-inline-item">
+                    <a
+                      href="https://github.com/authcompanion/authcompanion2/blob/main/CHANGELOG.md"
+                      class="link-secondary"
+                      rel="noopener"
+                    >
+                      Changelog
+                    </a>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
-        </Transition>
+        </footer>
       </div>
     </div>
+    <!-- Modal -->
+    <div class="modal modal-blur fade" id="modal-user" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">{{ showEditPanel ? 'Update User Account' : 'New User Account' }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div v-if="showEditPanel" class="mb-3">
+              <label class="form-label">ID</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder=""
+                :value="showEditPanel ? selectedUser.id : ''"
+                disabled
+                readonly
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Name</label>
+              <input
+                @input="event => userRecord.data.attributes.name = event.target.value"
+                type="text"
+                class="form-control"
+                placeholder="Your User's Name"
+                :value="showEditPanel ? selectedUser.attributes.name : ''"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input
+                @input="event => userRecord.data.attributes.email = event.target.value"
+                type="text"
+                class="form-control"
+                placeholder="Your User's Email"
+                :value="showEditPanel ? selectedUser.attributes.email : ''"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Password</label>
+              <input
+                @input="event => userRecord.data.attributes.password = event.target.value"
+                type="password"
+                class="form-control"
+                placeholder="Your User's Password"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Confirm Password</label>
+              <input
+                value=""
+                @input="event => confirmPassword = event.target.value"
+                type="password"
+                class="form-control"
+                placeholder="Confirm Password"
+              />
+            </div>
+            <div class="mb-3">
+              <div class="form-label">Status</div>
+              <select
+                class="form-select"
+                @input="event => userRecord.data.attributes.active = event.target.value"
+                :value="showEditPanel ? selectedUser.attributes.active : ''"
+              >
+                <option value="1">Activated</option>
+                <option value="0">Deactivated</option>
+              </select>
+            </div>
+            <div v-if="showEditPanel" class="mb-3">
+              <label class="form-label">Created At</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder=""
+                :value="selectedUser.attributes.created"
+                disabled
+                readonly
+              />
+            </div>
+            <div v-if="showEditPanel" class="mb-3">
+              <label class="form-label">Updated At</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder=""
+                :value="selectedUser.attributes.updated"
+                disabled
+                readonly
+              />
+            </div>
+          </div>
 
-    <!-- Scripts -->
+          <div class="modal-footer">
+            <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal"> Cancel </a>
+            <a
+              @click="showEditPanel ? updateUserRecord(selectedUser.id, userRecord) : createUserRecord(userRecord)"
+              class="btn btn-primary ms-auto"
+              data-bs-dismiss="modal"
+            >
+              <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="icon"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M12 5l0 14" />
+                <path d="M5 12l14 0" />
+              </svg>
+              {{ showEditPanel ? 'Update User Account' : 'Create User Account' }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Tabler Core -->
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/js/tabler.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/js/demo.min.js"></script>
+    <!-- Vue JS -->
     <script type="module">
-      import { createApp, ref } from "https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.prod.js";
+      import { createApp, ref } from "https://cdn.jsdelivr.net/npm/vue@3.3.11/dist/vue.esm-browser.prod.js";
 
       createApp({
         setup() {
+          // User record to be sent to the API and populated via the form (modal)
+          const userRecord = ref({
+            data: {
+              type: "users",
+              attributes: {},
+            },
+          });
+
           // Get the user's jwt token from the local storage and store it in a variable
           const token = localStorage.getItem("ACCESS_TOKEN");
 
-          // Toggle the edit panel and profile menu
+          // Toggle the edit modal with specific fields to edit a user
           let showEditPanel = ref(false);
-          let showCreateMenu = ref(false);
 
           // Toggle the notification
           let showNotification = ref(false);
@@ -582,14 +649,6 @@
 
           // User record to be edited
           let selectedUser = ref({});
-
-          // User record to be sent to the API and populated in the form
-          const userRecord = ref({
-            data: {
-              type: "users",
-              attributes: {},
-            },
-          });
 
           // Variable to store the confrim password value
           const confirmPassword = ref("");
@@ -614,20 +673,28 @@
             //fetchUsers();
           };
 
-          //function to toggle the create panel when the create button is clicked
-          const toggleCreatePanel = () => {
-            showCreateMenu.value = true;
-            showEditPanel.value = !showEditPanel.value;
-          };
-
           // Function to toggle the edit panel and populate the form with the user data
           const toggleEditPanel = (user) => {
-            //set the showCreateMenu to false
-            showCreateMenu.value = false;
             // set the selected user to the user passed in the function
             selectedUser.value = user;
             // toggle the edit panel
             showEditPanel.value = true;
+          };
+
+          // Function to toggle the create modal
+          const toggleCreatePanel = () => {
+            // toggle the edit panel
+            showEditPanel.value = false;
+
+            //reset the userRecord
+            userRecord.value = {
+              data: {
+                type: "users",
+                attributes: {},
+              },
+            };
+
+            confirmPassword.value = "";
           };
 
           const redirect = () => {
@@ -701,6 +768,7 @@
                 // wrap the user object in a data object
                 body: JSON.stringify(user),
               });
+
               //if the response is not ok, throw an error
               if (!response.ok) {
                 showNotificationMessage("Error: " + response.message);
@@ -726,7 +794,6 @@
                 showNotificationMessage("Passwords do not match, try again!");
                 return;
               }
-
               // POST request to the /v1/admin/users endpoint
               let response = await fetch(`/v1/admin/users`, {
                 method: "POST",
@@ -743,9 +810,6 @@
                 showNotificationMessage("Error: " + data.message);
                 return;
               }
-              // Toggle the create panel and reset the form
-              showCreateMenu.value = !showCreateMenu.value;
-              showEditPanel.value = !showEditPanel.value;
 
               userRecord.value = {
                 data: {
@@ -755,6 +819,7 @@
               };
               // Call the showNotificationMessage function to show the notification
               showNotificationMessage("User created successfully!");
+
               // featch users for the table
               fetchUsers();
             } catch (e) {
@@ -831,7 +896,7 @@
           };
 
           const handlePageSizeInputChange = async () => {
-            if (searchValue.value === null) {
+            if (searchValue.value !== null) {
               await fetchUsers();
             } else {
               await searchUser();
@@ -868,11 +933,10 @@
             users,
             showEditPanel,
             toggleEditPanel,
+            toggleCreatePanel,
             updateUserRecord,
             selectedUser,
             userRecord,
-            showCreateMenu,
-            toggleCreatePanel,
             confirmPassword,
             createUserRecord,
             deleteUserRecord,

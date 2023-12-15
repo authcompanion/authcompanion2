@@ -30,6 +30,10 @@
 
 ---
 
+## Hot topics
+- A Refresh of the Admin Dashboard Design - [#21](https://github.com/authcompanion/authcompanion2/pull/21) [Done]
+
+
 ## Introduction
 
 AuthCompanion aims to satisfy the most common authentication and user management needs for your web application.
@@ -121,7 +125,7 @@ For a full list of AuthC's Web Forms, see the [Web Form Guide](https://docs.auth
 
 ## Admin Dashboard
 
-The Admin Dashboard is a tool that allows administrators or web application owners to manage the users of their web application. It provides a range of functions that administrators can use to create, edit, and delete user accounts; all via a friendly and intuitive interface.
+The Admin Dashboard is a tool that allows administrators or application owners to manage the users of their web application. It provides a range of functions that administrators can use to create, edit, and delete user accounts; all via a friendly and intuitive interface.
 
 Check out the Admin Dashboard in the documentation to learn how to access it: [Administer](https://docs.authcompanion.com/guide/administer.html).
 

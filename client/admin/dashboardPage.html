@@ -618,6 +618,17 @@
         </div>
       </div>
     </div>
+    <!-- Alert -->
+    <div v-cloak v-if="showNotification" class="top-0 p-3 position-fixed end-0">
+      <div
+        :class="['bg-white', 'alert', isError ? 'alert-danger' : 'alert-success', 'alert-dismissible', 'fade', 'show']"
+        role="alert"
+      >
+        <strong>{{ isError ? 'Error: ' : 'Success: ' }} </strong>{{ notificationMessage }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    </div>
+
     <!-- Tabler Core -->
     <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/js/tabler.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/js/demo.min.js"></script>
@@ -677,15 +688,21 @@
           };
 
           // Function to accept a message and show the notification, then call the dismissNotification function
-          const showNotificationMessage = (message) => {
+          const isError = ref(false);
+
+          const showNotificationMessage = (message, error) => {
             // set the notification message to the message passed in the function
             notificationMessage.value = message;
+            if (error) {
+              isError.value = true;
+            }
             // set the showNotification to true
             showNotification.value = true;
             // set a timeout to dismiss the notification after 3 seconds
             setTimeout(() => {
               showNotification.value = false;
-            }, 3200);
+              isError.value = false;
+            }, 3600);
             // call the fetchUsers function to refresh the table
             //fetchUsers();
           };
@@ -720,25 +737,20 @@
             confirmPassword.value = "";
           };
 
-          const redirect = () => {
-            // Use Vue Router or window.location.href to navigate to the /test URL
-            // Here, we're using window.location.href
-            window.location.href = "/v1/web/login";
-          };
-
           // Function to logout the user, remove the token from cookies and redirect to the login page
           const logout = async () => {
             try {
-              // GET request to our logout endpoint /v1/admin/logout
               let response = await fetch(`/v1/admin/logout`, {
                 method: "DELETE",
                 headers: {
                   "Content-type": "application/json",
                 },
               });
+              const data = await response.json();
+
               // if the response is not ok, throw an error
               if (!response.ok) {
-                showNotificationMessage("Error: " + response.message);
+                showNotificationMessage(data.message, true);
                 return;
               }
               // remove the token from the local storage
@@ -765,14 +777,15 @@
                   Authorization: `Bearer ${token}`,
                 },
               });
+              const data = await response.json();
 
               // if the response is not ok, throw an error
               if (!response.ok) {
-                showNotificationMessage("Error: " + response.message);
+                showNotificationMessage(data.message, true);
                 return;
               }
 
-              users.value = await response.json();
+              users.value = data;
             } catch (e) {
               console.log("Failed to load data");
               console.log(e);
@@ -791,10 +804,11 @@
                 // wrap the user object in a data object
                 body: JSON.stringify(user),
               });
+              const data = await response.json();
 
               //if the response is not ok, throw an error
               if (!response.ok) {
-                showNotificationMessage("Error: " + response.message);
+                showNotificationMessage(data.message + ", try again.", true);
                 return;
               }
               // Call the showNotificationMessage function to show the notification
@@ -804,6 +818,7 @@
               // refresh users
               fetchUsers();
             } catch (e) {
+              showNotificationMessage("There was an issue, try again.", true);
               console.log("Update User Failed");
               console.log(e);
             }
@@ -814,7 +829,7 @@
             try {
               //if the password and confirm password are not the same, return an error
               if (user.data.attributes.password !== confirmPassword.value) {
-                showNotificationMessage("Passwords do not match, try again!");
+                showNotificationMessage("Passwords do not match, try again!", true);
                 return;
               }
               // POST request to the /v1/admin/users endpoint
@@ -830,22 +845,17 @@
               const data = await response.json();
               //if the response is not ok, throw an error
               if (!response.ok) {
-                showNotificationMessage("Error: " + data.message);
+                showNotificationMessage(data.message, true);
                 return;
               }
 
-              userRecord.value = {
-                data: {
-                  type: "users",
-                  attributes: {},
-                },
-              };
               // Call the showNotificationMessage function to show the notification
               showNotificationMessage("User created successfully!");
 
               // featch users for the table
               fetchUsers();
             } catch (e) {
+              showNotificationMessage("There was an issue, try again.", true);
               console.log("Create User Failed");
               console.log(e);
             }
@@ -866,7 +876,7 @@
                 });
 
                 if (!response.ok) {
-                  showNotificationMessage("Error occured when deleting user");
+                  showNotificationMessage("Error occured when deleting user", true);
                   return;
                 }
 
@@ -898,7 +908,7 @@
               const data = await response.json();
               // If the response is not ok, throw an error
               if (!response.ok) {
-                showNotificationMessage("Error: " + data.message);
+                showNotificationMessage(data.message, true);
                 return;
               }
               // Process the search results
@@ -975,8 +985,8 @@
             pageNumber,
             previousPage,
             nextPage,
-            redirect,
             refForm,
+            isError,
           };
         },
       }).mount("#app");

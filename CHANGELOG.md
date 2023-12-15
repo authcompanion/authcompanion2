@@ -1,3 +1,18 @@
+# [3.0.0-beta.23](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.22...3.0.0-beta.23) (2023-12-15)
+
+This release of AuthCompanion features a band-new Admin Dashboard. The Dashboard's aesthetics and usability have significantly improved.
+
+### Bug Fixes
+
+* resolved error "User verification required, but user could not be verified" ([2087808](https://github.com/authcompanion/authcompanion2/commit/20878087cc07325219816ae52a495a34ef351706))
+
+
+### Features
+
+* a refresh of the admin dashboard design([#21](https://github.com/authcompanion/authcompanion2/issues/21)) ([54cd897](https://github.com/authcompanion/authcompanion2/commit/54cd8976f25f3262d1f8de32c328085db80d910c))
+
+
+
 # [3.0.0-beta.22](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.21...3.0.0-beta.22) (2023-11-23)
 
 

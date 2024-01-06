@@ -1,6 +1,6 @@
 # [3.0.0-beta.23](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.22...3.0.0-beta.23) (2023-12-15)
 
-This release of AuthCompanion features a band-new Admin Dashboard. The Dashboard's aesthetics and usability have significantly improved.
+This release of AuthCompanion features a brand-new Admin Dashboard. The Dashboard's aesthetics and usability have significantly improved.
 
 ### Bug Fixes
 

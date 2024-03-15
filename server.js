@@ -1,7 +1,7 @@
-import buildApp from "./app.js";
+import { buildApp } from "./app.js";
 import config from "./config.js";
 
-async function startServer() {
+const startServer = async () => {
   try {
     const server = await buildApp({
       logger: true,
@@ -12,22 +12,23 @@ async function startServer() {
       port: config.AUTHPORT,
       host: "0.0.0.0",
     });
+    const addresses = server.addresses();
 
-    printStartupMessage(config.AUTHPORT);
+    printStartupMessage(addresses[0].address, addresses[0].port);
     setupGracefulShutdown(server);
-  } catch (error) {
-    console.error("Error starting server:", error);
+  } catch (err) {
+    console.error(err);
     process.exit(1);
   }
-}
+};
 
-function printStartupMessage(port) {
+function printStartupMessage(address, port) {
   console.log(`
       ###########################################################
                 The AuthCompanion Server has started
 
-           🖥️   Client UI on: http://localhost:${port}/v1/web/login
-           🚀   Admin UI on: http://localhost:${port}/v1/admin/login
+           🖥️   Client UI on: http://${address}:${port}/v1/web/login
+           🚀   Admin UI on: http://${address}:${port}/v1/admin/login
 
       ###########################################################
       `);
@@ -38,10 +39,10 @@ function setupGracefulShutdown(server) {
   const handleSignal = async () => {
     try {
       await server.close();
-      console.log("AuthCompanion has exited. Goodbye! 👋");
+      server.log.info(`AuthCompanion has exited. Goodbye! 👋`);
       process.exit(0);
-    } catch (error) {
-      console.error("Error shutting down server:", error);
+    } catch (err) {
+      console.error(err);
       process.exit(1);
     }
   };

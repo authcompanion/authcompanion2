@@ -1,6 +1,9 @@
 import * as jose from "jose";
 import { randomUUID } from "crypto";
 import Database from "better-sqlite3";
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import { users } from "../db/sqlite/schema.js";
+import { eq } from "drizzle-orm";
 import config from "../config.js";
 import { createHash, verifyValueWithHash } from "./credential.js";
 import crypto from "crypto";
@@ -109,7 +112,7 @@ export async function makeRefreshtoken(userObj, secretKey, { recoveryToken = fal
 }
 
 // Creates a JWT token used for Admin dashboard authentication, with scope as "admin"
-export async function makeAdminToken(userObj, secretKey) {
+export async function makeAdminToken(adminUserAcc, secretKey) {
   try {
     // set default expiration time of the jwt token
     let expirationTime = "1h";
@@ -118,9 +121,9 @@ export async function makeAdminToken(userObj, secretKey) {
     const { userFingerprint, userFingerprintHash } = await generateClientContext();
 
     const claims = {
-      userid: userObj.uuid,
-      name: userObj.name,
-      email: userObj.email,
+      userid: adminUserAcc.uuid,
+      name: adminUserAcc.name,
+      email: adminUserAcc.email,
       userFingerprint: userFingerprintHash,
       scope: "admin",
     };
@@ -144,32 +147,28 @@ export async function makeAdminToken(userObj, secretKey) {
   }
 }
 
-export async function makeAdminRefreshtoken(adminObj, secretKey) {
+export async function makeAdminRefreshtoken(adminUserAcc, secretKey) {
   try {
     // Set default expiration time of the JWT token
     let expirationTime = "7d";
 
     // Define the token claims for the admin refresh token
     const claims = {
-      userid: adminObj.uuid,
-      name: adminObj.name,
-      email: adminObj.email,
+      userid: adminUserAcc.uuid,
+      name: adminUserAcc.name,
+      email: adminUserAcc.email,
       userFingerprint: null,
       scope: "admin",
     };
 
-    // Check if adminObj has metadata and appdata properties and add them to claims as needed
-
-    const db = new Database(config.DBPATH);
+    const sqlite = new Database(`${config.DBPATH}`);
+    const db = drizzle(sqlite);
 
     // Generate a random UUID for the token
     const jwtid = randomUUID();
 
-    // Update the admin table with the new JWT ID and update timestamp
-    const stmt = db.prepare(
-      "UPDATE admin SET jwt_id = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ?;"
-    );
-    stmt.run(jwtid, adminObj.uuid);
+    // Update the admin table with the new JWT ID
+    await db.update(users).set({ jwt_id: jwtid }).where(eq(users.uuid, adminUserAcc.uuid));
 
     // Create and sign the JWT token
     const jwt = await new jose.SignJWT(claims)
@@ -184,6 +183,7 @@ export async function makeAdminRefreshtoken(adminObj, secretKey) {
 
     return { token: jwt, expiration: payload.exp };
   } catch (error) {
+    console.log(error);
     throw { statusCode: 500, message: "Server Error" };
   }
 }

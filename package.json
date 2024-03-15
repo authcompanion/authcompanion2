@@ -1,6 +1,6 @@
 {
   "name": "authcompanion2",
-  "version": "3.0.0-beta.23",
+  "version": "4.0.0-beta.1",
   "description": "An admin-friendly, User Management Server (with Passkeys & JWTs) - for seamless and secure integration of user authentication.",
   "main": "server.js",
   "type": "module",
@@ -9,33 +9,37 @@
     "test": "ava",
     "start": "node --no-warnings server.js",
     "generate:css": "npx tailwindcss -i ./client/dist/index.css -o ./client/dist/main.css",
+    "generate:sqlite": "drizzle-kit generate:sqlite",
     "release:changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "keywords": [],
+  "homepage": "https://github.com/owner/project#readme",
   "author": "Paul Fischer",
   "license": "Big Time Public License",
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
     "@simplewebauthn/server": "^8.3.7",
-    "argon2": "^0.31.2",
+    "argon2": "0.31.2",
     "better-sqlite3": "^9.4.3",
     "compadre": "^3.2.0",
     "cookie": "^0.6.0",
     "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.30.2",
     "emailjs": "^4.0.3",
     "fastify": "^4.26.2",
     "fastify-plugin": "^4.5.1",
-    "jose": "^5.2.2"
+    "jose": "^5.2.3"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
     "ava": "^5.3.1",
     "conventional-changelog-cli": "^4.1.0",
+    "drizzle-kit": "^0.20.14",
     "prettier": "^3.2.5",
     "tailwindcss": "^3.4.1"
   },
   "engines": {
-    "node": ">=18.16",
-    "pnpm": ">=8.3.0"
+    "node": ">=20",
+    "pnpm": ">=8"
   }
 }

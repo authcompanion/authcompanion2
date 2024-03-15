@@ -1,4 +1,6 @@
 import { createHash } from "../../../utils/credential.js";
+import { users } from "../../../db/sqlite/schema.js";
+import { eq, sql } from "drizzle-orm";
 
 export const updateUserHandler = async function (request, reply) {
   try {
@@ -9,35 +11,28 @@ export const updateUserHandler = async function (request, reply) {
     }
 
     //Check if the user exists in the database
-    const userStmt = this.db.prepare("SELECT * FROM users WHERE uuid = ?;");
-    const user = await userStmt.get(request.params.uuid);
+    const existingAccount = await this.db
+      .select({ uuid: users.uuid, email: users.email })
+      .from(users)
+      .where(eq(users.uuid, request.params.uuid))
+      .get();
 
-    if (!user) {
+    if (!existingAccount) {
       request.log.info("Admin API: User does not exist in database, update failed");
       throw { statusCode: 404, message: "User Not Found" };
     }
 
     //Check if the user's email is being updated and if its not the same email as the user's current email, check if the new email is already in use
-    if (request.body.data.attributes.email && request.body.data.attributes.email !== user.email) {
-      const emailStmt = this.db.prepare("SELECT * FROM users WHERE email = ?;");
-      const email = await emailStmt.get(request.body.data.attributes.email);
+    if (request.body.data.attributes.email && request.body.data.attributes.email !== existingAccount.email) {
+      const existingEmail = await this.db
+        .select({ email: users.email })
+        .from(users)
+        .where(eq(users.email, request.body.data.attributes.email))
+        .get();
 
-      if (email) {
+      if (existingEmail) {
         request.log.info("Admin API: User's email is already in use, update failed");
         throw { statusCode: 400, message: "Email Already In Use" };
-      }
-    }
-
-    //if the user's password is being updated, hash the new password
-    if (request.body.data.attributes.password) {
-      const hashpwd = await createHash(request.body.data.attributes.password);
-      request.body.data.attributes.password = hashpwd;
-    }
-
-    //If the user's active status is a string, convert it to a number
-    if (request.body.data.attributes.active) {
-      if (typeof request.body.data.attributes.active === "string") {
-        request.body.data.attributes.active = Number(request.body.data.attributes.active);
       }
     }
 
@@ -52,29 +47,59 @@ export const updateUserHandler = async function (request, reply) {
       }
     }
 
+    //Check if the user's isAdmin status is being updated and if it is, check if the new status is a valid 1 or 0
+    if (request.body.data.attributes.isAdmin) {
+      if (request.body.data.attributes.isAdmin !== 0 && request.body.data.attributes.isAdmin !== 1) {
+        request.log.info("Admin API: User's isAdmin status is not valid, update failed");
+        throw {
+          statusCode: 400,
+          message: "Invalid isAdmin Status, Please use 1 for true and 0 for false",
+        };
+      }
+    }
+
+    //If the user's password is being updated, hash the new password
+    if (request.body.data.attributes.password) {
+      const hashpwd = await createHash(request.body.data.attributes.password);
+      request.body.data.attributes.password = hashpwd;
+    }
+
+    //Required for drizzle orm to execute sql
+    const nameValue = request.body.data.attributes.name || null;
+    const emailValue = request.body.data.attributes.email || null;
+    const passwordValue = request.body.data.attributes.password || null;
+    const metadataValue = JSON.stringify(request.body.data.attributes.metadata) || null;
+    const appValue = JSON.stringify(request.body.data.attributes.appdata) || null;
+    const activeValue = request.body.data.attributes.active ?? null;
+    const adminValue = request.body.data.attributes.isAdmin ?? null;
+
     //Per json-api spec: If a request does not include all of the attributes for a resource, the server MUST interpret the missing attributes as if they were included with their current values. The server MUST NOT interpret missing attributes as null values.
-    const updateStmt = this.db.prepare(
-      "UPDATE users SET name = coalesce(?, name), email = coalesce(?, email), password = coalesce(?, password), metadata = coalesce(?, metadata), appdata = coalesce(?, appdata), active = coalesce(?, active), updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ? RETURNING uuid, name, email, metadata, appdata, active, created_at, updated_at;"
-    );
-    const updatedUser = updateStmt.get(
-      request.body.data.attributes.name,
-      request.body.data.attributes.email,
-      request.body.data.attributes.password,
-      JSON.stringify(request.body.data.attributes.metadata),
-      JSON.stringify(request.body.data.attributes.app),
-      request.body.data.attributes.active,
-      request.params.uuid
-    );
+    const stmt = sql`
+    UPDATE users
+    SET
+      name = coalesce(${nameValue}, name),
+      email = coalesce(${emailValue}, email),
+      password = coalesce(${passwordValue}, password),
+      metadata = coalesce(${metadataValue}, metadata),
+      appdata = coalesce(${appValue}, appdata),
+      active = coalesce(${activeValue}, active),
+      isAdmin = coalesce(${adminValue}, isAdmin)
+    WHERE uuid = ${request.params.uuid}
+    RETURNING uuid, name, email, password, metadata, appdata, active, isAdmin, created_at, updated_at;
+  `;
+
+    const user = this.db.get(stmt);
 
     //Prepare the server response
     const userAttributes = {
-      name: updatedUser.name,
-      email: updatedUser.email,
+      name: user.name,
+      email: user.email,
       metadata: JSON.parse(user.metadata),
       app: JSON.parse(user.appdata),
-      active: updatedUser.active,
-      created: updatedUser.created_at,
-      updated: updatedUser.updated_at,
+      active: user.active,
+      isAdmin: user.isAdmin,
+      created: user.created_at,
+      updated: user.updated_at,
     };
 
     reply.statusCode = 200;
@@ -83,11 +108,11 @@ export const updateUserHandler = async function (request, reply) {
     return {
       data: {
         type: "users",
-        id: updatedUser.uuid,
+        id: user.uuid,
         attributes: userAttributes,
       },
     };
   } catch (err) {
-    throw { statusCode: err.statusCode, message: err.message };
+    throw err;
   }
 };

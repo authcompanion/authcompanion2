@@ -1,5 +1,7 @@
 import { makeAdminToken, makeAdminRefreshtoken, validateJWT } from "../../../utils/jwt.js";
 import config from "../../../config.js";
+import { users } from "../../../db/sqlite/schema.js";
+import { eq } from "drizzle-orm";
 
 export const tokenRefreshHandler = async function (request, reply) {
   try {
@@ -18,31 +20,38 @@ export const tokenRefreshHandler = async function (request, reply) {
     }
 
     // Validate the refresh token
-    const jwtClaims = await validateJWT(refreshToken, this.key);
+    let jwtClaims = await validateJWT(refreshToken, this.key);
 
     // Fetch the registered admin user from the database
-    const stmt = this.db.prepare(
-      "SELECT uuid, name, email, jwt_id, password, active, created_at, updated_at FROM admin WHERE uuid = ?;"
-    );
-    const userObj = await stmt.get(jwtClaims.userid);
+    const existingAccount = await this.db
+      .select({
+        uuid: users.uuid,
+        name: users.name,
+        email: users.email,
+        jwt_id: users.jwt_id,
+        active: users.active,
+        isAdmin: users.isAdmin,
+        created: users.created_at,
+        updated: users.updated_at,
+      })
+      .from(users)
+      .where(eq(users.jwt_id, jwtClaims.jti))
+      .get();
 
-    // Check if the "jiti" value in the JWT payload matches the admin's "jwt_id"
-    if (jwtClaims.jti !== userObj.jwt_id) {
-      request.log.info("Admin API: JWT jiti value does not match the admin's jwt_id");
-      throw {
-        statusCode: 401,
-        message: "Server Error",
-      };
+    // Check if a user with that JWT is returned.
+    if (existingAccount === undefined) {
+      request.log.info("Auth API: User not found when Refreshing Token");
+      throw { statusCode: 400, message: "Refresh Token Failed" };
     }
 
     // Looks good! Let's prepare the reply
-    const adminAccessToken = await makeAdminToken(userObj, this.key);
-    const adminRefreshToken = await makeAdminRefreshtoken(userObj, this.key);
+    const adminAccessToken = await makeAdminToken(existingAccount, this.key);
+    const adminRefreshToken = await makeAdminRefreshtoken(existingAccount, this.key);
 
     const userAttributes = {
-      name: userObj.name,
-      email: userObj.email,
-      created: userObj.created_at,
+      name: existingAccount.name,
+      email: existingAccount.email,
+      created: existingAccount.created_at,
       access_token: adminAccessToken.token,
       access_token_expiry: adminAccessToken.expiration,
       refresh_token: adminRefreshToken.token,
@@ -56,13 +65,13 @@ export const tokenRefreshHandler = async function (request, reply) {
 
     return {
       data: {
-        id: userObj.uuid,
+        id: existingAccount.uuid,
         type: "users",
         attributes: userAttributes,
       },
     };
   } catch (err) {
-    throw { statusCode: err.statusCode, message: err.message };
+    throw err;
   }
 };
 
@@ -85,17 +94,34 @@ export const tokenRefreshDeleteHandler = async function (request, reply) {
     //Validate the refresh token
     const jwtClaims = await validateJWT(refreshToken, this.key);
     //Fetch user from Database
-    const stmt = this.db.prepare(
-      "SELECT uuid, name, email, jwt_id, created_at, updated_at FROM admin WHERE jwt_id = ?;"
-    );
-    const userObj = await stmt.get(jwtClaims.jti);
-    if (userObj === undefined) {
+    const existingAccount = await this.db
+      .select({
+        uuid: users.uuid,
+        name: users.name,
+        email: users.email,
+        jwt_id: users.jwt_id,
+        active: users.active,
+        isAdmin: users.isAdmin,
+        created: users.created_at,
+        updated: users.updated_at,
+      })
+      .from(users)
+      .where(eq(users.jwt_id, jwtClaims.jti))
+      .get();
+    // const stmt = this.db.prepare(
+    //   "SELECT uuid, name, email, jwt_id, created_at, updated_at FROM admin WHERE jwt_id = ?;"
+    // );
+    // const userObj = await stmt.get(jwtClaims.jti);
+
+    if (existingAccount === undefined) {
       request.log.info("Admin API: User not found");
       throw { statusCode: 400, message: "Refresh Token Failed" };
     }
 
-    const delStmt = this.db.prepare("UPDATE admin SET jwt_id = 0 WHERE jwt_id = ?");
-    const resp = await delStmt.run(jwtClaims.jti);
+    const resp = await this.db.update(users).set({ jwt_id: null }).where(eq(users.jwt_id, jwtClaims.jti));
+    // const delStmt = this.db.prepare("UPDATE admin SET jwt_id = 0 WHERE jwt_id = ?");
+    // const resp = await delStmt.run(jwtClaims.jti);
+    console.log(resp);
     if (resp.changes !== 1) {
       request.log.info("Error deleting token id");
       throw { statusCode: 500, message: "Internal Error" };
@@ -103,6 +129,6 @@ export const tokenRefreshDeleteHandler = async function (request, reply) {
 
     reply.code(204);
   } catch (err) {
-    throw { statusCode: err.statusCode, message: err.message };
+    throw err;
   }
 };

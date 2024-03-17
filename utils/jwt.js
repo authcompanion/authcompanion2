@@ -18,7 +18,7 @@ async function generateClientContext() {
 }
 
 // Creates a JWT token used for user authentication, with scope as "user"
-export async function makeAccesstoken(userObj, secretKey) {
+export async function makeAccesstoken(userAcc, secretKey) {
   try {
     // set default expiration time of the access jwt token
     let expirationTime = "1h";
@@ -28,19 +28,19 @@ export async function makeAccesstoken(userObj, secretKey) {
 
     // build the token claims
     const claims = {
-      userid: userObj.uuid,
-      name: userObj.name,
-      email: userObj.email,
+      userid: userAcc.uuid,
+      name: userAcc.name,
+      email: userAcc.email,
       userFingerprint: userFingerprintHash,
       scope: "user",
     };
 
-    if (userObj.metadata !== undefined && userObj.metadata !== null && userObj.metadata !== "{}") {
-      claims.metadata = JSON.parse(userObj.metadata);
+    if (userAcc.metadata !== undefined && userAcc.metadata !== null && userAcc.metadata !== "{}") {
+      claims.metadata = JSON.parse(userAcc.metadata);
     }
 
-    if (userObj.appdata !== undefined && userObj.appdata !== null && userObj.appdata !== "{}") {
-      claims.app = JSON.parse(userObj.appdata);
+    if (userAcc.appdata !== undefined && userAcc.appdata !== null && userAcc.appdata !== "{}") {
+      claims.app = JSON.parse(userAcc.appdata);
     }
 
     const jwt = await new jose.SignJWT(claims)
@@ -63,7 +63,7 @@ export async function makeAccesstoken(userObj, secretKey) {
 }
 
 //https://datatracker.ietf.org/doc/html/draft-ietf-oauth-browser-based-apps-05#section-8
-export async function makeRefreshtoken(userObj, secretKey, { recoveryToken = false } = {}) {
+export async function makeRefreshtoken(userAcc, secretKey, { recoveryToken = false } = {}) {
   try {
     // set default expiration time of the jwt token
     let expirationTime = "7d";
@@ -73,27 +73,27 @@ export async function makeRefreshtoken(userObj, secretKey, { recoveryToken = fal
       expirationTime = "15m";
     }
     const claims = {
-      userid: userObj.uuid,
-      name: userObj.name,
-      email: userObj.email,
+      userid: userAcc.uuid,
+      name: userAcc.name,
+      email: userAcc.email,
     };
 
-    if (userObj.metadata !== undefined && userObj.metadata !== null && userObj.metadata !== "{}") {
-      claims.metadata = JSON.parse(userObj.metadata);
+    if (userAcc.metadata !== undefined && userAcc.metadata !== null && userAcc.metadata !== "{}") {
+      claims.metadata = JSON.parse(userAcc.metadata);
     }
 
-    if (userObj.appdata !== undefined && userObj.appdata !== null && userObj.appdata !== "{}") {
-      claims.app = JSON.parse(userObj.appdata);
+    if (userAcc.appdata !== undefined && userAcc.appdata !== null && userAcc.appdata !== "{}") {
+      claims.app = JSON.parse(userAcc.appdata);
     }
 
-    const db = new Database(config.DBPATH);
+    const sqlite = new Database(`${config.DBPATH}`);
+    const db = drizzle(sqlite);
 
+    // Generate a random UUID for the token
     const jwtid = randomUUID();
 
-    const stmt = db.prepare(
-      "UPDATE users SET jwt_id = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ?;"
-    );
-    stmt.run(jwtid, userObj.uuid);
+    // Update the admin table with the new JWT ID
+    await db.update(users).set({ jwt_id: jwtid }).where(eq(users.uuid, userAcc.uuid));
 
     const jwt = await new jose.SignJWT(claims)
       .setProtectedHeader({ alg: "HS256", typ: "JWT" })

@@ -4,6 +4,8 @@ import { createId } from "@paralleldrive/cuid2";
 import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import config from "../../config.js";
 import { refreshCookie, fgpCookie } from "../../utils/cookies.js";
+import { users } from "../../db/sqlite/schema.js";
+import { eq, sql } from "drizzle-orm";
 
 export const registrationHandler = async function (request, reply) {
   try {
@@ -14,39 +16,54 @@ export const registrationHandler = async function (request, reply) {
     }
 
     //Check if the user exists already
-    const stmt = this.db.prepare("SELECT * FROM users WHERE email = ?;");
-    const requestedAccount = await stmt.get(request.body.data.attributes.email);
+    const existingAccount = await this.db
+      .select({ uuid: users.uuid })
+      .from(users)
+      .where(eq(users.email, request.body.data.attributes.email))
+      .get();
 
-    if (requestedAccount) {
+    if (existingAccount) {
       request.log.info("Auth API: User already exists in database, registration failed");
-
       throw { statusCode: 400, message: "Registration Failed" };
     }
+
     //Create the user in the Database
-    const hashpwd = await createHash(request.body.data.attributes.password);
+    const hashPwd = await createHash(request.body.data.attributes.password);
     const uuid = createId();
     const jwtid = randomUUID();
 
-    const registerStmt = this.db.prepare(
-      "INSERT INTO users (uuid, name, email, password, metadata, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, metadata, appdata, jwt_id, created_at, updated_at;"
-    );
-    const userObj = registerStmt.get(
-      uuid,
-      request.body.data.attributes.name,
-      request.body.data.attributes.email,
-      hashpwd,
-      JSON.stringify(request.body.data.attributes.metadata),
-      "1",
-      jwtid
-    );
+    const userObj = {
+      uuid: uuid,
+      name: request.body.data.attributes.name,
+      email: request.body.data.attributes.email,
+      password: hashPwd,
+      active: 1,
+      metadata: request.body.data.attributes.metadata,
+      jwt_id: jwtid,
+      created_at: sql`DATETIME('now')`,
+    };
+
+    const createdUser = await this.db
+      .insert(users)
+      .values({ ...userObj })
+      .returning({
+        uuid: users.uuid,
+        name: users.name,
+        email: users.email,
+        active: users.active,
+        metadata: users.metadata,
+        created: users.created_at,
+        updated: users.updated_at,
+      });
+
     //Prepare the reply
-    const userAccessToken = await makeAccesstoken(userObj, this.key);
-    const userRefreshToken = await makeRefreshtoken(userObj, this.key);
+    const userAccessToken = await makeAccesstoken(createdUser, this.key);
+    const userRefreshToken = await makeRefreshtoken(createdUser, this.key);
 
     const userAttributes = {
-      name: userObj.name,
-      email: userObj.email,
-      created: userObj.created_at,
+      name: createdUser[0].name,
+      email: createdUser[0].email,
+      created: createdUser[0].created_at,
       access_token: userAccessToken.token,
       access_token_expiry: userAccessToken.expiration,
     };
@@ -63,11 +80,11 @@ export const registrationHandler = async function (request, reply) {
     return {
       data: {
         type: "users",
-        id: userObj.uuid,
+        id: createdUser.uuid,
         attributes: userAttributes,
       },
     };
   } catch (err) {
-    throw { statusCode: err.statusCode, message: err.message };
+    throw err;
   }
 };

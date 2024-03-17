@@ -39,7 +39,7 @@ export const tokenRefreshHandler = async function (request, reply) {
       .get();
 
     // Check if a user with that JWT is returned.
-    if (existingAccount === undefined) {
+    if (!existingAccount) {
       request.log.info("Auth API: User not found when Refreshing Token");
       throw { statusCode: 400, message: "Refresh Token Failed" };
     }
@@ -56,8 +56,6 @@ export const tokenRefreshHandler = async function (request, reply) {
       access_token_expiry: adminAccessToken.expiration,
       refresh_token: adminRefreshToken.token,
     };
-    const expireDate = new Date();
-    expireDate.setTime(expireDate.getTime() + 7 * 24 * 60 * 60 * 1000); // TODO: Make configurable now, set to 7 days
 
     reply.headers({
       "x-authc-app-origin": config.APPLICATIONORIGIN,
@@ -108,20 +106,14 @@ export const tokenRefreshDeleteHandler = async function (request, reply) {
       .from(users)
       .where(eq(users.jwt_id, jwtClaims.jti))
       .get();
-    // const stmt = this.db.prepare(
-    //   "SELECT uuid, name, email, jwt_id, created_at, updated_at FROM admin WHERE jwt_id = ?;"
-    // );
-    // const userObj = await stmt.get(jwtClaims.jti);
 
-    if (existingAccount === undefined) {
+    if (!existingAccount) {
       request.log.info("Admin API: User not found");
       throw { statusCode: 400, message: "Refresh Token Failed" };
     }
 
     const resp = await this.db.update(users).set({ jwt_id: null }).where(eq(users.jwt_id, jwtClaims.jti));
-    // const delStmt = this.db.prepare("UPDATE admin SET jwt_id = 0 WHERE jwt_id = ?");
-    // const resp = await delStmt.run(jwtClaims.jti);
-    console.log(resp);
+
     if (resp.changes !== 1) {
       request.log.info("Error deleting token id");
       throw { statusCode: 500, message: "Internal Error" };

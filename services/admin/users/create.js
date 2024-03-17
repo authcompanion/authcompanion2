@@ -64,7 +64,7 @@ export const createUserHandler = async function (request, reply) {
       created_at: sql`DATETIME('now')`,
     };
 
-    const user = await this.db
+    const createdUser = await this.db
       .insert(users)
       .values({ ...userObj })
       .returning({
@@ -85,8 +85,8 @@ export const createUserHandler = async function (request, reply) {
     return {
       data: {
         type: "users",
-        id: user[0].uuid,
-        attributes: { ...user[0] },
+        id: createdUser[0].uuid,
+        attributes: { ...createdUser[0] },
       },
     };
   } catch (err) {

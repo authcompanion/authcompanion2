@@ -24,7 +24,7 @@
     "compadre": "^3.2.0",
     "cookie": "^0.6.0",
     "dotenv": "^16.4.5",
-    "drizzle-orm": "^0.30.2",
+    "drizzle-orm": "^0.30.4",
     "emailjs": "^4.0.3",
     "fastify": "^4.26.2",
     "fastify-plugin": "^4.5.1",

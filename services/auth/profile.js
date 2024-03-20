@@ -57,7 +57,8 @@ export const userProfileHandler = async function (request, reply) {
     SET
       name = coalesce(${nameValue}, name),
       email = coalesce(${emailValue}, email),
-      password = coalesce(${passwordValue}, password)
+      password = coalesce(${passwordValue}, password),
+      updated_at = strftime('%Y-%m-%d %H:%M:%S','now')
     WHERE uuid = ${request.jwtRequestPayload.userid}
     RETURNING uuid, name, email, metadata, appdata, active, created_at, updated_at;
   `;

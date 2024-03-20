@@ -83,7 +83,8 @@ export const updateUserHandler = async function (request, reply) {
       metadata = coalesce(${metadataValue}, metadata),
       appdata = coalesce(${appValue}, appdata),
       active = coalesce(${activeValue}, active),
-      isAdmin = coalesce(${adminValue}, isAdmin)
+      isAdmin = coalesce(${adminValue}, isAdmin),
+      updated_at = strftime('%Y-%m-%d %H:%M:%S','now')
     WHERE uuid = ${request.params.uuid}
     RETURNING uuid, name, email, password, metadata, appdata, active, isAdmin, created_at, updated_at;
   `;

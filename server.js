@@ -27,8 +27,8 @@ function printStartupMessage(address, port) {
       ###########################################################
                 The AuthCompanion Server has started
 
-           🖥️   Client UI on: http://${address}:${port}/v1/web/login
-           🚀   Admin UI on: http://${address}:${port}/v1/admin/login
+           🖥️   Client UI on: http://localhost:${port}/v1/web/login
+           🚀   Admin UI on: http://localhost:${port}/v1/admin/login
 
       ###########################################################
       `);

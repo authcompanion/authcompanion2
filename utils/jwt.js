@@ -36,11 +36,11 @@ export async function makeAccesstoken(userAcc, secretKey) {
     };
 
     if (userAcc.metadata !== undefined && userAcc.metadata !== null && userAcc.metadata !== "{}") {
-      claims.metadata = JSON.parse(userAcc.metadata);
+      claims.metadata = userAcc.metadata;
     }
 
     if (userAcc.appdata !== undefined && userAcc.appdata !== null && userAcc.appdata !== "{}") {
-      claims.app = JSON.parse(userAcc.appdata);
+      claims.app = userAcc.appdata;
     }
 
     const jwt = await new jose.SignJWT(claims)
@@ -57,7 +57,7 @@ export async function makeAccesstoken(userAcc, secretKey) {
       userFingerprint: userFingerprint,
     };
   } catch (error) {
-    fastify.log.info(error);
+    console.log(error);
     throw { statusCode: 500, message: "Server Error" };
   }
 }
@@ -79,11 +79,11 @@ export async function makeRefreshtoken(userAcc, secretKey, { recoveryToken = fal
     };
 
     if (userAcc.metadata !== undefined && userAcc.metadata !== null && userAcc.metadata !== "{}") {
-      claims.metadata = JSON.parse(userAcc.metadata);
+      claims.metadata = userAcc.metadata;
     }
 
     if (userAcc.appdata !== undefined && userAcc.appdata !== null && userAcc.appdata !== "{}") {
-      claims.app = JSON.parse(userAcc.appdata);
+      claims.app = userAcc.appdata;
     }
 
     const sqlite = new Database(`${config.DBPATH}`);
@@ -93,7 +93,7 @@ export async function makeRefreshtoken(userAcc, secretKey, { recoveryToken = fal
     const jwtid = randomUUID();
 
     // Update the admin table with the new JWT ID
-    await db.update(users).set({ jwt_id: jwtid }).where(eq(users.uuid, userAcc.uuid));
+    db.update(users).set({ jwt_id: jwtid }).where(eq(users.uuid, userAcc.uuid)).run();
 
     const jwt = await new jose.SignJWT(claims)
       .setProtectedHeader({ alg: "HS256", typ: "JWT" })
@@ -106,7 +106,7 @@ export async function makeRefreshtoken(userAcc, secretKey, { recoveryToken = fal
 
     return { token: jwt, expiration: payload.exp };
   } catch (error) {
-    fastify.log.info(error);
+    console.log(error);
     throw { statusCode: 500, message: "Server Error" };
   }
 }
@@ -142,7 +142,6 @@ export async function makeAdminToken(adminUserAcc, secretKey) {
       userFingerprint: userFingerprint,
     };
   } catch (error) {
-    fastify.log.info(error);
     throw { statusCode: 500, message: "Server Error" };
   }
 }
@@ -168,7 +167,7 @@ export async function makeAdminRefreshtoken(adminUserAcc, secretKey) {
     const jwtid = randomUUID();
 
     // Update the admin table with the new JWT ID
-    await db.update(users).set({ jwt_id: jwtid }).where(eq(users.uuid, adminUserAcc.uuid));
+    db.update(users).set({ jwt_id: jwtid }).where(eq(users.uuid, adminUserAcc.uuid)).run();
 
     // Create and sign the JWT token
     const jwt = await new jose.SignJWT(claims)
@@ -207,7 +206,6 @@ export async function validateJWT(jwt, secretKey, fingerprint = null) {
 
     return payload;
   } catch (error) {
-    fastify.log.info(error);
     throw { statusCode: 500, message: "Server Error" };
   }
 }

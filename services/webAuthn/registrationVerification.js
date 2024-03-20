@@ -1,20 +1,26 @@
 import config from "../../config.js";
 import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import { verifyRegistrationResponse } from "@simplewebauthn/server";
+import { users, authenticator } from "../../db/sqlite/schema.js";
+import { eq, sql } from "drizzle-orm";
 
 export const registrationVerificationHandler = async function (request, reply) {
   try {
     //set the PR's ID value
     const appURL = new URL(config.ORIGIN);
     const rpID = appURL.hostname;
+
     // The URL at which registrations and authentications should occur
     const origin = appURL.origin;
 
     // Fetch user from database
     const requestedAccount = request.headers["x-authc-app-userid"];
 
-    const stmt = this.db.prepare("SELECT challenge FROM users WHERE UUID = ?;");
-    const { challenge } = await stmt.get(requestedAccount);
+    const { challenge } = await this.db
+      .select({ challenge: users.challenge })
+      .from(users)
+      .where(eq(users.uuid, requestedAccount))
+      .get();
 
     //verify the request for registration
     const verification = await verifyRegistrationResponse({
@@ -22,7 +28,7 @@ export const registrationVerificationHandler = async function (request, reply) {
       expectedChallenge: challenge,
       expectedOrigin: origin,
       expectedRPID: rpID,
-      requireUserVerification: true,
+      requireUserVerification: false,
     });
 
     //check if the registration request is verified
@@ -34,26 +40,34 @@ export const registrationVerificationHandler = async function (request, reply) {
     //create the returned authenticator
     const { credentialPublicKey, credentialID, counter } = verification.registrationInfo;
 
-    const authenticatorStmt = this.db.prepare(
-      "INSERT INTO Authenticator (credentialID, credentialPublicKey, counter) VALUES (?,?,?) RETURNING *;"
-    );
-    const authenticatorObj = authenticatorStmt.get(credentialID, credentialPublicKey, counter);
+    const authenticatorObj = await this.db
+      .insert(authenticator)
+      .values({
+        credentialID: credentialID,
+        credentialPublicKey: credentialPublicKey,
+        counter: counter,
+      })
+      .returning({ id: authenticator.id });
 
     //associate the authenticator to the user and activate the account
-    const userStmt = this.db.prepare(
-      "UPDATE users SET authenticator_id = ?, active = ? WHERE uuid = ? RETURNING uuid, name, email, jwt_id, created_at, updated_at;"
-    );
-
-    const userObj = userStmt.get(authenticatorObj.id, "1", requestedAccount);
+    const userAcc = await this.db
+      .update(users)
+      .set({ authenticatorId: authenticatorObj[0].id, active: 1 })
+      .where(eq(users.uuid, requestedAccount))
+      .returning({
+        uuid: users.uuid,
+        name: users.name,
+        email: users.email,
+      });
 
     //Prepare the reply
-    const userAccessToken = await makeAccesstoken(userObj, this.key);
-    const userRefreshToken = await makeRefreshtoken(userObj, this.key);
+    const userAccessToken = await makeAccesstoken(userAcc[0], this.key);
+    const userRefreshToken = await makeRefreshtoken(userAcc[0], this.key);
 
     const userAttributes = {
-      name: userObj.name,
-      email: userObj.email,
-      created: userObj.created_at,
+      name: userAcc.name,
+      email: userAcc.email,
+      created: userAcc.created_at,
       access_token: userAccessToken.token,
       access_token_expiry: userAccessToken.expiration,
     };
@@ -70,13 +84,12 @@ export const registrationVerificationHandler = async function (request, reply) {
 
     return {
       data: {
-        id: userObj.uuid,
+        id: userAcc.uuid,
         type: "Register",
         attributes: userAttributes,
       },
     };
   } catch (err) {
-    console.log(err);
-    throw { statusCode: err.statusCode, message: err.message };
+    throw err;
   }
 };

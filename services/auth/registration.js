@@ -57,8 +57,8 @@ export const registrationHandler = async function (request, reply) {
       });
 
     //Prepare the reply
-    const userAccessToken = await makeAccesstoken(createdUser, this.key);
-    const userRefreshToken = await makeRefreshtoken(createdUser, this.key);
+    const userAccessToken = await makeAccesstoken(createdUser[0], this.key);
+    const userRefreshToken = await makeRefreshtoken(createdUser[0], this.key);
 
     const userAttributes = {
       name: createdUser[0].name,
@@ -80,7 +80,7 @@ export const registrationHandler = async function (request, reply) {
     return {
       data: {
         type: "users",
-        id: createdUser.uuid,
+        id: createdUser[0].uuid,
         attributes: userAttributes,
       },
     };

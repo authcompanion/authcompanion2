@@ -22,13 +22,13 @@ export const users = sqliteTable("users", {
 
 export const authenticator = sqliteTable("authenticator", {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  credentialId: text("credentialID").notNull(),
+  credentialID: text("credentialID").notNull(),
   credentialPublicKey: text("credentialPublicKey").notNull(),
   counter: integer("counter").notNull(),
   transports: text("transports"),
 });
 
 export const storage = sqliteTable("storage", {
-  sessionId: text("sessionID").primaryKey(),
+  sessionID: text("sessionID").primaryKey(),
   data: text("data").notNull(),
 });

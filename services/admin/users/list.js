@@ -1,5 +1,5 @@
 import { users } from "../../../db/sqlite/schema.js";
-import { asc, sql, count } from "drizzle-orm";
+import { asc, sql, count, like } from "drizzle-orm";
 
 export const listUsersHandler = async function (request, reply) {
   try {
@@ -28,6 +28,7 @@ export const listUsersHandler = async function (request, reply) {
           metadata: user.metadata,
           app: user.appdata,
           active: user.active,
+          isAdmin: user.isAdmin,
           created: user.created_at,
           updated: user.updated_at,
         },

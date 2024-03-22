@@ -23,7 +23,6 @@ export const registrationOptionsHandler = async function (request, reply) {
       nouns: nouns,
     });
     const userName = nameGenerator.generate();
-    console.log(userName);
 
     //build webauthn options for "passwordless" flow.
     let options = {

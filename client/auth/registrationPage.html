@@ -257,8 +257,6 @@
 
                 let attResp = await startRegistration(opts);
 
-                console.log(attResp);
-
                 let verificationResponse = await fetch("/v1/auth/registration-verification", {
                   method: "POST",
                   body: JSON.stringify(attResp),

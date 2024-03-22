@@ -226,7 +226,6 @@
 
               if (response.ok) {
                 window.localStorage.setItem("ACCESS_TOKEN", resbody.data.attributes.access_token);
-                console.log(appOrigin);
                 window.location.href = appOrigin;
               } else {
                 showError.value = true;

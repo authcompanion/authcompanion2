@@ -8,7 +8,6 @@
     "dev": "node --watch --no-warnings server.js",
     "test": "ava",
     "start": "node --no-warnings server.js",
-    "generate:css": "npx tailwindcss -i ./client/dist/index.css -o ./client/dist/main.css",
     "generate:sqlite": "drizzle-kit generate:sqlite",
     "release:changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
@@ -31,12 +30,10 @@
     "jose": "^5.2.3"
   },
   "devDependencies": {
-    "@tailwindcss/forms": "^0.5.7",
     "ava": "^5.3.1",
     "conventional-changelog-cli": "^4.1.0",
     "drizzle-kit": "^0.20.14",
-    "prettier": "^3.2.5",
-    "tailwindcss": "^3.4.1"
+    "prettier": "^3.2.5"
   },
   "engines": {
     "node": ">=20",

@@ -1,5 +1,5 @@
 import test from "ava";
-import buildApp from "../app.js";
+import { buildApp } from "../app.js";
 import { unlink } from "node:fs/promises";
 import { parse } from "cookie";
 import { readFile } from "node:fs/promises";
@@ -81,8 +81,7 @@ test.before(async (t) => {
 // Cleanup Test
 test.after.always("cleanup tests", async (t) => {
   await unlink("./test.db");
-  await unlink("./test.db-shm");
-  await unlink("./test.db-wal");
+
   //remove the serverkey
   await unlink("./serverkey_test");
 
@@ -331,7 +330,7 @@ test("JWT Test: makeAccesstoken generates a valid JWT token", async (t) => {
   t.is(payload.userid, userObj.uuid);
   t.is(payload.name, userObj.name);
   t.is(payload.email, userObj.email);
-  t.deepEqual(payload.metadata, JSON.parse(userObj.metadata));
+  t.deepEqual(payload.metadata, userObj.metadata);
 
   // Assert that the token is not empty
   t.truthy(token);

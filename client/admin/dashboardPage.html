@@ -4,9 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Admin Dashboard</title>
-    <!-- CSS files -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/tabler.min.css" />
+    <title>Admin Panel</title>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/js/tabler.min.js"></script> -->
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/tabler.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/demo.min.css" />
 
     <style>
@@ -25,6 +25,7 @@
   </head>
   <body id="app">
     <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/js/demo-theme.js"></script>
+
     <div class="page">
       <!-- Navbar -->
       <header class="navbar navbar-expand-md d-print-none">
@@ -200,12 +201,13 @@
                 </div>
               </a>
               <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                <p class="dropdown-item" @click="logout()">logout</p>
                 <!-- <a href="#" class="dropdown-item">Status</a>
                 <a href="./profile.html" class="dropdown-item">Profile</a>
                 <a href="#" class="dropdown-item">Feedback</a>
                 <div class="dropdown-divider"></div>
                 <a href="./settings.html" class="dropdown-item">Settings</a> -->
-                <a href="" class="dropdown-item" @click="logout()">Logout</a>
+                <!-- <a href="./login" class="dropdown-item" @click="logout()">Logout</a> -->
               </div>
             </div>
           </div>
@@ -249,7 +251,7 @@
             <div class="row g-2 align-items-center">
               <div class="col">
                 <!-- Page pre-title -->
-                <div class="page-pretitle">Admin Dashboard</div>
+                <div class="page-pretitle">Admin Panel</div>
                 <h2 class="page-title">User Management</h2>
               </div>
               <!-- Page title actions -->
@@ -336,6 +338,7 @@
                           <th>Name</th>
                           <th>Email</th>
                           <th>Status</th>
+                          <th>Admin</th>
                           <th>Created At</th>
                           <th>Updated At</th>
 
@@ -347,7 +350,8 @@
                           <td class="">{{ user.id }}</td>
                           <td class="text-muted">{{ user.attributes.name }}</td>
                           <td class="text-muted">{{ user.attributes.email }}</td>
-                          <td class="text-muted">{{ user.attributes.active == 1 ? 'Activated' : 'Deactivated' }}</td>
+                          <td class="text-muted">{{ user.attributes.active == 1 ? 'Active' : 'Deactive' }}</td>
+                          <td class="text-muted">{{ user.attributes.isAdmin == 1 ? 'Yes' : 'No' }}</td>
                           <td class="text-muted">{{ user.attributes.created }}</td>
                           <td class="text-muted">{{ user.attributes.updated }}</td>
                           <td class="text-muted">
@@ -563,6 +567,18 @@
                   <option value="0">Deactivated</option>
                 </select>
               </div>
+              <div class="mb-3">
+                <div class="form-label">Admin</div>
+                <select
+                  class="form-select"
+                  @input="event => userRecord.data.attributes.isAdmin = event.target.value"
+                  :value="showEditPanel ? selectedUser.attributes.isAdmin : ''"
+                >
+                  <option selected>Choose Status</option>
+                  <option value="1">Yes</option>
+                  <option value="0">No</option>
+                </select>
+              </div>
               <div v-if="showEditPanel" class="mb-3">
                 <label class="form-label">Created At</label>
                 <input
@@ -740,13 +756,19 @@
           // Function to logout the user, remove the token from cookies and redirect to the login page
           const logout = async () => {
             try {
-              let response = await fetch(`/v1/admin/logout`, {
+              let response = await fetch(`/v1/admin/logout/${claims.userid}`, {
                 method: "DELETE",
                 headers: {
                   "Content-type": "application/json",
+                  Authorization: `Bearer ${token}`,
                 },
               });
-              const data = await response.json();
+
+              if (response.ok) {
+                // Response status is within the range 200-299, indicating success
+                localStorage.removeItem("ACCESS_TOKEN");
+                window.location.href = "/v1/admin/login";
+              }
 
               // if the response is not ok, throw an error
               if (!response.ok) {
@@ -754,8 +776,6 @@
                 return;
               }
               // remove the token from the local storage
-              localStorage.removeItem("ACCESS_TOKEN");
-              window.location.href = "/v1/admin/login";
             } catch (e) {
               console.log("Logout User Failed");
               console.log(e);

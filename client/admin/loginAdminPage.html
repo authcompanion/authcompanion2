@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/v1/web/styles/main.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/js/tabler.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/tabler.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/@simplewebauthn/browser@8.0.2/dist/bundle/index.es5.umd.min.js"></script>
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     <style>
@@ -17,149 +18,169 @@
 
     <title>Login</title>
   </head>
-  <body id="app">
+  <body id="app" class="d-flex flex-column">
     <!-- Alert -->
-    <div v-cloak v-if="showError" role="alert" class="p-4 border-red-500 rounded border-s-4 bg-red-50">
-      <div class="flex items-center gap-2 text-red-800">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
-          <path
-            fill-rule="evenodd"
-            d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
-            clip-rule="evenodd"
-          />
-        </svg>
-
-        <strong class="block font-medium"> Something went wrong </strong>
+    <div v-cloak v-if="showError" role="alert">
+      <div class="alert alert-danger" role="alert">
+        <div class="d-flex">
+          <div>
+            <!-- Download SVG icon from http://tabler-icons.io/i/alert-circle -->
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="icon alert-icon"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"></path>
+              <path d="M12 8v4"></path>
+              <path d="M12 16h.01"></path>
+            </svg>
+          </div>
+          <div>
+            <h4 class="alert-title">Something went wrong:</h4>
+            <div class="text-secondary">{{ errorDetail }}</div>
+          </div>
+        </div>
       </div>
-
-      <p class="mt-2 text-sm text-red-700">{{ errorDetail }}</p>
     </div>
     <!-- Form -->
-    <div class="max-w-screen-xl px-4 py-16 mx-auto sm:px-6 lg:px-8">
-      <div class="max-w-lg mx-auto">
-        <form @submit.prevent action="" class="p-4 mt-6 mb-0 rounded-lg shadow-lg sm:p-6 lg:p-8">
-          <div class="flex flex-row text-xl font-semibold">
-            <span class="mr-1 -rotate-90">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="w-6 h-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
+    <div class="page page-center">
+      <div class="container py-2 container-tight">
+        <!-- <div class="mb-4 text-center">
+          <a href="." class="navbar-brand navbar-brand-autodark">
+            <img src="./static/logo.svg" width="110" height="32" alt="Tabler" class="navbar-brand-image" />
+          </a>
+        </div> -->
+        <div class="card card-md">
+          <div class="card-body">
+            <h2 class="mb-4 text-center h2">Login to your admin panel</h2>
+            <form @submit.prevent action="" autocomplete="off" novalidate="">
+              <div class="mb-3">
+                <label class="form-label">Email address</label>
+                <input
+                  v-model="email"
+                  type="email"
+                  class="form-control"
+                  placeholder="your@email.com"
+                  autocomplete="off"
                 />
-              </svg>
-            </span>
-            Admin Dashboard Login
+              </div>
+              <div class="mb-2">
+                <label class="form-label">
+                  Password
+                  <!-- <span class="form-label-description">
+                    <a href="/v1/web/recovery">I forgot password</a>
+                  </span> -->
+                </label>
+                <div class="input-group input-group-flat">
+                  <input
+                    v-model="password"
+                    type="password"
+                    class="form-control"
+                    placeholder="Your password"
+                    autocomplete="off"
+                  />
+                  <span class="input-group-text">
+                    <a
+                      href="#"
+                      class="link-secondary"
+                      data-bs-toggle="tooltip"
+                      aria-label="Show password"
+                      data-bs-original-title="Show password"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="icon"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        stroke-width="2"
+                        stroke="currentColor"
+                        fill="none"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
+                        <path
+                          d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"
+                        ></path>
+                      </svg>
+                    </a>
+                  </span>
+                </div>
+              </div>
+
+              <div class="form-footer">
+                <button
+                  @click="submit"
+                  @keyup.enter="submit"
+                  type="submit"
+                  class="btn btn-primary d-flex justify-content-center align-items-center w-100"
+                >
+                  <span class="text-center flex-grow-1">Sign in</span>
+                  <span class="ms-auto">
+                    <svg
+                      width="16"
+                      height="16"
+                      x-description="Heroicon name: mini/lock-closed"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </form>
           </div>
-
-          <p class="my-4 text-lg mx-4text-left">Welcome, sign in with your admin credentials.</p>
-
-          <div class="my-4">
-            <label for="email" class="sr-only">Email</label>
-
-            <div class="relative">
-              <input
-                type="email"
-                class="w-full p-4 text-sm border-gray-200 rounded-lg shadow-sm pe-12"
-                type="email"
-                v-model="email"
-                placeholder="Enter email"
-              />
-
-              <span class="absolute inset-y-0 grid px-4 end-0 place-content-center">
+          <!-- <div class="hr-text">or</div>
+          <div class="card-body">
+            <button
+              @click="passkeySubmit"
+              type="submit"
+              class="btn btn-primary d-flex justify-content-center align-items-center w-100"
+            >
+              <span class="text-center flex-grow-1">Passkey</span>
+              <span class="ms-auto">
                 <svg
+                  width="16"
+                  height="16"
                   xmlns="http://www.w3.org/2000/svg"
-                  class="w-4 h-4 text-gray-400"
                   fill="none"
                   viewBox="0 0 24 24"
+                  stroke-width="1.5"
                   stroke="currentColor"
                 >
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
-                  />
+                    d="M7.864 4.243A7.5 7.5 0 0119.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 004.5 10.5a7.464 7.464 0 01-1.15 3.993m1.989 3.559A11.209 11.209 0 008.25 10.5a3.75 3.75 0 117.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 01-3.6 9.75m6.633-4.596a18.666 18.666 0 01-2.485 5.33"
+                  ></path>
                 </svg>
               </span>
-            </div>
-          </div>
-
-          <div class="my-4">
-            <label for="password" class="sr-only">Password</label>
-
-            <div class="relative">
-              <input
-                type="password"
-                class="w-full p-4 text-sm border-gray-200 rounded-lg shadow-sm pe-12"
-                v-model="password"
-                placeholder="Enter password"
-              />
-
-              <span class="absolute inset-y-0 grid px-4 end-0 place-content-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="w-4 h-4 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-
-          <button
-            type=""
-            class="block w-full px-5 py-3 mt-4 text-sm font-medium text-white bg-gray-800 rounded-lg"
-            @click="submit"
-            @keyup.enter="submit"
-          >
-            <span class="absolute flex items-center">
-              <svg
-                class="w-5 h-5 text-white group-hover:text-indigo-400"
-                x-description="Heroicon name: mini/lock-closed"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-            </span>
-            Sign in
-          </button>
-
-          <!-- <div class="relative flex items-center py-2 my-2">
-            <div class="flex-grow border-t border-gray-400"></div>
-            <span class="flex-shrink mx-4 text-gray-700">Or</span>
-            <div class="flex-grow border-t border-gray-400"></div>
+            </button>
           </div> -->
-        </form>
+        </div>
+        <!-- <div @click="createAccount" class="mt-3 text-center text-secondary">
+          Don't have account yet? <a href="#" tabindex="-1">Sign up</a>
+        </div> -->
       </div>
     </div>
+
     <div class="fixed inset-x-0 bottom-0">
       <div class="m-4 text-xs text-gray-400">
         Powered by
@@ -170,7 +191,7 @@
     </div>
     <!-- scripts -->
     <script type="module">
-      import { createApp, ref, computed } from "https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.prod.js";
+      import { createApp, ref, computed } from "https://cdn.jsdelivr.net/npm/vue@3.4.21/dist/vue.esm-browser.prod.js";
 
       createApp({
         setup() {

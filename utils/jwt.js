@@ -1,6 +1,9 @@
 import * as jose from "jose";
 import { randomUUID } from "crypto";
 import Database from "better-sqlite3";
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import { users } from "../db/sqlite/schema.js";
+import { eq } from "drizzle-orm";
 import config from "../config.js";
 import { createHash, verifyValueWithHash } from "./credential.js";
 import crypto from "crypto";
@@ -15,7 +18,7 @@ async function generateClientContext() {
 }
 
 // Creates a JWT token used for user authentication, with scope as "user"
-export async function makeAccesstoken(userObj, secretKey) {
+export async function makeAccesstoken(userAcc, secretKey) {
   try {
     // set default expiration time of the access jwt token
     let expirationTime = "1h";
@@ -25,19 +28,19 @@ export async function makeAccesstoken(userObj, secretKey) {
 
     // build the token claims
     const claims = {
-      userid: userObj.uuid,
-      name: userObj.name,
-      email: userObj.email,
+      userid: userAcc.uuid,
+      name: userAcc.name,
+      email: userAcc.email,
       userFingerprint: userFingerprintHash,
       scope: "user",
     };
 
-    if (userObj.metadata !== undefined && userObj.metadata !== null && userObj.metadata !== "{}") {
-      claims.metadata = JSON.parse(userObj.metadata);
+    if (userAcc.metadata !== undefined && userAcc.metadata !== null && userAcc.metadata !== "{}") {
+      claims.metadata = userAcc.metadata;
     }
 
-    if (userObj.appdata !== undefined && userObj.appdata !== null && userObj.appdata !== "{}") {
-      claims.app = JSON.parse(userObj.appdata);
+    if (userAcc.appdata !== undefined && userAcc.appdata !== null && userAcc.appdata !== "{}") {
+      claims.app = userAcc.appdata;
     }
 
     const jwt = await new jose.SignJWT(claims)
@@ -54,13 +57,13 @@ export async function makeAccesstoken(userObj, secretKey) {
       userFingerprint: userFingerprint,
     };
   } catch (error) {
-    fastify.log.info(error);
+    console.log(error);
     throw { statusCode: 500, message: "Server Error" };
   }
 }
 
 //https://datatracker.ietf.org/doc/html/draft-ietf-oauth-browser-based-apps-05#section-8
-export async function makeRefreshtoken(userObj, secretKey, { recoveryToken = false } = {}) {
+export async function makeRefreshtoken(userAcc, secretKey, { recoveryToken = false } = {}) {
   try {
     // set default expiration time of the jwt token
     let expirationTime = "7d";
@@ -70,27 +73,27 @@ export async function makeRefreshtoken(userObj, secretKey, { recoveryToken = fal
       expirationTime = "15m";
     }
     const claims = {
-      userid: userObj.uuid,
-      name: userObj.name,
-      email: userObj.email,
+      userid: userAcc.uuid,
+      name: userAcc.name,
+      email: userAcc.email,
     };
 
-    if (userObj.metadata !== undefined && userObj.metadata !== null && userObj.metadata !== "{}") {
-      claims.metadata = JSON.parse(userObj.metadata);
+    if (userAcc.metadata !== undefined && userAcc.metadata !== null && userAcc.metadata !== "{}") {
+      claims.metadata = userAcc.metadata;
     }
 
-    if (userObj.appdata !== undefined && userObj.appdata !== null && userObj.appdata !== "{}") {
-      claims.app = JSON.parse(userObj.appdata);
+    if (userAcc.appdata !== undefined && userAcc.appdata !== null && userAcc.appdata !== "{}") {
+      claims.app = userAcc.appdata;
     }
 
-    const db = new Database(config.DBPATH);
+    const sqlite = new Database(`${config.DBPATH}`);
+    const db = drizzle(sqlite);
 
+    // Generate a random UUID for the token
     const jwtid = randomUUID();
 
-    const stmt = db.prepare(
-      "UPDATE users SET jwt_id = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ?;"
-    );
-    stmt.run(jwtid, userObj.uuid);
+    // Update the admin table with the new JWT ID
+    db.update(users).set({ jwt_id: jwtid }).where(eq(users.uuid, userAcc.uuid)).run();
 
     const jwt = await new jose.SignJWT(claims)
       .setProtectedHeader({ alg: "HS256", typ: "JWT" })
@@ -103,13 +106,13 @@ export async function makeRefreshtoken(userObj, secretKey, { recoveryToken = fal
 
     return { token: jwt, expiration: payload.exp };
   } catch (error) {
-    fastify.log.info(error);
+    console.log(error);
     throw { statusCode: 500, message: "Server Error" };
   }
 }
 
 // Creates a JWT token used for Admin dashboard authentication, with scope as "admin"
-export async function makeAdminToken(userObj, secretKey) {
+export async function makeAdminToken(adminUserAcc, secretKey) {
   try {
     // set default expiration time of the jwt token
     let expirationTime = "1h";
@@ -118,9 +121,9 @@ export async function makeAdminToken(userObj, secretKey) {
     const { userFingerprint, userFingerprintHash } = await generateClientContext();
 
     const claims = {
-      userid: userObj.uuid,
-      name: userObj.name,
-      email: userObj.email,
+      userid: adminUserAcc.uuid,
+      name: adminUserAcc.name,
+      email: adminUserAcc.email,
       userFingerprint: userFingerprintHash,
       scope: "admin",
     };
@@ -139,37 +142,32 @@ export async function makeAdminToken(userObj, secretKey) {
       userFingerprint: userFingerprint,
     };
   } catch (error) {
-    fastify.log.info(error);
     throw { statusCode: 500, message: "Server Error" };
   }
 }
 
-export async function makeAdminRefreshtoken(adminObj, secretKey) {
+export async function makeAdminRefreshtoken(adminUserAcc, secretKey) {
   try {
     // Set default expiration time of the JWT token
     let expirationTime = "7d";
 
     // Define the token claims for the admin refresh token
     const claims = {
-      userid: adminObj.uuid,
-      name: adminObj.name,
-      email: adminObj.email,
+      userid: adminUserAcc.uuid,
+      name: adminUserAcc.name,
+      email: adminUserAcc.email,
       userFingerprint: null,
       scope: "admin",
     };
 
-    // Check if adminObj has metadata and appdata properties and add them to claims as needed
-
-    const db = new Database(config.DBPATH);
+    const sqlite = new Database(`${config.DBPATH}`);
+    const db = drizzle(sqlite);
 
     // Generate a random UUID for the token
     const jwtid = randomUUID();
 
-    // Update the admin table with the new JWT ID and update timestamp
-    const stmt = db.prepare(
-      "UPDATE admin SET jwt_id = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE uuid = ?;"
-    );
-    stmt.run(jwtid, adminObj.uuid);
+    // Update the admin table with the new JWT ID
+    db.update(users).set({ jwt_id: jwtid }).where(eq(users.uuid, adminUserAcc.uuid)).run();
 
     // Create and sign the JWT token
     const jwt = await new jose.SignJWT(claims)
@@ -184,6 +182,7 @@ export async function makeAdminRefreshtoken(adminObj, secretKey) {
 
     return { token: jwt, expiration: payload.exp };
   } catch (error) {
+    console.log(error);
     throw { statusCode: 500, message: "Server Error" };
   }
 }
@@ -207,7 +206,6 @@ export async function validateJWT(jwt, secretKey, fingerprint = null) {
 
     return payload;
   } catch (error) {
-    fastify.log.info(error);
     throw { statusCode: 500, message: "Server Error" };
   }
 }

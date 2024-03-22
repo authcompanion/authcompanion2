@@ -2,6 +2,8 @@ import config from "../../config.js";
 import { parse } from "cookie";
 import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import { verifyAuthenticationResponse } from "@simplewebauthn/server";
+import { users, storage, authenticator } from "../../db/sqlite/schema.js";
+import { eq, sql } from "drizzle-orm";
 
 export const loginVerificationHandler = async function (request, reply) {
   try {
@@ -16,17 +18,29 @@ export const loginVerificationHandler = async function (request, reply) {
     const cookies = parse(request.headers.cookie);
 
     //retrieve the session's challenge from storage
-    const storageStmt = this.db.prepare("SELECT data FROM storage WHERE sessionID = ?;");
-    const sessionChallenge = await storageStmt.get(cookies.sessionID);
+    const sessionChallenge = await this.db
+      .select({
+        data: storage.data,
+      })
+      .from(storage)
+      .where(eq(storage.sessionID, cookies.sessionID))
+      .get();
 
     //set userID from response
     const userID = request.body.response.userHandle;
 
     //retrieve the user's authenticator
-    const stmt = this.db.prepare(
-      "SELECT credentialPublicKey, credentialID, counter, transports FROM authenticator INNER JOIN users ON users.authenticator_id = authenticator.id WHERE users.uuid = ?;"
-    );
-    const userAuthenticator = await stmt.get(userID);
+    const userAuthenticator = await this.db
+      .select({
+        credentialPublicKey: authenticator.credentialPublicKey,
+        credentialID: authenticator.credentialID,
+        counter: authenticator.counter,
+        transports: authenticator.transports,
+      })
+      .from(authenticator)
+      .innerJoin(users, eq(users.authenticatorId, authenticator.id))
+      .where(eq(users.uuid, userID))
+      .get();
 
     //verify the request for login with all the information gathered
     const verification = await verifyAuthenticationResponse({
@@ -35,7 +49,7 @@ export const loginVerificationHandler = async function (request, reply) {
       expectedOrigin: origin,
       expectedRPID: rpID,
       authenticator: userAuthenticator,
-      requireUserVerification: true,
+      requireUserVerification: false,
     });
 
     //check if the registration request is verified
@@ -45,16 +59,23 @@ export const loginVerificationHandler = async function (request, reply) {
     }
 
     //session clean up in the storage
-    const deleteStmt = this.db.prepare("DELETE FROM storage WHERE sessionID = ?;");
-    await deleteStmt.run(cookies.sessionID);
+    await this.db.delete(storage).where(eq(storage.sessionID, cookies.sessionID)).run();
 
     // All looks good! Let's prepare the reply
 
     // Fetch user from database
-    const userStmt = this.db.prepare(
-      "SELECT uuid, name, email, jwt_id, password, active, created_at, updated_at FROM users WHERE uuid = ?;"
-    );
-    const userObj = await userStmt.get(userID);
+    const userObj = await this.db
+      .select({
+        uuid: users.uuid,
+        name: users.name,
+        email: users.email,
+        jwt_id: users.jwt_id,
+        active: users.active,
+        created_at: users.created_at,
+      })
+      .from(users)
+      .where(eq(users.uuid, userID))
+      .get();
 
     const userAccessToken = await makeAccesstoken(userObj, this.key);
     const userRefreshToken = await makeRefreshtoken(userObj, this.key);
@@ -85,6 +106,6 @@ export const loginVerificationHandler = async function (request, reply) {
       },
     };
   } catch (err) {
-    throw { statusCode: err.statusCode, message: err.message };
+    throw err;
   }
 };

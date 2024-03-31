@@ -1,11 +1,10 @@
 import fastifyPlugin from "fastify-plugin";
 import config from "../config.js";
-import { users } from "../db/sqlite/schema.js";
 import { writeFileSync } from "fs";
 import { createId } from "@paralleldrive/cuid2";
 import { createHash } from "../utils/credential.js";
 import * as crypto from "crypto";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 //function to generate a random password using crypto module
 const generatePassword = function () {
@@ -20,11 +19,12 @@ const setupAdminKey = async function (fastify) {
     }
 
     //check if the admin user already exists on server startup
-    const adminUser = await fastify.db.select({ name: users.name }).from(users).where(eq(users.active, 1)).get();
+    const adminUser = await fastify.db
+      .select({ name: fastify.users.name })
+      .from(fastify.users)
+      .where(eq(fastify.users.email, "admin@localhost"));
 
-    if (adminUser) {
-      //register the admin user on the fastify instance
-      //fastify.decorate("registeredAdminUser", adminUser);
+    if (adminUser.length > 0) {
       return;
     }
 
@@ -32,6 +32,7 @@ const setupAdminKey = async function (fastify) {
     const uuid = createId();
     const adminPwd = generatePassword();
     const hashPwd = await createHash(adminPwd);
+    const now = new Date().toISOString(); // Create a Date object with the current date and time
 
     //Create a default admin user account
     const userObj = {
@@ -39,21 +40,16 @@ const setupAdminKey = async function (fastify) {
       name: "admin",
       email: "admin@localhost",
       password: hashPwd,
-      active: 1,
-      isAdmin: 1,
-      created_at: sql`DATETIME('now')`,
+      active: true,
+      isAdmin: true,
+      created_at: now,
+      updated_at: now,
     };
 
-    await fastify.db.insert(users).values({ ...userObj });
+    await fastify.db.insert(fastify.users).values({ ...userObj });
 
     //export admin password to a file. Admin password is only exported once on server startup and can be traded for an access token
     writeFileSync(config.ADMINKEYPATH, `admin email: ${userObj.email} \nadmin password: ${adminPwd}`);
-    fastify.log.info(`Generated Admin API Key here: ${config.ADMINKEYPATH}...`);
-    fastify.log.info(`Admin Email: ${userObj.email} & Password: ${adminPwd}`);
-
-    //register the admin user on the fastify instance
-    // fastify.decorate("registeredAdminUser", user);
-
     fastify.log.info(`Using Admin API Key: ${config.ADMINKEYPATH}`);
   } catch (error) {
     console.log(error);

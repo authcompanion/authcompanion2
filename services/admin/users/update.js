@@ -1,6 +1,5 @@
 import { createHash } from "../../../utils/credential.js";
-import { users } from "../../../db/sqlite/schema.js";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export const updateUserHandler = async function (request, reply) {
   try {
@@ -12,12 +11,18 @@ export const updateUserHandler = async function (request, reply) {
 
     //Check if the user exists in the database
     const existingAccount = await this.db
-      .select({ uuid: users.uuid, email: users.email })
-      .from(users)
-      .where(eq(users.uuid, request.params.uuid))
-      .get();
+      .select({
+        name: this.users.name,
+        email: this.users.email,
+        metadata: this.users.metadata,
+        appdata: this.users.appdata,
+        isAdmin: this.users.isAdmin,
+        active: this.users.active,
+      })
+      .from(this.users)
+      .where(eq(this.users.uuid, request.params.uuid));
 
-    if (!existingAccount) {
+    if (!existingAccount[0]) {
       request.log.info("Admin API: User does not exist in database, update failed");
       throw { statusCode: 404, message: "User Not Found" };
     }
@@ -25,12 +30,11 @@ export const updateUserHandler = async function (request, reply) {
     //Check if the user's email is being updated and if its not the same email as the user's current email, check if the new email is already in use
     if (request.body.data.attributes.email && request.body.data.attributes.email !== existingAccount.email) {
       const existingEmail = await this.db
-        .select({ email: users.email })
-        .from(users)
-        .where(eq(users.email, request.body.data.attributes.email))
-        .get();
+        .select({ email: this.users.email })
+        .from(this.users)
+        .where(eq(this.users.email, request.body.data.attributes.email));
 
-      if (existingEmail) {
+      if (existingEmail[0]) {
         request.log.info("Admin API: User's email is already in use, update failed");
         throw { statusCode: 400, message: "Email Already In Use" };
       }
@@ -64,43 +68,46 @@ export const updateUserHandler = async function (request, reply) {
       request.body.data.attributes.password = hashpwd;
     }
 
-    //Required for drizzle orm to execute sql
-    const nameValue = request.body.data.attributes.name || null;
-    const emailValue = request.body.data.attributes.email || null;
-    const passwordValue = request.body.data.attributes.password || null;
-    const metadataValue = JSON.stringify(request.body.data.attributes.metadata) || null;
-    const appValue = JSON.stringify(request.body.data.attributes.appdata) || null;
-    const activeValue = request.body.data.attributes.active ?? null;
-    const adminValue = request.body.data.attributes.isAdmin ?? null;
+    const data = request.body.data.attributes;
+    const now = new Date().toISOString(); // Create a Date object with the current date and time
 
-    //Per json-api spec: If a request does not include all of the attributes for a resource, the server MUST interpret the missing attributes as if they were included with their current values. The server MUST NOT interpret missing attributes as null values.
-    const stmt = sql`
-    UPDATE users
-    SET
-      name = coalesce(${nameValue}, name),
-      email = coalesce(${emailValue}, email),
-      password = coalesce(${passwordValue}, password),
-      metadata = coalesce(${metadataValue}, metadata),
-      appdata = coalesce(${appValue}, appdata),
-      active = coalesce(${activeValue}, active),
-      isAdmin = coalesce(${adminValue}, isAdmin),
-      updated_at = strftime('%Y-%m-%d %H:%M:%S','now')
-    WHERE uuid = ${request.params.uuid}
-    RETURNING uuid, name, email, password, metadata, appdata, active, isAdmin, created_at, updated_at;
-  `;
+    const updateData = {
+      name: data.name ?? existingAccount[0].name,
+      email: data.email ?? existingAccount[0].email,
+      password: data.password ?? request.body.data.attributes.password,
+      metadata: data.metadata ?? existingAccount[0].metadata,
+      appdata: data.appdata ?? existingAccount[0].appdata,
+      active: Boolean(data.active ?? existingAccount[0].active),
+      isAdmin: Boolean(data.isAdmin ?? existingAccount[0].isAdmin),
+      updated_at: now,
+    };
 
-    const user = this.db.get(stmt);
+    const user = await this.db
+      .update(this.users)
+      .set(updateData)
+      .where(eq(this.users.uuid, request.params.uuid))
+      .returning({
+        uuid: this.users.uuid,
+        name: this.users.name,
+        email: this.users.email,
+        metadata: this.users.metadata,
+        appdata: this.users.appdata,
+        isAdmin: this.users.isAdmin,
+        active: this.users.active,
+        created_at: this.users.created_at,
+        updated_at: this.users.updated_at,
+      });
 
     //Prepare the server response
     const userAttributes = {
-      name: user.name,
-      email: user.email,
-      metadata: JSON.parse(user.metadata),
-      app: JSON.parse(user.appdata),
-      active: user.active,
-      isAdmin: user.isAdmin,
-      created: user.created_at,
-      updated: user.updated_at,
+      name: user[0].name,
+      email: user[0].email,
+      metadata: user[0].metadata,
+      app: user[0].appdata,
+      active: user[0].active,
+      isAdmin: user[0].isAdmin,
+      created: user[0].created_at,
+      updated: user[0].updated_at,
     };
 
     reply.statusCode = 200;
@@ -109,7 +116,7 @@ export const updateUserHandler = async function (request, reply) {
     return {
       data: {
         type: "users",
-        id: user.uuid,
+        id: user[0].uuid,
         attributes: userAttributes,
       },
     };

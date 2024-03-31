@@ -1,12 +1,12 @@
 {
   "version": "5",
-  "dialect": "sqlite",
+  "dialect": "pg",
   "entries": [
     {
       "idx": 0,
       "version": "5",
-      "when": 1711561569258,
-      "tag": "0000_majestic_felicia_hardy",
+      "when": 1711561559771,
+      "tag": "0000_futuristic_kulan_gath",
       "breakpoints": true
     }
   ]

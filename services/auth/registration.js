@@ -4,8 +4,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import config from "../../config.js";
 import { refreshCookie, fgpCookie } from "../../utils/cookies.js";
-import { users } from "../../db/sqlite/schema.js";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export const registrationHandler = async function (request, reply) {
   try {
@@ -17,12 +16,11 @@ export const registrationHandler = async function (request, reply) {
 
     //Check if the user exists already
     const existingAccount = await this.db
-      .select({ uuid: users.uuid })
-      .from(users)
-      .where(eq(users.email, request.body.data.attributes.email))
-      .get();
+      .select({ uuid: this.users.uuid })
+      .from(this.users)
+      .where(eq(this.users.email, request.body.data.attributes.email));
 
-    if (existingAccount) {
+    if (existingAccount[0]) {
       request.log.info("Auth API: User already exists in database, registration failed");
       throw { statusCode: 400, message: "Registration Failed" };
     }
@@ -31,34 +29,36 @@ export const registrationHandler = async function (request, reply) {
     const hashPwd = await createHash(request.body.data.attributes.password);
     const uuid = createId();
     const jwtid = randomUUID();
+    const now = new Date().toISOString(); // Create a Date object with the current date and time
 
     const userObj = {
       uuid: uuid,
       name: request.body.data.attributes.name,
       email: request.body.data.attributes.email,
       password: hashPwd,
-      active: 1,
+      active: true,
       metadata: request.body.data.attributes.metadata,
       jwt_id: jwtid,
-      created_at: sql`DATETIME('now')`,
+      created_at: now,
+      updated_at: now,
     };
 
     const createdUser = await this.db
-      .insert(users)
+      .insert(this.users)
       .values({ ...userObj })
       .returning({
-        uuid: users.uuid,
-        name: users.name,
-        email: users.email,
-        active: users.active,
-        metadata: users.metadata,
-        created: users.created_at,
-        updated: users.updated_at,
+        uuid: this.users.uuid,
+        name: this.users.name,
+        email: this.users.email,
+        active: this.users.active,
+        metadata: this.users.metadata,
+        created: this.users.created_at,
+        updated: this.users.updated_at,
       });
 
     //Prepare the reply
     const userAccessToken = await makeAccesstoken(createdUser[0], this.key);
-    const userRefreshToken = await makeRefreshtoken(createdUser[0], this.key);
+    const userRefreshToken = await makeRefreshtoken(createdUser[0], this.key, this);
 
     const userAttributes = {
       name: createdUser[0].name,

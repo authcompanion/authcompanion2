@@ -1,7 +1,6 @@
 import config from "../../config.js";
 import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import { verifyRegistrationResponse } from "@simplewebauthn/server";
-import { users, authenticator } from "../../db/sqlite/schema.js";
 import { eq, sql } from "drizzle-orm";
 
 export const registrationVerificationHandler = async function (request, reply) {
@@ -16,16 +15,15 @@ export const registrationVerificationHandler = async function (request, reply) {
     // Fetch user from database
     const requestedAccount = request.headers["x-authc-app-userid"];
 
-    const { challenge } = await this.db
-      .select({ challenge: users.challenge })
-      .from(users)
-      .where(eq(users.uuid, requestedAccount))
-      .get();
+    const stmt = await this.db
+      .select({ challenge: this.users.challenge })
+      .from(this.users)
+      .where(eq(this.users.uuid, requestedAccount));
 
     //verify the request for registration
     const verification = await verifyRegistrationResponse({
       response: request.body,
-      expectedChallenge: challenge,
+      expectedChallenge: stmt[0].challenge,
       expectedOrigin: origin,
       expectedRPID: rpID,
       requireUserVerification: false,
@@ -39,36 +37,39 @@ export const registrationVerificationHandler = async function (request, reply) {
 
     //create the returned authenticator
     const { credentialPublicKey, credentialID, counter } = verification.registrationInfo;
+    console.log(credentialPublicKey);
+    console.log(credentialID);
 
     const authenticatorObj = await this.db
-      .insert(authenticator)
+      .insert(this.authenticator)
       .values({
         credentialID: credentialID,
         credentialPublicKey: credentialPublicKey,
         counter: counter,
         transports: request.body.response.transports,
       })
-      .returning({ id: authenticator.id });
+      .returning({ id: this.authenticator.id });
 
     //associate the authenticator to the user and activate the account
     const userAcc = await this.db
-      .update(users)
+      .update(this.users)
       .set({ authenticatorId: authenticatorObj[0].id, active: 1 })
-      .where(eq(users.uuid, requestedAccount))
+      .where(eq(this.users.uuid, requestedAccount))
       .returning({
-        uuid: users.uuid,
-        name: users.name,
-        email: users.email,
+        uuid: this.users.uuid,
+        name: this.users.name,
+        email: this.users.email,
+        created_at: this.users.created_at,
       });
 
     //Prepare the reply
     const userAccessToken = await makeAccesstoken(userAcc[0], this.key);
-    const userRefreshToken = await makeRefreshtoken(userAcc[0], this.key);
+    const userRefreshToken = await makeRefreshtoken(userAcc[0], this.key, this);
 
     const userAttributes = {
-      name: userAcc.name,
-      email: userAcc.email,
-      created: userAcc.created_at,
+      name: userAcc[0].name,
+      email: userAcc[0].email,
+      created: userAcc[0].created_at,
       access_token: userAccessToken.token,
       access_token_expiry: userAccessToken.expiration,
     };
@@ -85,7 +86,7 @@ export const registrationVerificationHandler = async function (request, reply) {
 
     return {
       data: {
-        id: userAcc.uuid,
+        id: userAcc[0].uuid,
         type: "Register",
         attributes: userAttributes,
       },

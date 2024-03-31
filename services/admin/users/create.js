@@ -1,8 +1,7 @@
 import { createHash } from "../../../utils/credential.js";
 import { randomUUID } from "crypto";
 import { createId } from "@paralleldrive/cuid2";
-import { users } from "../../../db/sqlite/schema.js";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export const createUserHandler = async function (request, reply) {
   try {
@@ -14,12 +13,11 @@ export const createUserHandler = async function (request, reply) {
 
     //Check if the user exists already
     const existingAccount = await this.db
-      .select({ uuid: users.uuid })
-      .from(users)
-      .where(eq(users.email, request.body.data.attributes.email))
-      .get();
+      .select({ uuid: this.users.uuid })
+      .from(this.users)
+      .where(eq(this.users.email, request.body.data.attributes.email));
 
-    if (existingAccount) {
+    if (existingAccount[0]) {
       request.log.info("Admin API: User's email already exists in database, creation failed");
       throw { statusCode: 400, message: "Duplicate Email Address Exists" };
     }
@@ -50,33 +48,35 @@ export const createUserHandler = async function (request, reply) {
     const hashPwd = await createHash(request.body.data.attributes.password);
     const uuid = createId();
     const jwtid = randomUUID();
+    const now = new Date().toISOString(); // Create a Date object with the current date and time
 
     const userObj = {
       uuid: uuid,
       name: request.body.data.attributes.name,
       email: request.body.data.attributes.email,
       password: hashPwd,
-      active: 1,
+      active: true,
       isAdmin: request.body.data.attributes.isAdmin,
       metadata: request.body.data.attributes.metadata,
-      appdata: request.body.data.attributes.app,
+      appdata: request.body.data.attributes.appdata,
       jwt_id: jwtid,
-      created_at: sql`DATETIME('now')`,
+      created_at: now,
+      updated_at: now,
     };
 
     const createdUser = await this.db
-      .insert(users)
+      .insert(this.users)
       .values({ ...userObj })
       .returning({
-        uuid: users.uuid,
-        name: users.name,
-        email: users.email,
-        metadata: users.metadata,
-        appdata: users.appdata,
-        active: users.active,
-        isAdmin: users.isAdmin,
-        created: users.created_at,
-        updated: users.updated_at,
+        uuid: this.users.uuid,
+        name: this.users.name,
+        email: this.users.email,
+        metadata: this.users.metadata,
+        appdata: this.users.appdata,
+        active: this.users.active,
+        isAdmin: this.users.isAdmin,
+        created: this.users.created_at,
+        updated: this.users.updated_at,
       });
 
     reply.statusCode = 201;

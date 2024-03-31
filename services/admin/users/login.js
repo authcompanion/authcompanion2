@@ -1,7 +1,6 @@
 import { verifyValueWithHash, secureCookie } from "../../../utils/credential.js";
 import { makeAdminToken, makeAdminRefreshtoken } from "../../../utils/jwt.js";
 import config from "../../../config.js";
-import { users } from "../../../db/sqlite/schema.js";
 import { eq } from "drizzle-orm";
 
 export const loginHandler = async function (request, reply) {
@@ -15,17 +14,15 @@ export const loginHandler = async function (request, reply) {
     // Fetch the registered admin user from the database
     const existingAccount = await this.db
       .select({
-        uuid: users.uuid,
-        name: users.name,
-        email: users.email,
-        password: users.password,
-        active: users.active,
-        created_at: users.created_at,
+        uuid: this.users.uuid,
+        name: this.users.name,
+        email: this.users.email,
+        password: this.users.password,
+        active: this.users.active,
+        created_at: this.users.created_at,
       })
-      .from(users)
-      .where(eq(users.email, request.body.data.attributes.email))
-      .where(eq(users.isAdmin, 1))
-      .get();
+      .from(this.users)
+      .where(eq(this.users.email, request.body.data.attributes.email));
 
     // Check if admin user does not exist in the database
     if (!existingAccount) {
@@ -33,14 +30,14 @@ export const loginHandler = async function (request, reply) {
       throw { statusCode: 400, message: "Login Failed" };
     }
     // Check if user has an 'active' account
-    if (!existingAccount.active) {
+    if (!existingAccount[0].active) {
       request.log.info("Admin API: User account is not active, login failed");
       throw { statusCode: 400, message: "Login Failed" };
     }
 
     const passwordCheckResult = await verifyValueWithHash(
       request.body.data.attributes.password,
-      existingAccount.password
+      existingAccount[0].password
     );
 
     // Check if user has the correct password
@@ -48,15 +45,15 @@ export const loginHandler = async function (request, reply) {
       request.log.info("Admin API: User password is incorrect, login failed");
       throw { statusCode: 400, message: "Login Failed" };
     }
-
     // Looks good! Let's prepare the reply
-    const adminAccessToken = await makeAdminToken(existingAccount, this.key);
-    const adminRefreshToken = await makeAdminRefreshtoken(existingAccount, this.key);
+    const adminAccessToken = await makeAdminToken(existingAccount[0], this.key);
+    const adminRefreshToken = await makeAdminRefreshtoken(existingAccount[0], this.key, this);
 
     const userAttributes = {
-      name: existingAccount.name,
-      email: existingAccount.email,
-      created: existingAccount.created_at,
+      uuid: existingAccount[0].uuid,
+      name: existingAccount[0].name,
+      email: existingAccount[0].email,
+      created: existingAccount[0].created_at,
       access_token: adminAccessToken.token,
       access_token_expiry: adminAccessToken.expiration,
       refresh_token: adminRefreshToken.token,

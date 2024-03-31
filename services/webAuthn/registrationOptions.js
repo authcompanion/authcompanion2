@@ -5,8 +5,6 @@ import { nouns } from "../../utils/names.js";
 import { createHash } from "../../utils/credential.js";
 import crypto from "crypto";
 import { generateRegistrationOptions } from "@simplewebauthn/server";
-import { users } from "../../db/sqlite/schema.js";
-import { eq, sql } from "drizzle-orm";
 
 export const registrationOptionsHandler = async function (request, reply) {
   try {
@@ -52,15 +50,18 @@ export const registrationOptionsHandler = async function (request, reply) {
     //build email
     const generatedUniqueEmail = `placeholder+${Math.random().toString(36).substring(8)}@example.com`;
 
+    const now = new Date().toISOString(); // Create a Date object with the current date and time
+
     //create user
-    await this.db.insert(users).values({
+    await this.db.insert(this.users).values({
       uuid: userUUID,
       name: userName,
       email: generatedUniqueEmail,
       password: hashpwd,
       challenge: generatedOptions.challenge,
       active: 0,
-      created_at: sql`DATETIME('now')`,
+      created_at: now,
+      updated_at: now,
     });
 
     //send the reply

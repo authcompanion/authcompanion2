@@ -1,8 +1,5 @@
 import * as jose from "jose";
 import { randomUUID } from "crypto";
-import Database from "better-sqlite3";
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import { users } from "../db/sqlite/schema.js";
 import { eq } from "drizzle-orm";
 import config from "../config.js";
 import { createHash, verifyValueWithHash } from "./credential.js";
@@ -63,7 +60,7 @@ export async function makeAccesstoken(userAcc, secretKey) {
 }
 
 //https://datatracker.ietf.org/doc/html/draft-ietf-oauth-browser-based-apps-05#section-8
-export async function makeRefreshtoken(userAcc, secretKey, { recoveryToken = false } = {}) {
+export async function makeRefreshtoken(userAcc, secretKey, fastifyInstance, { recoveryToken = false } = {}) {
   try {
     // set default expiration time of the jwt token
     let expirationTime = "7d";
@@ -86,14 +83,14 @@ export async function makeRefreshtoken(userAcc, secretKey, { recoveryToken = fal
       claims.app = userAcc.appdata;
     }
 
-    const sqlite = new Database(`${config.DBPATH}`);
-    const db = drizzle(sqlite);
-
     // Generate a random UUID for the token
     const jwtid = randomUUID();
 
     // Update the admin table with the new JWT ID
-    db.update(users).set({ jwt_id: jwtid }).where(eq(users.uuid, userAcc.uuid)).run();
+    await fastifyInstance.db
+      .update(fastifyInstance.users)
+      .set({ jwt_id: jwtid })
+      .where(eq(fastifyInstance.users.uuid, userAcc.uuid));
 
     const jwt = await new jose.SignJWT(claims)
       .setProtectedHeader({ alg: "HS256", typ: "JWT" })
@@ -146,7 +143,7 @@ export async function makeAdminToken(adminUserAcc, secretKey) {
   }
 }
 
-export async function makeAdminRefreshtoken(adminUserAcc, secretKey) {
+export async function makeAdminRefreshtoken(adminUserAcc, secretKey, fastifyInstance) {
   try {
     // Set default expiration time of the JWT token
     let expirationTime = "7d";
@@ -160,14 +157,14 @@ export async function makeAdminRefreshtoken(adminUserAcc, secretKey) {
       scope: "admin",
     };
 
-    const sqlite = new Database(`${config.DBPATH}`);
-    const db = drizzle(sqlite);
-
     // Generate a random UUID for the token
     const jwtid = randomUUID();
 
     // Update the admin table with the new JWT ID
-    db.update(users).set({ jwt_id: jwtid }).where(eq(users.uuid, adminUserAcc.uuid)).run();
+    await fastifyInstance.db
+      .update(fastifyInstance.users)
+      .set({ jwt_id: jwtid })
+      .where(eq(fastifyInstance.users.uuid, adminUserAcc.uuid));
 
     // Create and sign the JWT token
     const jwt = await new jose.SignJWT(claims)

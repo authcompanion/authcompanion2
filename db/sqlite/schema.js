@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { sqliteTable, foreignKey, integer, text, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { sqliteTable, integer, text } from "drizzle-orm/sqlite-core";
 
 export const users = sqliteTable("users", {
   id: integer("id").primaryKey({ autoIncrement: true }),
@@ -15,9 +15,7 @@ export const users = sqliteTable("users", {
   metadata: text("metadata", { mode: "json" }),
   appdata: text("appdata", { mode: "json" }),
   created_at: text("created_at").notNull(),
-  updated_at: text("updated_at")
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP`),
+  updated_at: text("updated_at").notNull(),
 });
 
 export const authenticator = sqliteTable("authenticator", {

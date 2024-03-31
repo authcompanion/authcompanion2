@@ -1,5 +1,4 @@
-import { users } from "../../../db/sqlite/schema.js";
-import { asc, sql, count, like } from "drizzle-orm";
+import { asc, count, like } from "drizzle-orm";
 
 export const listUsersHandler = async function (request, reply) {
   try {
@@ -11,9 +10,9 @@ export const listUsersHandler = async function (request, reply) {
 
     const userList = await this.db
       .select()
-      .from(users)
-      .where(searchEmail ? like(users.email, `%${searchEmail}%`) : null)
-      .orderBy(asc(users.id))
+      .from(this.users)
+      .where(searchEmail ? like(this.users.email, `%${searchEmail}%`) : null)
+      .orderBy(asc(this.users.id))
       .limit(size)
       .offset((page - 1) * size);
 
@@ -37,8 +36,8 @@ export const listUsersHandler = async function (request, reply) {
     // Count total users
     const totalCountResult = await this.db
       .select({ count: count() })
-      .from(users)
-      .where(searchEmail ? like(users.email, `%${searchEmail}%`) : null);
+      .from(this.users)
+      .where(searchEmail ? like(this.users.email, `%${searchEmail}%`) : null);
 
     const totalCount = totalCountResult[0].count;
 

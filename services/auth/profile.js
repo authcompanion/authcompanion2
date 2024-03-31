@@ -2,8 +2,7 @@ import { createHash } from "../../utils/credential.js";
 import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import config from "../../config.js";
 import { refreshCookie, fgpCookie } from "../../utils/cookies.js";
-import { users } from "../../db/sqlite/schema.js";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export const userProfileHandler = async function (request, reply) {
   try {
@@ -15,10 +14,12 @@ export const userProfileHandler = async function (request, reply) {
 
     //Fetch user from Database
     const existingAccount = await this.db
-      .select({ uuid: users.uuid, email: users.email })
-      .from(users)
-      .where(eq(users.uuid, request.jwtRequestPayload.userid))
-      .get();
+      .select({
+        name: this.users.name,
+        email: this.users.email,
+      })
+      .from(this.users)
+      .where(eq(this.users.uuid, request.jwtRequestPayload.userid));
 
     //Check if the user exists already
     if (!existingAccount) {
@@ -29,10 +30,9 @@ export const userProfileHandler = async function (request, reply) {
     //Check if the user's email is being updated and if its not the same email as the user's current email, check if the new email is already in use
     if (request.body.data.attributes.email && request.body.data.attributes.email !== existingAccount.email) {
       const existingEmail = await this.db
-        .select({ email: users.email })
-        .from(users)
-        .where(eq(users.email, request.body.data.attributes.email))
-        .get();
+        .select({ email: this.users.email })
+        .from(this.users)
+        .where(eq(this.users.email, request.body.data.attributes.email));
 
       if (existingEmail) {
         request.log.info("Admin API: User's email is already in use, update failed");
@@ -46,34 +46,39 @@ export const userProfileHandler = async function (request, reply) {
       request.body.data.attributes.password = hashpwd;
     }
 
-    //Required for drizzle orm to execute sql
-    const nameValue = request.body.data.attributes.name || null;
-    const emailValue = request.body.data.attributes.email || null;
-    const passwordValue = request.body.data.attributes.password || null;
+    const data = request.body.data.attributes;
+    const now = new Date().toISOString(); // Create a Date object with the current date and time
 
-    //Per json-api spec: If a request does not include all of the attributes for a resource, the server MUST interpret the missing attributes as if they were included with their current values. The server MUST NOT interpret missing attributes as null values.
-    const stmt = sql`
-    UPDATE users
-    SET
-      name = coalesce(${nameValue}, name),
-      email = coalesce(${emailValue}, email),
-      password = coalesce(${passwordValue}, password),
-      updated_at = strftime('%Y-%m-%d %H:%M:%S','now')
-    WHERE uuid = ${request.jwtRequestPayload.userid}
-    RETURNING uuid, name, email, metadata, appdata, active, created_at, updated_at;
-  `;
+    const updateData = {
+      name: data.name ?? existingAccount[0].name,
+      email: data.email ?? existingAccount[0].email,
+      password: data.password ?? request.body.data.attributes.password,
+      updated_at: now,
+    };
 
-    const user = this.db.get(stmt);
+    const user = await this.db
+      .update(this.users)
+      .set(updateData)
+      .where(eq(this.users.uuid, request.jwtRequestPayload.userid))
+      .returning({
+        uuid: this.users.uuid,
+        name: this.users.name,
+        email: this.users.email,
+        metadata: this.users.metadata,
+        active: this.users.active,
+        created_at: this.users.created_at,
+        updated_at: this.users.updated_at,
+      });
 
     //Prepare the reply
-    const userAccessToken = await makeAccesstoken(user, this.key);
-    const userRefreshToken = await makeRefreshtoken(user, this.key);
+    const userAccessToken = await makeAccesstoken(user[0], this.key);
+    const userRefreshToken = await makeRefreshtoken(user[0], this.key, this);
 
     const userAttributes = {
-      name: user.name,
-      email: user.email,
-      created: user.created_at,
-      updated: user.updated_at,
+      name: user[0].name,
+      email: user[0].email,
+      created: user[0].created_at,
+      updated: user[0].updated_at,
       access_token: userAccessToken.token,
       access_token_expiry: userAccessToken.expiration,
     };
@@ -86,7 +91,7 @@ export const userProfileHandler = async function (request, reply) {
     return {
       data: {
         type: "users",
-        id: user.uuid,
+        id: user[0].uuid,
         attributes: userAttributes,
       },
     };

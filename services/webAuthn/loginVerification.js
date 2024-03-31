@@ -2,8 +2,7 @@ import config from "../../config.js";
 import { parse } from "cookie";
 import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import { verifyAuthenticationResponse } from "@simplewebauthn/server";
-import { users, storage, authenticator } from "../../db/sqlite/schema.js";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export const loginVerificationHandler = async function (request, reply) {
   try {
@@ -20,11 +19,10 @@ export const loginVerificationHandler = async function (request, reply) {
     //retrieve the session's challenge from storage
     const sessionChallenge = await this.db
       .select({
-        data: storage.data,
+        data: this.storage.data,
       })
-      .from(storage)
-      .where(eq(storage.sessionID, cookies.sessionID))
-      .get();
+      .from(this.storage)
+      .where(eq(this.storage.sessionID, cookies.sessionID));
 
     //set userID from response
     const userID = request.body.response.userHandle;
@@ -32,25 +30,26 @@ export const loginVerificationHandler = async function (request, reply) {
     //retrieve the user's authenticator
     const userAuthenticator = await this.db
       .select({
-        credentialPublicKey: authenticator.credentialPublicKey,
-        credentialID: authenticator.credentialID,
-        counter: authenticator.counter,
-        transports: authenticator.transports,
+        credentialPublicKey: this.authenticator.credentialPublicKey,
+        credentialID: this.authenticator.credentialID,
+        counter: this.authenticator.counter,
+        transports: this.authenticator.transports,
       })
-      .from(authenticator)
-      .innerJoin(users, eq(users.authenticatorId, authenticator.id))
-      .where(eq(users.uuid, userID))
-      .get();
+      .from(this.authenticator)
+      .innerJoin(this.users, eq(this.users.authenticatorId, this.authenticator.id))
+      .where(eq(this.users.uuid, userID));
 
     //verify the request for login with all the information gathered
     const verification = await verifyAuthenticationResponse({
       response: request.body,
-      expectedChallenge: sessionChallenge.data,
+      expectedChallenge: sessionChallenge[0].data,
       expectedOrigin: origin,
       expectedRPID: rpID,
-      authenticator: userAuthenticator,
+      authenticator: userAuthenticator[0],
       requireUserVerification: false,
     });
+
+    console.log(verification);
 
     //check if the registration request is verified
     if (!verification.verified) {
@@ -59,31 +58,30 @@ export const loginVerificationHandler = async function (request, reply) {
     }
 
     //session clean up in the storage
-    await this.db.delete(storage).where(eq(storage.sessionID, cookies.sessionID)).run();
+    await this.db.delete(this.storage).where(eq(this.storage.sessionID, this.cookies.sessionID));
 
     // All looks good! Let's prepare the reply
 
     // Fetch user from database
     const userObj = await this.db
       .select({
-        uuid: users.uuid,
-        name: users.name,
-        email: users.email,
-        jwt_id: users.jwt_id,
-        active: users.active,
-        created_at: users.created_at,
+        uuid: this.users.uuid,
+        name: this.users.name,
+        email: this.users.email,
+        jwt_id: this.users.jwt_id,
+        active: this.users.active,
+        created_at: this.users.created_at,
       })
-      .from(users)
-      .where(eq(users.uuid, userID))
-      .get();
+      .from(this.users)
+      .where(eq(this.users.uuid, userID));
 
-    const userAccessToken = await makeAccesstoken(userObj, this.key);
-    const userRefreshToken = await makeRefreshtoken(userObj, this.key);
+    const userAccessToken = await makeAccesstoken(userObj[0], this.key);
+    const userRefreshToken = await makeRefreshtoken(userObj[0], this.key, this);
 
     const userAttributes = {
-      name: userObj.name,
-      email: userObj.email,
-      created: userObj.created_at,
+      name: userObj[0].name,
+      email: userObj[0].email,
+      created: userObj[0].created_at,
       access_token: userAccessToken.token,
       access_token_expiry: userAccessToken.expiration,
     };
@@ -100,7 +98,7 @@ export const loginVerificationHandler = async function (request, reply) {
 
     return {
       data: {
-        id: userObj.uuid,
+        id: userObj[0].uuid,
         type: "Login",
         attributes: userAttributes,
       },

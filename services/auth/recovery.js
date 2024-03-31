@@ -1,7 +1,6 @@
 import { makeRefreshtoken } from "../../utils/jwt.js";
 import config from "../../config.js";
 import { SMTPClient } from "emailjs";
-import { users } from "../../db/sqlite/schema.js";
 import { eq } from "drizzle-orm";
 
 export const profileRecoveryHandler = async function (request, reply) {
@@ -17,10 +16,9 @@ export const profileRecoveryHandler = async function (request, reply) {
   try {
     //Fetch user from Database
     const existingAccount = await this.db
-      .select({ uuid: users.uuid, name: users.name, email: users.email })
-      .from(users)
-      .where(eq(users.email, request.body.email))
-      .get();
+      .select({ uuid: this.users.uuid, name: this.users.name, email: this.users.email })
+      .from(this.users)
+      .where(eq(this.users.email, request.body.email));
 
     //Check if the user exists in the database, before issuing recovery token
     if (!existingAccount) {
@@ -30,13 +28,13 @@ export const profileRecoveryHandler = async function (request, reply) {
     }
 
     //Prepare & send the recovery email
-    const userRecoveryToken = await makeRefreshtoken(existingAccount, this.key, {
+    const userRecoveryToken = await makeRefreshtoken(existingAccount[0], this.key, this, {
       recoveryToken: "true",
     });
 
     const message = await client.sendAsync({
       from: config.FROMADDRESS,
-      to: existingAccount.email,
+      to: existingAccount[0].email,
       //cc: 'else <else@your-email.com>',
       subject: "Account Recovery",
       attachment: [

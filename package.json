@@ -8,7 +8,8 @@
     "dev": "node --watch --no-warnings server.js",
     "test": "ava",
     "start": "node --no-warnings server.js",
-    "generate:sqlite": "drizzle-kit generate:sqlite",
+    "generate:sqlite": "drizzle-kit generate:sqlite --config=./db/sqlite/sqlite.config.js",
+    "generate:pg": "drizzle-kit generate:pg --config=./db/postgres/pg.config.js",
     "release:changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "keywords": [],
@@ -17,17 +18,18 @@
   "license": "Big Time Public License",
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
-    "@simplewebauthn/server": "^8.3.7",
+    "@simplewebauthn/server": "^9.0.3",
     "argon2": "0.31.2",
     "better-sqlite3": "^9.4.3",
     "compadre": "^3.2.0",
     "cookie": "^0.6.0",
     "dotenv": "^16.4.5",
-    "drizzle-orm": "^0.30.4",
+    "drizzle-orm": "^0.30.5",
     "emailjs": "^4.0.3",
     "fastify": "^4.26.2",
     "fastify-plugin": "^4.5.1",
-    "jose": "^5.2.3"
+    "jose": "^5.2.3",
+    "postgres": "^3.4.4"
   },
   "devDependencies": {
     "ava": "^5.3.1",

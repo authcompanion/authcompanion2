@@ -1,7 +1,6 @@
 import config from "../../config.js";
 import { parse } from "cookie";
 import { generateAuthenticationOptions } from "@simplewebauthn/server";
-import { storage } from "../../db/sqlite/schema.js";
 
 export const loginOptionsHandler = async function (request, reply) {
   try {
@@ -23,7 +22,7 @@ export const loginOptionsHandler = async function (request, reply) {
     const cookies = parse(request.headers.cookie);
 
     //persist the challenge with the associated session id for the verification step in loginVerification.js
-    await this.db.insert(storage).values({
+    await this.db.insert(this.storage).values({
       sessionID: cookies.sessionID,
       data: generatedOptions.challenge,
     });

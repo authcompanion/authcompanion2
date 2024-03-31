@@ -39,17 +39,24 @@ export const loginVerificationHandler = async function (request, reply) {
       .innerJoin(this.users, eq(this.users.authenticatorId, this.authenticator.id))
       .where(eq(this.users.uuid, userID));
 
+    // Convert hexadecimal strings back to Uint8Array
+    const credentialPublicKeyUint8Array = Buffer.from(userAuthenticator[0].credentialPublicKey, "hex");
+    const credentialIDUint8Array = Buffer.from(userAuthenticator[0].credentialID, "hex");
+
     //verify the request for login with all the information gathered
     const verification = await verifyAuthenticationResponse({
       response: request.body,
       expectedChallenge: sessionChallenge[0].data,
       expectedOrigin: origin,
       expectedRPID: rpID,
-      authenticator: userAuthenticator[0],
+      authenticator: {
+        credentialPublicKey: credentialPublicKeyUint8Array,
+        credentialID: credentialIDUint8Array,
+        counter: userAuthenticator[0].counter,
+        transports: userAuthenticator[0].transports,
+      },
       requireUserVerification: false,
     });
-
-    console.log(verification);
 
     //check if the registration request is verified
     if (!verification.verified) {
@@ -58,7 +65,7 @@ export const loginVerificationHandler = async function (request, reply) {
     }
 
     //session clean up in the storage
-    await this.db.delete(this.storage).where(eq(this.storage.sessionID, this.cookies.sessionID));
+    await this.db.delete(this.storage).where(eq(this.storage.sessionID, cookies.sessionID));
 
     // All looks good! Let's prepare the reply
 

@@ -1,7 +1,7 @@
 import config from "../../config.js";
 import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import { verifyRegistrationResponse } from "@simplewebauthn/server";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export const registrationVerificationHandler = async function (request, reply) {
   try {
@@ -37,14 +37,17 @@ export const registrationVerificationHandler = async function (request, reply) {
 
     //create the returned authenticator
     const { credentialPublicKey, credentialID, counter } = verification.registrationInfo;
-    console.log(credentialPublicKey);
-    console.log(credentialID);
+    // Convert Uint8Array to hexadecimal string for credentialPublicKey
+    const credentialPublicKeyHex = Buffer.from(credentialPublicKey).toString("hex");
+
+    // Convert Uint8Array to hexadecimal string for credentialID
+    const credentialIDHex = Buffer.from(credentialID).toString("hex");
 
     const authenticatorObj = await this.db
       .insert(this.authenticator)
       .values({
-        credentialID: credentialID,
-        credentialPublicKey: credentialPublicKey,
+        credentialID: credentialIDHex,
+        credentialPublicKey: credentialPublicKeyHex,
         counter: counter,
         transports: request.body.response.transports,
       })

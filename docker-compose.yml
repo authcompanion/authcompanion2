@@ -5,7 +5,7 @@ services:
     build: .
     container_name: authcompanion
     environment:
-      - DB_PATH=./authdata/authcompanion_users.db
+      - DB_PATH=./authdata/sqlite_authc_database.db
       - ADMIN_KEY_PATH=./authdata/adminkey
       - KEY_PATH=./authdata/serverkey
     ports:

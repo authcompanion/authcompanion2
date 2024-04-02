@@ -22,7 +22,7 @@ export const userProfileHandler = async function (request, reply) {
       .where(eq(this.users.uuid, request.jwtRequestPayload.userid));
 
     //Check if the user exists already
-    if (!existingAccount) {
+    if (existingAccount.length === 0) {
       request.log.info("Auth API: User does not exist in database, update failed");
       throw { statusCode: 400, message: "Profile Update Failed" };
     }
@@ -34,7 +34,7 @@ export const userProfileHandler = async function (request, reply) {
         .from(this.users)
         .where(eq(this.users.email, request.body.data.attributes.email));
 
-      if (existingEmail) {
+      if (existingEmail[0]) {
         request.log.info("Admin API: User's email is already in use, update failed");
         throw { statusCode: 400, message: "Email Already In Use" };
       }

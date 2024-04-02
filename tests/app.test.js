@@ -351,7 +351,7 @@ test("JWT Test: makeRefreshtoken generates a valid refresh JWT token", async (t)
   const secretKey = t.context.app.key;
 
   // Generate a refresh token using the function
-  const { token, expiration } = await makeRefreshtoken(userObj, secretKey);
+  const { token, expiration } = await makeRefreshtoken(userObj, secretKey, t.context.app);
 
   // Fetch the payload
   const { payload } = await jose.jwtVerify(token, secretKey);
@@ -377,7 +377,7 @@ test("JWT Test: makeRefreshtoken generates a valid recovery JWT token", async (t
   const secretKey = t.context.app.key;
 
   // Generate a recovery token using the function
-  const { token, expiration } = await makeRefreshtoken(userObj, secretKey, {
+  const { token, expiration } = await makeRefreshtoken(userObj, secretKey, t.context.app, {
     recoveryToken: true,
   });
 

@@ -27,11 +27,10 @@ export const loginHandler = async function (request, reply) {
       .where(eq(this.users.email, request.body.data.attributes.email));
 
     // Check if user does not exist in the database
-    if (!existingAccount) {
+    if (existingAccount.length === 0) {
       request.log.info("Auth API: User does not exist in database, login failed");
       throw { statusCode: 400, message: "Login Failed" };
     }
-
     // Check if user has an 'active' account
     if (!existingAccount[0].active) {
       request.log.info("Auth API: User account is not active, login failed");

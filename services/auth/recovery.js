@@ -21,7 +21,7 @@ export const profileRecoveryHandler = async function (request, reply) {
       .where(eq(this.users.email, request.body.email));
 
     //Check if the user exists in the database, before issuing recovery token
-    if (!existingAccount) {
+    if (existingAccount.length === 0) {
       request.log.info("User was not found in the Database - Profile Recovery failed");
       // send a request to the client
       reply.code(200).send({ statusCode: 200, message: "Recovery email sent" });

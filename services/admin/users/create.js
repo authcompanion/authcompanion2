@@ -55,7 +55,7 @@ export const createUserHandler = async function (request, reply) {
       name: request.body.data.attributes.name,
       email: request.body.data.attributes.email,
       password: hashPwd,
-      active: true,
+      active: request.body.data.attributes.active,
       isAdmin: request.body.data.attributes.isAdmin,
       metadata: request.body.data.attributes.metadata,
       appdata: request.body.data.attributes.appdata,

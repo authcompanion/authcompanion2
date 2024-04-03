@@ -1,3 +1,13 @@
+# [4.0.0-beta.1](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.23...4.0.0-beta.1) (2024-04-03)
+
+Introducing AuthCompanion v4.0.0 (beta), a major release packed with enhancements. This update significantly simplifies the codebase, ensuring consistent feature growth in the future. Enjoy the addition of PostgreSQL support (alongside SQLite), popular choices for storing AuthC's user accounts. Plus, explore the refreshed web forms, particularly the Login and Registration screens. Start your implementation fresh with this version for a smoother authentication experience!
+
+### Features
+
+* support for postgres + new login/registration webform style([#22](https://github.com/authcompanion/authcompanion2/issues/22)) ([acced69](https://github.com/authcompanion/authcompanion2/commit/acced69b1b91a136dccd601f65b421b318a03455))
+
+
+
 # [3.0.0-beta.23](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.22...3.0.0-beta.23) (2023-12-15)
 
 This release of AuthCompanion features a brand-new Admin Dashboard. The Dashboard's aesthetics and usability have significantly improved.

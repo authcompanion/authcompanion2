@@ -1,3 +1,5 @@
+import { asc, count, like } from "drizzle-orm";
+
 export const listUsersHandler = async function (request, reply) {
   try {
     const { "page[number]": pageNumber = 1, "page[size]": pageSize = 10, "search[email]": searchEmail } = request.query;
@@ -6,54 +8,41 @@ export const listUsersHandler = async function (request, reply) {
     const page = parseInt(pageNumber);
     const size = parseInt(pageSize);
 
-    // Calculate the offset based on the page and size
-    const offset = (page - 1) * size;
+    const userList = await this.db
+      .select()
+      .from(this.users)
+      .where(searchEmail ? like(this.users.email, `%${searchEmail}%`) : null)
+      .orderBy(asc(this.users.id))
+      .limit(size)
+      .offset((page - 1) * size);
 
-    // Prepare the SQL query and parameters
-    let query = "SELECT uuid, name, email, metadata, appdata, active, created_at, updated_at FROM users";
-    let params = [];
-
-    if (searchEmail) {
-      query += " WHERE email LIKE ?";
-      params.push(`%${searchEmail}%`);
-    }
-
-    query += " LIMIT ? OFFSET ?";
-
-    // Fetch the user's uuid, name, email, active, created_at, updated_at attributes from the database
-    const stmt = this.db.prepare(query);
-    params.push(size, offset); // Add size and offset to the parameters
-
-    const users = await stmt.all(...params); // Spread the params array
-
-    // For each user, prepare the server response
-    const userAttributes = users.map((user) => {
+    // Prepare the response data
+    const userAttributes = userList.map((user) => {
       return {
         type: "users",
         id: user.uuid,
         attributes: {
           name: user.name,
           email: user.email,
-          metadata: JSON.parse(user.metadata),
-          app: JSON.parse(user.appdata),
+          metadata: user.metadata,
+          app: user.appdata,
           active: user.active,
+          isAdmin: user.isAdmin,
           created: user.created_at,
           updated: user.updated_at,
         },
       };
     });
+    // Count total users
+    const totalCountResult = await this.db
+      .select({ count: count() })
+      .from(this.users)
+      .where(searchEmail ? like(this.users.email, `%${searchEmail}%`) : null);
 
-    // Fetch the total count of users matching the search
-    let countQuery = "SELECT COUNT(*) as count FROM users";
-    if (searchEmail) {
-      countQuery += " WHERE email LIKE ?";
-    }
-
-    const countStmt = this.db.prepare(countQuery);
-    const totalCount = await countStmt.get(...(searchEmail ? [`%${searchEmail}%`] : [])); // Spread the searchEmail param if provided
+    const totalCount = totalCountResult[0].count;
 
     // Calculate pagination metadata
-    const totalPages = Math.ceil(totalCount.count / size);
+    const totalPages = Math.ceil(totalCount / size);
     const hasNextPage = page < totalPages;
     const hasPreviousPage = page > 1;
 
@@ -80,6 +69,6 @@ export const listUsersHandler = async function (request, reply) {
       links: paginationLinks,
     };
   } catch (err) {
-    throw { statusCode: err.statusCode, message: err.message };
+    throw err;
   }
 };

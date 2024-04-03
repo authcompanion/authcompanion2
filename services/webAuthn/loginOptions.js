@@ -10,7 +10,7 @@ export const loginOptionsHandler = async function (request, reply) {
 
     //set registration options
     const opts = {
-      userVerification: "required",
+      userVerification: "preferred",
       timeout: 60000,
       rpID,
     };
@@ -22,8 +22,10 @@ export const loginOptionsHandler = async function (request, reply) {
     const cookies = parse(request.headers.cookie);
 
     //persist the challenge with the associated session id for the verification step in loginVerification.js
-    const stmt = this.db.prepare("INSERT INTO storage (sessionID, data) VALUES (?, ?);");
-    await stmt.run(cookies.sessionID, generatedOptions.challenge);
+    await this.db.insert(this.storage).values({
+      sessionID: cookies.sessionID,
+      data: generatedOptions.challenge,
+    });
 
     //send the reply
     return generatedOptions;

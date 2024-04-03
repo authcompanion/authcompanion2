@@ -1,6 +1,7 @@
 import { createHash } from "../../../utils/credential.js";
 import { randomUUID } from "crypto";
 import { createId } from "@paralleldrive/cuid2";
+import { eq } from "drizzle-orm";
 
 export const createUserHandler = async function (request, reply) {
   try {
@@ -10,20 +11,15 @@ export const createUserHandler = async function (request, reply) {
       throw { statusCode: 400, message: "Invalid Type Attribute" };
     }
 
-    //Check if the user's email exists already
-    const stmt = this.db.prepare("SELECT * FROM users WHERE email = ?;");
-    const duplicateAccount = await stmt.get(request.body.data.attributes.email);
+    //Check if the user exists already
+    const existingAccount = await this.db
+      .select({ uuid: this.users.uuid })
+      .from(this.users)
+      .where(eq(this.users.email, request.body.data.attributes.email));
 
-    if (duplicateAccount) {
+    if (existingAccount[0]) {
       request.log.info("Admin API: User's email already exists in database, creation failed");
       throw { statusCode: 400, message: "Duplicate Email Address Exists" };
-    }
-
-    //If the user's active status is a string, convert it to a number
-    if (request.body.data.attributes.active) {
-      if (typeof request.body.data.attributes.active === "string") {
-        request.body.data.attributes.active = Number(request.body.data.attributes.active);
-      }
     }
 
     //Check if the user's active status is being updated and if it is, check if the new status is a valid 1 or 0
@@ -37,34 +33,51 @@ export const createUserHandler = async function (request, reply) {
       }
     }
 
-    //Create the user in the Database
-    const hashpwd = await createHash(request.body.data.attributes.password);
+    //Check if the user's isAdmin status is being updated and if it is, check if the new status is a valid 1 or 0
+    if (request.body.data.attributes.isAdmin) {
+      if (request.body.data.attributes.isAdmin !== 0 && request.body.data.attributes.isAdmin !== 1) {
+        request.log.info("Admin API: User's isAdmin status is not valid, update failed");
+        throw {
+          statusCode: 400,
+          message: "Invalid isAdmin Status, Please use 1 for true and 0 for false",
+        };
+      }
+    }
+
+    //Prepare the user account
+    const hashPwd = await createHash(request.body.data.attributes.password);
     const uuid = createId();
     const jwtid = randomUUID();
+    const now = new Date().toISOString(); // Create a Date object with the current date and time
 
-    const registerStmt = this.db.prepare(
-      "INSERT INTO users (uuid, name, email, password, metadata, appdata, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, metadata, appdata, active, created_at, updated_at;"
-    );
-    const user = registerStmt.get(
-      uuid,
-      request.body.data.attributes.name,
-      request.body.data.attributes.email,
-      hashpwd,
-      JSON.stringify(request.body.data.attributes.metadata),
-      JSON.stringify(request.body.data.attributes.app),
-      request.body.data.attributes.active,
-      jwtid
-    );
-    //Prepare the server response
-    const userAttributes = {
-      name: user.name,
-      email: user.email,
-      metadata: JSON.parse(user.metadata),
-      app: JSON.parse(user.appdata),
-      active: user.active,
-      created: user.created_at,
-      updated: user.updated_at,
+    const userObj = {
+      uuid: uuid,
+      name: request.body.data.attributes.name,
+      email: request.body.data.attributes.email,
+      password: hashPwd,
+      active: request.body.data.attributes.active,
+      isAdmin: request.body.data.attributes.isAdmin,
+      metadata: request.body.data.attributes.metadata,
+      appdata: request.body.data.attributes.appdata,
+      jwt_id: jwtid,
+      created_at: now,
+      updated_at: now,
     };
+
+    const createdUser = await this.db
+      .insert(this.users)
+      .values({ ...userObj })
+      .returning({
+        uuid: this.users.uuid,
+        name: this.users.name,
+        email: this.users.email,
+        metadata: this.users.metadata,
+        appdata: this.users.appdata,
+        active: this.users.active,
+        isAdmin: this.users.isAdmin,
+        created: this.users.created_at,
+        updated: this.users.updated_at,
+      });
 
     reply.statusCode = 201;
 
@@ -72,11 +85,12 @@ export const createUserHandler = async function (request, reply) {
     return {
       data: {
         type: "users",
-        id: user.uuid,
-        attributes: userAttributes,
+        id: createdUser[0].uuid,
+        attributes: { ...createdUser[0] },
       },
     };
   } catch (err) {
-    throw { statusCode: err.statusCode, message: err.message };
+    // dont throw error to people
+    throw err;
   }
 };

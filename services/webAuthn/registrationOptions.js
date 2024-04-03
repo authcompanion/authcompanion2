@@ -1,5 +1,4 @@
 import config from "../../config.js";
-import { randomUUID } from "crypto";
 import { createId } from "@paralleldrive/cuid2";
 import compadre from "compadre";
 import { nouns } from "../../utils/names.js";
@@ -32,7 +31,7 @@ export const registrationOptionsHandler = async function (request, reply) {
       timeout: 60000,
       attestationType: "indirect",
       authenticatorSelection: {
-        userVerification: "required",
+        userVerification: "preferred",
         residentKey: "required",
       },
       supportedAlgorithmIDs: [-7, -257],
@@ -42,8 +41,6 @@ export const registrationOptionsHandler = async function (request, reply) {
     const generatedOptions = await generateRegistrationOptions(options);
 
     //Generate user data and create user in database
-    //build jwtid
-    const jwtid = randomUUID();
 
     //build password
     //generate a random string of length 16
@@ -53,22 +50,23 @@ export const registrationOptionsHandler = async function (request, reply) {
     //build email
     const generatedUniqueEmail = `placeholder+${Math.random().toString(36).substring(8)}@example.com`;
 
+    const now = new Date().toISOString(); // Create a Date object with the current date and time
+
     //create user
-    const registerStmt = this.db.prepare(
-      "INSERT INTO users (uuid, name, email, password, challenge, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, jwt_id, created_at, updated_at;"
-    );
-    const userObj = registerStmt.get(
-      userUUID,
-      userName,
-      generatedUniqueEmail,
-      hashpwd,
-      generatedOptions.challenge,
-      "0",
-      jwtid
-    );
+    await this.db.insert(this.users).values({
+      uuid: userUUID,
+      name: userName,
+      email: generatedUniqueEmail,
+      password: hashpwd,
+      challenge: generatedOptions.challenge,
+      active: 0,
+      created_at: now,
+      updated_at: now,
+    });
+
     //send the reply
     return generatedOptions;
   } catch (err) {
-    throw { statusCode: err.statusCode, message: err.message };
+    throw err;
   }
 };

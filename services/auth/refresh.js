@@ -2,6 +2,8 @@ import { makeAccesstoken, makeRefreshtoken, validateJWT } from "../../utils/jwt.
 import config from "../../config.js";
 import { parse } from "cookie";
 import { refreshCookie, fgpCookie } from "../../utils/cookies.js";
+import { users } from "../../db/sqlite/schema.js";
+import { eq, sql } from "drizzle-orm";
 
 export const tokenRefreshHandler = async function (request, reply) {
   try {
@@ -9,6 +11,11 @@ export const tokenRefreshHandler = async function (request, reply) {
     if (request.headers.cookie) {
       const cookies = parse(request.headers.cookie);
       request.refreshToken = cookies.userRefreshToken;
+
+      if (!request.refreshToken) {
+        request.log.info("Auth API: The request does not include a refresh token as cookie, refresh failed");
+        throw { statusCode: 400, message: "Refresh Token Failed" };
+      }
     } else {
       request.log.info("Auth API: The request does not include a refresh token as cookie, refresh failed");
       throw { statusCode: 400, message: "Refresh Token Failed" };
@@ -16,24 +23,34 @@ export const tokenRefreshHandler = async function (request, reply) {
 
     //Validate the refresh token
     const jwtClaims = await validateJWT(request.refreshToken, this.key);
+
     //Fetch user from Database
-    const stmt = this.db.prepare(
-      "SELECT uuid, name, email, jwt_id, created_at, updated_at, metadata, appdata FROM users WHERE jwt_id = ?;"
-    );
-    const userObj = await stmt.get(jwtClaims.jti);
-    if (userObj === undefined) {
+    const existingAccount = await this.db
+      .select({
+        uuid: users.uuid,
+        name: users.name,
+        email: users.email,
+        jwt_id: users.jwt_id,
+        active: users.active,
+        created: this.users.created_at,
+        updated: this.users.updated_at,
+      })
+      .from(this.users)
+      .where(eq(this.users.jwt_id, jwtClaims.jti));
+
+    if (existingAccount.length === 0) {
       request.log.info("Auth API: User not found");
       throw { statusCode: 400, message: "Refresh Token Failed" };
     }
 
     //Prepare the reply
-    const userAccessToken = await makeAccesstoken(userObj, this.key);
-    const userRefreshToken = await makeRefreshtoken(userObj, this.key);
+    const userAccessToken = await makeAccesstoken(existingAccount[0], this.key);
+    const userRefreshToken = await makeRefreshtoken(existingAccount[0], this.key, this);
 
     const userAttributes = {
-      name: userObj.name,
-      email: userObj.email,
-      created: userObj.created_at,
+      name: existingAccount[0].name,
+      email: existingAccount[0].email,
+      created: existingAccount[0].created_at,
       access_token: userAccessToken.token,
       access_token_expiry: userAccessToken.expiration,
     };
@@ -45,13 +62,13 @@ export const tokenRefreshHandler = async function (request, reply) {
 
     return {
       data: {
-        id: userObj.uuid,
+        id: existingAccount[0].uuid,
         type: "users",
         attributes: userAttributes,
       },
     };
   } catch (err) {
-    throw { statusCode: err.statusCode, message: err.message };
+    throw err;
   }
 };
 
@@ -61,6 +78,11 @@ export const tokenRefreshDeleteHandler = async function (request, reply) {
     if (request.headers.cookie) {
       const cookies = parse(request.headers.cookie);
       request.refreshToken = cookies.userRefreshToken;
+
+      if (!request.refreshToken) {
+        request.log.info("Auth API: The request does not include a refresh token as cookie, refresh failed");
+        throw { statusCode: 400, message: "Refresh Token Failed" };
+      }
     } else {
       request.log.info("Auth API: The request does not include a refresh token as cookie, refresh failed");
       throw { statusCode: 400, message: "Refresh Token Failed" };
@@ -69,24 +91,31 @@ export const tokenRefreshDeleteHandler = async function (request, reply) {
     //Validate the refresh token
     const jwtClaims = await validateJWT(request.refreshToken, this.key);
     //Fetch user from Database
-    const stmt = this.db.prepare(
-      "SELECT uuid, name, email, jwt_id, created_at, updated_at, metadata, appdata FROM users WHERE jwt_id = ?;"
-    );
-    const userObj = await stmt.get(jwtClaims.jti);
-    if (userObj === undefined) {
+    const existingAccount = await this.db
+      .select({
+        uuid: users.uuid,
+      })
+      .from(this.users)
+      .where(eq(this.users.jwt_id, jwtClaims.jti));
+
+    if (existingAccount.length === 0) {
       request.log.info("Auth API: User not found");
       throw { statusCode: 400, message: "Refresh Token Failed" };
     }
 
-    const delStmt = this.db.prepare("UPDATE users SET jwt_id = 0 WHERE jwt_id = ?");
-    const resp = await delStmt.run(jwtClaims.jti);
-    if (resp.changes !== 1) {
+    const resp = await this.db
+      .update(this.users)
+      .set({ jwt_id: null })
+      .where(eq(this.users.jwt_id, jwtClaims.jti))
+      .returning({ uuid: this.users.uuid });
+
+    if (resp.length === 0) {
       request.log.info("Error deleting token id");
       throw { statusCode: 500, message: "Internal Error" };
     }
 
     reply.code(204);
   } catch (err) {
-    throw { statusCode: err.statusCode, message: err.message };
+    throw err;
   }
 };

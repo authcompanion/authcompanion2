@@ -1,9 +1,10 @@
 import fastifyPlugin from "fastify-plugin";
-import config from "../../config.js";
+import config from "../config.js";
 import { writeFileSync } from "fs";
 import { createId } from "@paralleldrive/cuid2";
-import { createHash } from "../../utils/credential.js";
+import { createHash } from "../utils/credential.js";
 import * as crypto from "crypto";
+import { eq } from "drizzle-orm";
 
 //function to generate a random password using crypto module
 const generatePassword = function () {
@@ -17,14 +18,13 @@ const setupAdminKey = async function (fastify) {
       config.ADMINKEYPATH = "./adminkey_test";
     }
 
-    //Check if the admin user already exists on server startup
-    const stmt = fastify.db.prepare("SELECT uuid, name, email, active, created_at, updated_at FROM admin LIMIT 1;");
-    const adminUser = await stmt.get();
+    //check if the admin user already exists on server startup
+    const adminUser = await fastify.db
+      .select({ name: fastify.users.name })
+      .from(fastify.users)
+      .where(eq(fastify.users.email, "admin@localhost"));
 
-    if (adminUser) {
-      //register the admin user on the fastify instance
-      fastify.decorate("registeredAdminUser", adminUser);
-      fastify.log.info(`Using Admin API Key: ${config.ADMINKEYPATH}`);
+    if (adminUser.length > 0) {
       return;
     }
 
@@ -32,27 +32,24 @@ const setupAdminKey = async function (fastify) {
     const uuid = createId();
     const adminPwd = generatePassword();
     const hashPwd = await createHash(adminPwd);
+    const now = new Date().toISOString(); // Create a Date object with the current date and time
 
-    //Create a default admin account
+    //Create a default admin user account
     const userObj = {
       uuid: uuid,
-      name: "Admin",
+      name: "admin",
       email: "admin@localhost",
+      password: hashPwd,
+      active: true,
+      isAdmin: true,
+      created_at: now,
+      updated_at: now,
     };
 
-    const registerStmt = fastify.db.prepare(
-      "INSERT INTO admin (uuid, name, email, password, active, jwt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ','now'), strftime('%Y-%m-%dT%H:%M:%fZ','now')) RETURNING uuid, name, email, active, created_at, updated_at;"
-    );
-    const user = registerStmt.get(uuid, userObj.name, userObj.email, hashPwd, 1, "");
+    await fastify.db.insert(fastify.users).values({ ...userObj });
 
     //export admin password to a file. Admin password is only exported once on server startup and can be traded for an access token
     writeFileSync(config.ADMINKEYPATH, `admin email: ${userObj.email} \nadmin password: ${adminPwd}`);
-    fastify.log.info(`Generating Admin API Key: ${config.ADMINKEYPATH}...`);
-    fastify.log.info(`Admin Email: ${userObj.email} & Password: ${adminPwd}`);
-
-    //register the admin user on the fastify instance
-    fastify.decorate("registeredAdminUser", user);
-
     fastify.log.info(`Using Admin API Key: ${config.ADMINKEYPATH}`);
   } catch (error) {
     console.log(error);

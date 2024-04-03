@@ -1,6 +1,7 @@
 import { makeRefreshtoken } from "../../utils/jwt.js";
 import config from "../../config.js";
 import { SMTPClient } from "emailjs";
+import { eq } from "drizzle-orm";
 
 export const profileRecoveryHandler = async function (request, reply) {
   //Create the SMTP client
@@ -14,24 +15,26 @@ export const profileRecoveryHandler = async function (request, reply) {
 
   try {
     //Fetch user from Database
-    const stmt = this.db.prepare("SELECT * FROM users WHERE email = ?;");
-    const userObj = await stmt.get(request.body.email);
+    const existingAccount = await this.db
+      .select({ uuid: this.users.uuid, name: this.users.name, email: this.users.email })
+      .from(this.users)
+      .where(eq(this.users.email, request.body.email));
 
     //Check if the user exists in the database, before issuing recovery token
-    if (!userObj) {
+    if (existingAccount.length === 0) {
       request.log.info("User was not found in the Database - Profile Recovery failed");
       // send a request to the client
-      reply.code(200).send({ statusCode: 200, message: "Recovery email issued" });
+      reply.code(200).send({ statusCode: 200, message: "Recovery email sent" });
     }
 
     //Prepare & send the recovery email
-    const userRecoveryToken = await makeRefreshtoken(userObj, this.key, {
+    const userRecoveryToken = await makeRefreshtoken(existingAccount[0], this.key, this, {
       recoveryToken: "true",
     });
 
     const message = await client.sendAsync({
       from: config.FROMADDRESS,
-      to: userObj.email,
+      to: existingAccount[0].email,
       //cc: 'else <else@your-email.com>',
       subject: "Account Recovery",
       attachment: [
@@ -217,6 +220,6 @@ export const profileRecoveryHandler = async function (request, reply) {
       },
     };
   } catch (err) {
-    throw { statusCode: err.statusCode, message: err.message };
+    throw err;
   }
 };

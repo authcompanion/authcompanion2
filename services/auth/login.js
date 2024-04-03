@@ -2,6 +2,7 @@ import { verifyValueWithHash } from "../../utils/credential.js";
 import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import { refreshCookie, fgpCookie } from "../../utils/cookies.js";
 import config from "../../config.js";
+import { eq } from "drizzle-orm";
 
 export const loginHandler = async function (request, reply) {
   try {
@@ -12,24 +13,34 @@ export const loginHandler = async function (request, reply) {
     }
 
     // Fetch user from database
-    const stmt = this.db.prepare(
-      "SELECT uuid, name, email, jwt_id, password, active, created_at, updated_at, metadata, appdata FROM users WHERE email = ?;"
-    );
-    const userObj = await stmt.get(request.body.data.attributes.email);
+    const existingAccount = await this.db
+      .select({
+        uuid: this.users.uuid,
+        name: this.users.name,
+        email: this.users.email,
+        jwt_id: this.users.jwt_id,
+        password: this.users.password,
+        active: this.users.active,
+        created_at: this.users.created_at,
+      })
+      .from(this.users)
+      .where(eq(this.users.email, request.body.data.attributes.email));
 
     // Check if user does not exist in the database
-    if (!userObj) {
+    if (existingAccount.length === 0) {
       request.log.info("Auth API: User does not exist in database, login failed");
       throw { statusCode: 400, message: "Login Failed" };
     }
-
     // Check if user has an 'active' account
-    if (!userObj.active) {
+    if (!existingAccount[0].active) {
       request.log.info("Auth API: User account is not active, login failed");
       throw { statusCode: 400, message: "Login Failed" };
     }
 
-    const passwordCheckResult = await verifyValueWithHash(request.body.data.attributes.password, userObj.password);
+    const passwordCheckResult = await verifyValueWithHash(
+      request.body.data.attributes.password,
+      existingAccount[0].password
+    );
 
     // Check if user has the correct password
     if (!passwordCheckResult) {
@@ -38,13 +49,13 @@ export const loginHandler = async function (request, reply) {
     }
 
     // Looks good! Let's prepare the reply
-    const userAccessToken = await makeAccesstoken(userObj, this.key);
-    const userRefreshToken = await makeRefreshtoken(userObj, this.key);
+    const userAccessToken = await makeAccesstoken(existingAccount[0], this.key);
+    const userRefreshToken = await makeRefreshtoken(existingAccount[0], this.key, this);
 
     const userAttributes = {
-      name: userObj.name,
-      email: userObj.email,
-      created: userObj.created_at,
+      name: existingAccount[0].name,
+      email: existingAccount[0].email,
+      created: existingAccount[0].created_at,
       access_token: userAccessToken.token,
       access_token_expiry: userAccessToken.expiration,
     };
@@ -57,11 +68,11 @@ export const loginHandler = async function (request, reply) {
     return {
       data: {
         type: "users",
-        id: userObj.uuid,
+        id: existingAccount[0].uuid,
         attributes: userAttributes,
       },
     };
   } catch (err) {
-    throw { statusCode: err.statusCode, message: err.message };
+    throw err;
   }
 };

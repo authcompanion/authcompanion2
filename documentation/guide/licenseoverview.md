@@ -1,20 +1,5 @@
 # License Overview
 
-## Goals at AuthCompanion
-
-- The value proposition for AuthCompanion is to bring user authentication
-  on-prem and migrated away from curret SaaS vendors; while making it as simple
-  as possible to both use and deploy. Offering AuthC as a SaaS ruins AuthC's
-  intended value as an on-prem server. Your users are your most important asset,
-  why would you have someone else run it?
-- Many open source communities have been eroded and devastated by VC funded
-  organizations who work to capture the majority of value which was intended for
-  the origial community. AuthCompanion is starting its life as propriety
-  software with its
-  ["source available"](https://en.wikipedia.org/wiki/Source-available_software#:~:text=Source%2Davailable%20software%20is%20software,to%20be%20called%20open%2Dsource.)
-  as an experiment to build a long term and sustainable environment for the
-  server development.
-
 ---
 
 AuthCompanion is licensed under the

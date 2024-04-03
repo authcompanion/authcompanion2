@@ -105,7 +105,7 @@ Bearer Token Required: `Authorization: Bearer {user's access token}`
 
 All fields in the user's attributes are optional.
 
-Optional: Pass an arbitrary object to data.attributes.metdata which will be made available as a claim on the user's JWT issued after login.
+Optional: Pass an object to data.attributes.metdata which will be made available as a claim on the user's JWT issued after login.
 
 **POST** Request Body:
 

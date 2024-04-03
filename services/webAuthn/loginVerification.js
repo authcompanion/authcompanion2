@@ -2,6 +2,7 @@ import config from "../../config.js";
 import { parse } from "cookie";
 import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import { verifyAuthenticationResponse } from "@simplewebauthn/server";
+import { eq } from "drizzle-orm";
 
 export const loginVerificationHandler = async function (request, reply) {
   try {
@@ -16,26 +17,45 @@ export const loginVerificationHandler = async function (request, reply) {
     const cookies = parse(request.headers.cookie);
 
     //retrieve the session's challenge from storage
-    const storageStmt = this.db.prepare("SELECT data FROM storage WHERE sessionID = ?;");
-    const sessionChallenge = await storageStmt.get(cookies.sessionID);
+    const sessionChallenge = await this.db
+      .select({
+        data: this.storage.data,
+      })
+      .from(this.storage)
+      .where(eq(this.storage.sessionID, cookies.sessionID));
 
     //set userID from response
     const userID = request.body.response.userHandle;
 
     //retrieve the user's authenticator
-    const stmt = this.db.prepare(
-      "SELECT credentialPublicKey, credentialID, counter, transports FROM authenticator INNER JOIN users ON users.authenticator_id = authenticator.id WHERE users.uuid = ?;"
-    );
-    const userAuthenticator = await stmt.get(userID);
+    const userAuthenticator = await this.db
+      .select({
+        credentialPublicKey: this.authenticator.credentialPublicKey,
+        credentialID: this.authenticator.credentialID,
+        counter: this.authenticator.counter,
+        transports: this.authenticator.transports,
+      })
+      .from(this.authenticator)
+      .innerJoin(this.users, eq(this.users.authenticatorId, this.authenticator.id))
+      .where(eq(this.users.uuid, userID));
+
+    // Convert hexadecimal strings back to Uint8Array
+    const credentialPublicKeyUint8Array = Buffer.from(userAuthenticator[0].credentialPublicKey, "hex");
+    const credentialIDUint8Array = Buffer.from(userAuthenticator[0].credentialID, "hex");
 
     //verify the request for login with all the information gathered
     const verification = await verifyAuthenticationResponse({
       response: request.body,
-      expectedChallenge: sessionChallenge.data,
+      expectedChallenge: sessionChallenge[0].data,
       expectedOrigin: origin,
       expectedRPID: rpID,
-      authenticator: userAuthenticator,
-      requireUserVerification: true,
+      authenticator: {
+        credentialPublicKey: credentialPublicKeyUint8Array,
+        credentialID: credentialIDUint8Array,
+        counter: userAuthenticator[0].counter,
+        transports: userAuthenticator[0].transports,
+      },
+      requireUserVerification: false,
     });
 
     //check if the registration request is verified
@@ -45,24 +65,30 @@ export const loginVerificationHandler = async function (request, reply) {
     }
 
     //session clean up in the storage
-    const deleteStmt = this.db.prepare("DELETE FROM storage WHERE sessionID = ?;");
-    await deleteStmt.run(cookies.sessionID);
+    await this.db.delete(this.storage).where(eq(this.storage.sessionID, cookies.sessionID));
 
     // All looks good! Let's prepare the reply
 
     // Fetch user from database
-    const userStmt = this.db.prepare(
-      "SELECT uuid, name, email, jwt_id, password, active, created_at, updated_at FROM users WHERE uuid = ?;"
-    );
-    const userObj = await userStmt.get(userID);
+    const userObj = await this.db
+      .select({
+        uuid: this.users.uuid,
+        name: this.users.name,
+        email: this.users.email,
+        jwt_id: this.users.jwt_id,
+        active: this.users.active,
+        created_at: this.users.created_at,
+      })
+      .from(this.users)
+      .where(eq(this.users.uuid, userID));
 
-    const userAccessToken = await makeAccesstoken(userObj, this.key);
-    const userRefreshToken = await makeRefreshtoken(userObj, this.key);
+    const userAccessToken = await makeAccesstoken(userObj[0], this.key);
+    const userRefreshToken = await makeRefreshtoken(userObj[0], this.key, this);
 
     const userAttributes = {
-      name: userObj.name,
-      email: userObj.email,
-      created: userObj.created_at,
+      name: userObj[0].name,
+      email: userObj[0].email,
+      created: userObj[0].created_at,
       access_token: userAccessToken.token,
       access_token_expiry: userAccessToken.expiration,
     };
@@ -79,12 +105,12 @@ export const loginVerificationHandler = async function (request, reply) {
 
     return {
       data: {
-        id: userObj.uuid,
+        id: userObj[0].uuid,
         type: "Login",
         attributes: userAttributes,
       },
     };
   } catch (err) {
-    throw { statusCode: err.statusCode, message: err.message };
+    throw err;
   }
 };

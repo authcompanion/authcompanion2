@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/v1/web/styles/main.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/js/tabler.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta20/dist/css/tabler.min.css" />
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     <style>
       html {
@@ -14,47 +15,47 @@
       }
     </style>
 
-    <title>Home</title>
+    <title>Your Home Page</title>
   </head>
   <body id="app">
-    <!-- Form -->
-    <div class="max-w-screen-xl px-4 py-16 mx-auto sm:px-6 lg:px-8">
-      <div class="max-w-lg mx-auto">
-        <form @submit.prevent action="" class="p-4 mt-6 mb-0 rounded-lg shadow-lg sm:p-6 lg:p-8">
-          <p class="text-2xl text-green-500">Success 🎉 !</p>
-          <p class="py-3 text-black">Nice job getting started with AuthCompanion.</p>
+    <div class="page-body">
+      <div class="container-xl">
+        <div class="row justify-content-center">
+          <div class="col-lg-10 col-xl-9">
+            <div class="card card-lg">
+              <div class="card-body markdown">
+                <h1>Success 🎉🎉 !</h1>
+                <p class="py-1 text-black">
+                  Hey, nice job getting started with AuthCompanion. You made it to the home page.
+                </p>
 
-          <p class="pt-8 text-black">
-            When you're ready, tell AuthC to redirect users after successful login to your application's home page
-            (instead of this temporary one).
-          </p>
+                <p class="py-1 text-black">
+                  When you're ready, tell AuthC to redirect users (after successful login) to your application's home
+                  and page ditch this one.
+                </p>
 
-          <p class="py-3 text-black">
-            For a full guide on how to integrate and launch AuthCompanion, check those sections in the docs:
-            <a class="text-blue-600 underline hover:text-blue-800" href="https://docs.authcompanion.com/"
-              >https://docs.authcompanion.com/</a
-            >
-          </p>
+                <p class="py-1 text-black">
+                  For a full guide on how to integrate and launch AuthCompanion, check those sections in the docs:
+                  <a class="text-blue-600 underline hover:text-blue-800" href="https://docs.authcompanion.com/"
+                    >https://docs.authcompanion.com/</a
+                  >
+                </p>
 
-          <p class="text-black">
-            After a successful login or account registration, AuthC provides developers a user's access token which is
-            used for managing your user's session. The access token contains helpful information about the user.
-            <a class="text-blue-600 underline hover:text-blue-800" :href="jwtDebugUrl"
-              >Decode the token's payload here to find out.</a
-            >
-          </p>
-          <br />
-        </form>
+                <p class="py-1 text-black">
+                  After a successful login or account registration, AuthC provides developers a user's access token
+                  which is used for managing your user's session. The access token contains helpful information about
+                  the user for all sorts of uses.
+                  <a class="text-blue-600 underline hover:text-blue-800" :href="jwtDebugUrl"
+                    >Decode the token's payload here to find out.</a
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="fixed inset-x-0 bottom-0">
-      <div class="m-4 text-xs text-gray-400">
-        Powered by
-        <span class="underline">
-          <a href="https://github.com/authcompanion/authcompanion2">AuthCompanion</a>
-        </span>
-      </div>
-    </div>
+
     <!-- Scripts -->
     <script type="module">
       import { createApp, ref, computed } from "https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.esm-browser.prod.js";

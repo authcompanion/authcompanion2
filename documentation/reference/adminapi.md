@@ -1,11 +1,11 @@
 # Admin API
 
 The RESTful Admin API helps you to programatically manage your Authcompanion Users for administrative purposes.
-The Admin APIs power AuthCompanions self-service Admin Dashboard.
+The Admin APIs power AuthCompanions self-service Admin Dashboard as well.
 
 ## Admin Access Token (Bearer Token)
 
-All Admin API requests require a Bearer Token in the request's header. This token is generated when you call the `admin/login` endpoint (described below) and allows access to the Admin APIs.
+Most Admin API requests require a Bearer Token in the request's header. This token is generated when you call the `admin/login` endpoint (described below) and allows access to the Admin APIs.
 
 ## Server URL
 
@@ -17,7 +17,7 @@ Returns Content-Type: application/json
 
 ### admin/login
 
-Description: Trades the admin credentials for an admin access token used to access the various Admin API endpoints. See more information about the admin credentials in the administer section of the documentation at [Administer](/guide/administer.md).
+Description: Trades the admin credentials for an admin access token used to authenticate into the various Admin API endpoints. See more information about the admin credentials in the administer section of the documentation at [Administer](/guide/administer.md).
 
 **POST** Request Body:
 
@@ -54,7 +54,7 @@ Response:
 
 ---
 
-### admin/users
+### admin/users/
 
 Description: Returns a list of users from the Authcompanion database.
 
@@ -85,7 +85,8 @@ Response:
         "app": {
           "tenantID": "1234"
         },
-        "active": 1,
+        "active": true,
+        "isAdmin": true,
         "created": "2023-02-02T21:33:53.926Z",
         "updated": "2023-02-02T21:33:53.926Z"
       }
@@ -102,7 +103,8 @@ Response:
         "app": {
           "tenantID": "5678"
         },
-        "active": 1,
+        "active": true,
+        "isAdmin": true,
         "created": "2023-02-02T21:34:37.712Z",
         "updated": "2023-02-02T21:34:37.712Z"
       }
@@ -124,7 +126,9 @@ Description: Creates a new user in the Authcompanion database.
 
 Bearer Token Required: `Authorization: Bearer {admin access token}`
 
-Optional: Pass an arbitrary object to data.attributes.metadata which will be made available as a claim on the user's JWT issued after login, this claim is changable using the user token. Pass an arbitrary object to data.attributes.app which will be made available as a claim on the user's JWT issued after login, this claim is changable only using the admin token (aka a "private" claim).
+Optional: Pass an object to data.attributes.metadata which will be made available as a claim on the user's JWT issued after login, this claim is changable using the user token.
+
+Pass an object to data.attributes.app which will be made available as a claim on the user's JWT issued after login, this claim is changable only using the admin token (aka a "private" claim).
 
 **POST** Request Body:
 
@@ -139,10 +143,11 @@ Optional: Pass an arbitrary object to data.attributes.metadata which will be mad
       "metadata": {
         "company": "Auth Co"
       },
-      "app": {
+      "appdata": {
         "tenantID": "1234"
       },
-      "active": 1
+      "active": 1,
+      "isAdmin": 1
     }
   }
 }
@@ -164,7 +169,8 @@ Response:
       "app": {
         "tenantID": "1234"
       },
-      "active": 1,
+      "active": true,
+      "isAdmin": true,
       "created": "2023-02-02T21:33:53.926Z",
       "updated": "2023-02-02T21:33:53.926Z"
     }
@@ -174,7 +180,7 @@ Response:
 
 ---
 
-### admin/users/:id
+### admin/users/:userid
 
 Description: Updates a single user from the Authcompanion database with the user's ID. If a request does not include all of the attributes for a resource, the AuthCompanion interpret the missing attributes as if they were included with their current values. Authcompanion does not interpret missing attributes as null values.
 
@@ -193,6 +199,7 @@ Optional: Pass an arbitrary object to data.attributes.metadata which will be mad
       "email": "hello@authcompanion.com",
       "password": "supersecret",
       "active": 1,
+      "isAdmin": 1,
       "metadata": {
         "tenant": "tenantID"
       },
@@ -220,7 +227,8 @@ Response:
       "app": {
         "tenantID": "1234"
       },
-      "active": 1,
+      "active": true,
+      "isAdmin": true,
       "created": "2023-02-02T21:33:53.926Z",
       "updated": "2023-02-02T21:33:53.926Z"
     }

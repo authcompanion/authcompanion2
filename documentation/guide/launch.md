@@ -155,7 +155,7 @@ Also update the [env] section of your `fly.toml` to persist the server key and d
   APPLICATION_ORIGIN="https://auth.example.com/v1/web/home"
   ADMIN_ORIGIN="http://demo.authcompanion.com/v1/admin/dashboard"
   SERVER_KEY_PATH="/data/keyfile"
-  DB_PATH="/data/authcompanion_users.db"
+  SQLITE_DB_PATH="/data/authcompanion_users.db"
 ```
 
 - Run `flyctl deploy` to restart your application with the new settings.

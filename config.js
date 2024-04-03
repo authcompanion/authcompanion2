@@ -14,7 +14,7 @@ const config = {
   RECOVERYURL: process.env.RECOVERY_REDIRECT_URL || "http://localhost:3002/v1/web/profile", // URL for recovery redirect, used in magic link redirect. defaults to a recovery profile URL
 
   // Security Settings
-  KEYPATH: process.env.SERVER_KEY_PATH || "./serverkey", // Path for the server key
+  KEYPATH: process.env.SERVER_KEY_PATH || "./serverkey", // Path for the server key used for signing/verifying JWTs
   ADMINKEYPATH: process.env.ADMIN_KEY_PATH || "./adminkey", // Path for the admin's username and password for the Admin Panel
   SAMESITE: process.env.SAMESITE || "None", // SameSite attribute for cookies, defaulting to "None"
 

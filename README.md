@@ -32,7 +32,7 @@
 
 ## Hot topics
 
-- New Postgres Support + New Login & Registration Style - [#22](https://github.com/authcompanion/authcompanion2/pull/22) [Done]
+- New Support for Postgres + New Login & Registration Web Form Style - [#22](https://github.com/authcompanion/authcompanion2/pull/22) [Done]
 - A Refresh of the Admin Dashboard Design - [#21](https://github.com/authcompanion/authcompanion2/pull/21) [Done]
 
 ## Introduction

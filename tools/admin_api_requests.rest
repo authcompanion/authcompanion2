@@ -1,0 +1,102 @@
+// REST Client is a tool that allows you to make HTTP requests directly within Visual Studio Code.
+// https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+// This file includes all requests available in AuthCompanion's Admin API
+@host = 127.0.0.1:3002/v1/admin
+@admin_email = admin@localhost
+// admin password can be found in ./adminkey file by default (on first startup)
+@admin_password = 
+@access_token = {{login.response.body.data.attributes.access_token}}
+@refresh_token = {{login.response.body.data.attributes.refresh_token}}
+@admin_id = {{login.response.body.data.id}}
+
+
+### Login to the admin account
+# @name login
+POST http://{{host}}/login
+content-type: application/json
+
+{
+  "data": {
+    "type": "users",
+    "attributes": {
+			"email": "{{admin_email}}",
+			"password": "{{admin_password}}"
+    }
+  }
+}
+
+### Create a user account
+# @name createdUser
+POST http://{{host}}/users
+content-type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "data": {
+    "type": "users",
+    "attributes": {
+      "name": "Authy Person",
+      "email": "testuser_1@authcompanion.com",
+      "password": "supersecretpassword",
+			"metadata": {
+				"tenant": "1234"
+			},
+			"appdata": {
+				"tenant": "5678"
+			},
+      "active": true,
+			"isAdmin": false
+    }
+  }
+}
+
+### Update a user account
+@user_id = {{createdUser.response.body.data.id}}
+PATCH http://{{host}}/users/{{user_id}}
+content-type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "data": {
+    "type": "users",
+    "attributes": {
+      "name": "Authy Person",
+      "email": "testuser_1_Updated@authcompanion.com",
+      "password": "supersecretpassword",
+			"metadata": {
+				"tenant": "1234"
+			},
+			"appdata": {
+				"tenant": "5678"
+			},
+      "active": true,
+			"isAdmin": false
+    }
+  }
+}
+
+### List the user accounts
+GET http://{{host}}/users?page[number]=1
+content-type: application/json
+Authorization: Bearer {{access_token}}
+
+
+### Delete a user account
+@user_id = {{createdUser.response.body.data.id}}
+DELETE http://{{host}}/users/{{user_id}}
+content-type: application/json
+Authorization: Bearer {{access_token}}
+
+### Regenerate admins's refresh token
+POST http://{{host}}/refresh
+content-type: application/json
+
+{
+    "refreshToken": "{{refresh_token}}"
+}
+
+### Logout of admin account
+@user_id = {{createdUser.response.body.data.id}}
+DELETE http://{{host}}/logout/{{admin_id}}
+content-type: application/json
+Authorization: Bearer {{access_token}}

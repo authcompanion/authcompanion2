@@ -32,7 +32,8 @@
 
 ## Hot topics
 
-- New Support for Postgres + New Login & Registration Web Form Style - [#22](https://github.com/authcompanion/authcompanion2/pull/22) [Done]
+- Our documentation now includes 2 new [.rest files](https://github.com/authcompanion/authcompanion2/tree/main/tools) that utilize the VS Code [REST Client plugin](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) to simplify API testing and provide clear examples of Authcompanion's admin and authentication APIs.
+- New Support for Postgres when storing user accounts + New Login & Registration Web Form Styling - [#22](https://github.com/authcompanion/authcompanion2/pull/22) [Done]
 - A Refresh of the Admin Dashboard Design - [#21](https://github.com/authcompanion/authcompanion2/pull/21) [Done]
 
 ## Introduction

@@ -29,7 +29,6 @@ export const registrationOptionsHandler = async function (request, reply) {
       userID: userUUID,
       userName: userName,
       timeout: 60000,
-      attestationType: "indirect",
       authenticatorSelection: {
         userVerification: "preferred",
         residentKey: "required",

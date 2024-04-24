@@ -49,7 +49,7 @@ export const registrationVerificationHandler = async function (request, reply) {
         credentialID: credentialIDHex,
         credentialPublicKey: credentialPublicKeyHex,
         counter: counter,
-        transports: request.body.response.transports,
+        transports: `${request.body.response.transports}`,
       })
       .returning({ id: this.authenticator.id });
 

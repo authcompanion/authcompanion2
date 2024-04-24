@@ -22,8 +22,12 @@ import { loginVerificationSchema } from "../services/webAuthn/schemas/loginVerif
 import { registerVerificationSchema } from "../services/webAuthn/schemas/registerVerificationSchema.js";
 
 import { authenticateAuthRequest } from "../utils/authenticate.js";
+import { configHandler } from "../services/auth/config.js";
 
 const authRoutes = async function (fastify, options) {
+  //config routes
+  fastify.get("/config", configHandler);
+
   //authentication API routes
   fastify.post("/register", registrationSchema, registrationHandler);
   fastify.post("/login", loginSchema, loginHandler);

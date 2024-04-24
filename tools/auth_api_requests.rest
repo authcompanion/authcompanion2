@@ -76,3 +76,9 @@ content-type: application/json
 Cookie: {{refresh_token}}
 
 {}
+
+### Get Server Config
+GET http://{{host}}/config
+content-type: application/json
+
+{}

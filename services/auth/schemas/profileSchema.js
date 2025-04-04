@@ -1,4 +1,4 @@
-export const loginSchema = {
+export const profileSchema = {
   schema: {
     body: {
       type: "object",
@@ -6,14 +6,20 @@ export const loginSchema = {
         data: {
           type: "object",
           properties: {
-            type: { type: "string" },
+            type: { type: "string", enum: ["users"] },
             attributes: {
               type: "object",
               properties: {
+                name: { type: "string", minLength: 2 },
                 email: { type: "string", format: "email" },
-                password: { type: "string" },
+                password: { type: "string", minLength: 8 },
+                metadata: {
+                  type: "object",
+                  additionalProperties: true,
+                  default: {},
+                },
               },
-              required: ["email", "password"],
+              minProperties: 1, // Requires at least one property in attributes
             },
           },
           required: ["type", "attributes"],
@@ -36,10 +42,11 @@ export const loginSchema = {
                   name: { type: "string" },
                   email: { type: "string", format: "email" },
                   created: { type: "string", format: "date-time" },
+                  updated: { type: "string", format: "date-time" },
                   access_token: { type: "string" },
                   access_token_expiry: { type: "string" },
                 },
-                required: ["name", "email", "created", "access_token", "access_token_expiry"],
+                required: ["name", "email", "created", "updated", "access_token", "access_token_expiry"],
               },
             },
             required: ["type", "id", "attributes"],

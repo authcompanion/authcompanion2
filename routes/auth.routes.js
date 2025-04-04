@@ -4,11 +4,11 @@ import { registrationSchema } from "../services/auth/schemas/registrationSchema.
 import { loginSchema } from "../services/auth/schemas/loginSchema.js";
 import { loginHandler } from "../services/auth/login.js";
 
-import { userProfileSchema } from "../services/auth/schemas/userProfileSchema.js";
-import { userProfileHandler } from "../services/auth/profile.js";
+import { profileSchema } from "../services/auth/schemas/profileSchema.js";
+import { profileHandler } from "../services/auth/profile.js";
 
-import { profileRecoverySchema } from "../services/auth/schemas/profileRecoverySchema.js";
-import { profileRecoveryHandler } from "../services/auth/recovery.js";
+import { recoverySchema } from "../services/auth/schemas/recoverySchema.js";
+import { recoveryHandler } from "../services/auth/recovery.js";
 
 import { tokenRefreshDeleteHandler, tokenRefreshHandler } from "../services/auth/refresh.js";
 import { refreshSchema } from "../services/auth/schemas/refreshSchema.js";
@@ -27,8 +27,8 @@ const authRoutes = async function (fastify, options) {
   //authentication API routes
   fastify.post("/register", registrationSchema, registrationHandler);
   fastify.post("/login", loginSchema, loginHandler);
-  fastify.post("/users/me", { onRequest: [authenticateAuthRequest], ...userProfileSchema }, userProfileHandler);
-  fastify.post("/recovery", profileRecoverySchema, profileRecoveryHandler);
+  fastify.post("/users/me", { onRequest: [authenticateAuthRequest], ...profileSchema }, profileHandler);
+  fastify.post("/recovery", recoverySchema, recoveryHandler);
   fastify.post("/refresh", refreshSchema, tokenRefreshHandler);
   fastify.delete("/refresh", refreshSchema, tokenRefreshDeleteHandler);
 

@@ -2,7 +2,7 @@ import { makeAccesstoken, makeRefreshtoken, validateJWT } from "../../utils/jwt.
 import config from "../../config.js";
 import { parse } from "cookie";
 import { refreshCookie, fgpCookie } from "../../utils/cookies.js";
-import { users } from "../../db/sqlite/schema.js";
+import { users } from "../../db/sqlite/sqlite.schema.js";
 import { eq, sql } from "drizzle-orm";
 
 export const tokenRefreshHandler = async function (request, reply) {

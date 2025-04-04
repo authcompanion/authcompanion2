@@ -58,4 +58,4 @@ const setupAdminKey = async function (fastify) {
 };
 
 //Wrap as Fastify Plugin
-export default fastifyPlugin(setupAdminKey, { fastify: "4.x" });
+export default fastifyPlugin(setupAdminKey, { fastify: "5.x" });

@@ -18,24 +18,24 @@
   "license": "Big Time Public License",
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
-    "@simplewebauthn/server": "^9.0.3",
-    "argon2": "0.31.2",
-    "better-sqlite3": "^9.4.3",
+    "@simplewebauthn/server": "^13.1.1",
+    "argon2": "^0.41.1",
+    "better-sqlite3": "^11.9.1",
     "compadre": "^3.2.0",
-    "cookie": "^0.6.0",
-    "dotenv": "^16.4.5",
-    "drizzle-orm": "^0.30.6",
+    "cookie": "^1.0.2",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.41.0",
     "emailjs": "^4.0.3",
-    "fastify": "^4.26.2",
-    "fastify-plugin": "^4.5.1",
-    "jose": "^5.2.3",
-    "postgres": "^3.4.4"
+    "fastify": "^5.2.2",
+    "fastify-plugin": "^5.0.1",
+    "jose": "^6.0.10",
+    "postgres": "^3.4.5"
   },
   "devDependencies": {
-    "ava": "^5.3.1",
-    "conventional-changelog-cli": "^4.1.0",
-    "drizzle-kit": "^0.20.14",
-    "prettier": "^3.2.5"
+    "ava": "^6.2.0",
+    "conventional-changelog-cli": "^5.0.0",
+    "drizzle-kit": "^0.30.6",
+    "prettier": "^3.5.3"
   },
   "engines": {
     "node": ">=20",

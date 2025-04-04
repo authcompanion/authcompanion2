@@ -58,4 +58,4 @@ const dbPlugin = async function (fastify) {
   fastify.decorate("storage", storage);
 };
 
-export default fastifyPlugin(dbPlugin, { fastify: "4.x" });
+export default fastifyPlugin(dbPlugin, { fastify: "5.x" });

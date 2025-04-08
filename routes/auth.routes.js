@@ -33,9 +33,29 @@ const authRoutes = async function (fastify, options) {
   fastify.delete("/refresh", refreshSchema, tokenRefreshDeleteHandler);
 
   //webAuthn API routes
-  fastify.get("/registration-options", registrationOptionsHandler);
+  fastify.get(
+    "/registration-options",
+    {
+      schema: {
+        description: "post some data",
+        tags: ["WebAuthn API"],
+        summary: "qwerty",
+      },
+    },
+    registrationOptionsHandler
+  );
   fastify.post("/registration-verification", registerVerificationSchema, registrationVerificationHandler);
-  fastify.get("/login-options", loginOptionsHandler);
+  fastify.get(
+    "/login-options",
+    {
+      schema: {
+        description: "post some data",
+        tags: ["WebAuthn API"],
+        summary: "qwerty",
+      },
+    },
+    loginOptionsHandler
+  );
   fastify.post("/login-verification", loginVerificationSchema, loginVerificationHandler);
 };
 

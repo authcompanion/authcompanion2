@@ -1,5 +1,8 @@
 export const loginSchema = {
   schema: {
+    description: "post some data",
+    tags: ["Admin API"],
+    summary: "qwerty",
     body: {
       type: "object",
       properties: {

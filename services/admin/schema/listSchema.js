@@ -1,5 +1,8 @@
 export const listUsersSchema = {
   schema: {
+    description: "post some data",
+    tags: ["Admin API"],
+    summary: "qwerty",
     querystring: {
       type: "object",
       properties: {

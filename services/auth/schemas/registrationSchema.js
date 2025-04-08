@@ -1,5 +1,8 @@
 export const registrationSchema = {
   schema: {
+    description: "post some data",
+    tags: ["Auth API"],
+    summary: "qwerty",
     body: {
       type: "object",
       properties: {

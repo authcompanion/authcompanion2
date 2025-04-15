@@ -19,7 +19,6 @@ export const listUsersSchema = {
         },
         "search[email]": {
           type: "string",
-          format: "email",
           maxLength: 255,
         },
       },

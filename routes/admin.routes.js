@@ -25,45 +25,6 @@ const adminRoutes = async function (fastify, options) {
   fastify.post("/token/refresh", refreshSchema, tokenRefreshHandler);
   fastify.delete("/token/refresh", refreshSchema, tokenRefreshDeleteHandler);
   fastify.delete("/logout/:uuid", { onRequest: [authenticateAdminRequest], ...logoutSchema }, logoutHandler);
-
-  //Admin web user interface routes
-  fastify.get(
-    "/dashboard",
-    {
-      onRequest: [authenticateWebAdminRequest],
-      schema: {
-        description: "post some data",
-        tags: ["Admin Forms"],
-        summary: "qwerty",
-      },
-    },
-    (request, reply) => {
-      const adminPage = readFileSync("./client/admin/dashboardPage.html");
-      reply.headers({
-        "Content-Type": `text/html`,
-      });
-      return adminPage;
-    }
-  );
-
-  //Login page for the admin web user interface
-  fastify.get(
-    "/login",
-    {
-      schema: {
-        description: "post some data",
-        tags: ["Admin Forms"],
-        summary: "qwerty",
-      },
-    },
-    (request, reply) => {
-      const loginPage = readFileSync("./client/admin/loginAdminPage.html");
-      reply.headers({
-        "Content-Type": `text/html`,
-      });
-      return loginPage;
-    }
-  );
 };
 
 export default adminRoutes;

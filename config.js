@@ -5,10 +5,9 @@ const config = {
   // Application Settings
   AUTHPORT: parseInt(process.env.PORT || "", 10) || 3002,
   ORIGIN: process.env.ORIGIN || "http://localhost:3002",
-  APPLICATIONORIGIN: process.env.APPLICATION_ORIGIN || "http://localhost:3002/v1/web/home",
-  REGISTRATIONORIGIN:
-    process.env.REGISTRATION_ORIGIN || process.env.APPLICATION_ORIGIN || "http://localhost:3002/v1/web/home",
-  ADMINORIGIN: process.env.ADMIN_ORIGIN || "http://localhost:3002/v1/admin/dashboard",
+  APPLICATIONORIGIN: process.env.APPLICATION_ORIGIN || "/",
+  REGISTRATIONORIGIN: process.env.REGISTRATION_ORIGIN || process.env.APPLICATION_ORIGIN || "/",
+  ADMINORIGIN: process.env.ADMIN_ORIGIN || "/admin",
   RECOVERYURL: process.env.RECOVERY_REDIRECT_URL || "http://localhost:3002/v1/web/profile",
 
   // Security Settings

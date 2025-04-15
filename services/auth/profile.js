@@ -8,7 +8,7 @@ export const profileHandler = async function (request, reply) {
   const {
     data: { type, attributes },
   } = request.body;
-  const userId = request.jwtRequestPayload.userid;
+  const sub = request.jwtRequestPayload.sub;
   const now = new Date().toISOString();
 
   // Validate request format
@@ -17,15 +17,21 @@ export const profileHandler = async function (request, reply) {
     throw { statusCode: 400, message: "Invalid Type Attribute" };
   }
 
-  // Get current user data
+  // Get current user data with all necessary fields
   const [currentUser] = await this.db
-    .select({ name: this.users.name, email: this.users.email })
+    .select({
+      uuid: this.users.uuid,
+      name: this.users.name,
+      email: this.users.email,
+      metadata: this.users.metadata,
+      appdata: this.users.appdata,
+    })
     .from(this.users)
-    .where(eq(this.users.uuid, userId));
+    .where(eq(this.users.uuid, sub));
 
   if (!currentUser) {
     request.log.info("Auth API: User not found during profile update");
-    throw { statusCode: 400, message: "Profile Update Failed" };
+    throw { statusCode: 404, message: "User Not Found" };
   }
 
   // Validate email uniqueness if changing
@@ -37,7 +43,7 @@ export const profileHandler = async function (request, reply) {
 
     if (existing) {
       request.log.info("Auth API: Duplicate email attempt during profile update");
-      throw { statusCode: 400, message: "Email Already In Use" };
+      throw { statusCode: 409, message: "Email Already In Use" };
     }
   }
 
@@ -53,20 +59,38 @@ export const profileHandler = async function (request, reply) {
     updateData.password = await createHash(attributes.password);
   }
 
-  // Perform update
-  const [updatedUser] = await this.db.update(this.users).set(updateData).where(eq(this.users.uuid, userId)).returning({
+  // Perform update and return all necessary fields
+  const [updatedUser] = await this.db.update(this.users).set(updateData).where(eq(this.users.uuid, sub)).returning({
     uuid: this.users.uuid,
     name: this.users.name,
     email: this.users.email,
+    metadata: this.users.metadata,
+    appdata: this.users.appdata,
     created_at: this.users.created_at,
     updated_at: this.users.updated_at,
   });
 
-  // Generate new tokens
-  const accessToken = await makeAccesstoken(updatedUser, this.key);
-  const refreshToken = await makeRefreshtoken(updatedUser, this.key, this);
+  // Generate new tokens with updated claims
+  const accessToken = await makeAccesstoken(
+    {
+      ...updatedUser,
+      metadata: updatedUser.metadata || "{}",
+      appdata: updatedUser.appdata || "{}",
+    },
+    this.key
+  );
 
-  // Set response
+  const refreshToken = await makeRefreshtoken(
+    {
+      ...updatedUser,
+      metadata: updatedUser.metadata || "{}",
+      appdata: updatedUser.appdata || "{}",
+    },
+    this.key,
+    this
+  );
+
+  // Set response headers
   reply.headers({
     "set-cookie": [refreshCookie(refreshToken.token), fgpCookie(accessToken.userFingerprint)],
     "x-authc-app-origin": config.APPLICATIONORIGIN,

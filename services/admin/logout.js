@@ -1,36 +1,32 @@
 import config from "../../config.js";
 import { eq } from "drizzle-orm";
+import { refreshCookie, fgpCookie } from "../../utils/cookies.js";
 
 export const logoutHandler = async function (request, reply) {
-  const { uuid } = request.params;
+  // Get user ID from validated JWT
+  const sub = request.jwtRequestPayload.sub;
 
-  // Invalidate JWT and verify user exists
+  // Invalidate all active tokens by changing JWT ID
   const result = await this.db
     .update(this.users)
     .set({ jwt_id: null })
-    .where(eq(this.users.uuid, uuid))
+    .where(eq(this.users.uuid, sub))
     .returning({ uuid: this.users.uuid });
 
   if (result.length === 0) {
-    request.log.warn(`Admin API: Logout attempt for non-existent user (${uuid})`);
+    request.log.warn(`Auth API: Logout attempt for non-existent user (${sub})`);
     throw { statusCode: 404, message: "User not found" };
   }
 
-  // Create expired cookie with same attributes as login cookie
-  const expiredCookie = [
-    "adminRefreshToken=",
-    "Path=/",
-    "Expires=Thu, 01 Jan 1970 00:00:00 GMT", // Expire immediately
-    `SameSite=${config.SAMESITE}`,
-    "HttpOnly",
-    secureCookie(),
-  ].join("; ");
+  // Create expired cookies for both token types
+  const expiredRefreshCookie = refreshCookie("", true);
+  const expiredFgpCookie = fgpCookie("", true);
 
   reply.headers({
-    "set-cookie": [expiredCookie],
-    "x-authc-app-origin": config.ADMIN_ORIGIN,
+    "set-cookie": [expiredRefreshCookie, expiredFgpCookie],
+    "x-authc-app-origin": config.APPLICATIONORIGIN,
     "Clear-Site-Data": '"cookies", "storage"',
   });
 
-  reply.code(204).send();
+  return reply.code(204).send();
 };

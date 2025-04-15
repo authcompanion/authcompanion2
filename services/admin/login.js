@@ -82,7 +82,7 @@ export const loginHandler = async function (request, reply) {
   // Set response headers
   reply.headers({
     "set-cookie": [cookieValue],
-    "x-authc-app-origin": config.ADMIN_ORIGIN,
+    "x-authc-app-origin": config.ADMINORIGIN,
   });
 
   return {

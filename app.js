@@ -1,26 +1,44 @@
 import Fastify from "fastify";
 import authRoutes from "./routes/auth.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
-import webRoutes from "./routes/ui.routes.js";
 import database from "./db/db.js";
 import serverKey from "./key/server.key.js";
 import adminKey from "./key/admin.key.js";
+import fastifyStatic from "@fastify/static";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
+import { readFileSync } from "fs";
+import path from "path";
 
 // Constants for API versioning and route prefixes
 const API_VERSION = "v1";
 const ROUTE_PREFIXES = {
   ADMIN: `/${API_VERSION}/admin`,
   AUTH: `/${API_VERSION}/auth`,
-  WEB: `/${API_VERSION}/web`,
 };
 
 export const buildApp = async (serverOptions = {}) => {
   const app = Fastify(serverOptions);
 
+  // Cache the SPA page at server start (not on every request)
+  const spaPath = path.join(process.cwd(), "client", "dist", "index.html");
+  let spaPage;
+
+  try {
+    spaPage = readFileSync(spaPath, "utf8");
+  } catch (error) {
+    throw new Error(`Failed to cache SPA page: ${error.message}`);
+  }
+
   // Register core plugins first
   await app.register(database).register(serverKey).register(adminKey);
+
+  // Register static assets plugin
+  await app.register(fastifyStatic, {
+    root: path.join(process.cwd(), "client", "dist"),
+    prefix: "/", // Serve from root path
+    decorateReply: false, // Disable automatic headers
+  });
 
   // Register OpenAPI Documentation
   await app.register(fastifySwagger, {
@@ -40,8 +58,6 @@ export const buildApp = async (serverOptions = {}) => {
         { name: "Auth API", description: "Code related end-points" },
         { name: "Admin API", description: "User related end-points" },
         { name: "WebAuthn API", description: "AuthCompanion's Web Forms" },
-        { name: "Web Forms", description: "AuthCompanion's Web Forms" },
-        { name: "Admin Forms", description: "AuthCompanion's Web Forms" },
         { name: "Health Checks", description: "AuthCompanion's Web Forms" },
       ],
       components: {
@@ -56,7 +72,7 @@ export const buildApp = async (serverOptions = {}) => {
     },
   });
   await app.register(fastifySwaggerUi, {
-    routePrefix: "/api",
+    routePrefix: "/docs/api",
     uiConfig: {
       docExpansion: "list",
       deepLinking: false,
@@ -67,7 +83,6 @@ export const buildApp = async (serverOptions = {}) => {
   const plugins = [
     { plugin: adminRoutes, options: { prefix: ROUTE_PREFIXES.ADMIN } },
     { plugin: authRoutes, options: { prefix: ROUTE_PREFIXES.AUTH } },
-    { plugin: webRoutes, options: { prefix: ROUTE_PREFIXES.WEB } },
   ];
 
   for (const { plugin, options } of plugins) {
@@ -76,20 +91,6 @@ export const buildApp = async (serverOptions = {}) => {
 
   // Add health check endpoints
   app.register(async (fastify) => {
-    fastify.get(
-      "/",
-      {
-        schema: {
-          description: "post some data",
-          tags: ["Health Checks"],
-          summary: "qwerty",
-        },
-      },
-      async () => {
-        return "Welcome and hello 👋 - AuthCompanion is serving requests!";
-      }
-    );
-
     fastify.get(
       "/health",
       {
@@ -101,17 +102,11 @@ export const buildApp = async (serverOptions = {}) => {
       },
       async () => ({ status: "OK" })
     );
-    fastify.get(
-      "/ready",
-      {
-        schema: {
-          description: "post some data",
-          tags: ["Health Checks"],
-          summary: "qwerty",
-        },
-      },
-      async () => ({ status: "READY" })
-    );
+  });
+
+  // Add SPA catch-all route
+  app.setNotFoundHandler((request, reply) => {
+    reply.code(200).header("Content-Type", "text/html; charset=utf-8").send(spaPage);
   });
 
   // Add global error handler

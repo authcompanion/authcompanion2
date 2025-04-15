@@ -76,8 +76,10 @@ function logStartupDetails(server) {
          🚨 Port:         ${port}
 
          🔧 Endpoints:
-             🖥️  Client UI:  ${baseUrl}/v1/web/login
-             🛠️  Admin UI:   ${baseUrl}/v1/admin/login
+             🖥️  Client UI:  ${baseUrl}/
+             🛠️  Admin UI:   ${baseUrl}/admin/login
+             📒  API Documentation:   ${baseUrl}/docs/api
+
 
     ###########################################################
   `);

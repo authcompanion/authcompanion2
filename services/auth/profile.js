@@ -1,7 +1,7 @@
 import { createHash } from "../../utils/credential.js";
 import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import config from "../../config.js";
-import { refreshCookie, fgpCookie } from "../../utils/cookies.js";
+import { refreshCookie } from "../../utils/cookies.js";
 import { eq } from "drizzle-orm";
 
 export const profileHandler = async function (request, reply) {
@@ -92,7 +92,7 @@ export const profileHandler = async function (request, reply) {
 
   // Set response headers
   reply.headers({
-    "set-cookie": [refreshCookie(refreshToken.token), fgpCookie(accessToken.userFingerprint)],
+    "set-cookie": [refreshCookie(refreshToken.token)],
     "x-authc-app-origin": config.APPLICATIONORIGIN,
   });
 

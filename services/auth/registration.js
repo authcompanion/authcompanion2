@@ -3,7 +3,7 @@ import { randomUUID } from "crypto";
 import { createId } from "@paralleldrive/cuid2";
 import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import config from "../../config.js";
-import { refreshCookie, fgpCookie } from "../../utils/cookies.js";
+import { refreshCookie } from "../../utils/cookies.js";
 import { eq } from "drizzle-orm";
 
 export const registrationHandler = async function (request, reply) {
@@ -54,7 +54,7 @@ export const registrationHandler = async function (request, reply) {
 
   // Set response
   reply.code(201).headers({
-    "set-cookie": [refreshCookie(refreshToken.token), fgpCookie(accessToken.userFingerprint)],
+    "set-cookie": [refreshCookie(refreshToken.token)],
     "x-authc-app-origin": config.REGISTRATIONORIGIN,
   });
 

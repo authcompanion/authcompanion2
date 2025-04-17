@@ -23,22 +23,14 @@ const TOKEN_CONFIG = {
   },
 };
 
-async function generateClientContext() {
-  const fingerprint = crypto.randomBytes(16).toString("hex");
-  const hash = await createHash(fingerprint);
-  return { userFingerprint: fingerprint, userFingerprintHash: hash };
-}
-
 export async function makeAccesstoken(userAcc, key) {
   try {
-    const { userFingerprint, userFingerprintHash } = await generateClientContext();
     const jwtid = randomUUID();
 
     const claims = {
       sub: userAcc.uuid,
       name: userAcc.name,
       email: userAcc.email,
-      userFingerprint: userFingerprintHash,
       scope: TOKEN_CONFIG.USER.scope,
     };
 
@@ -64,7 +56,6 @@ export async function makeAccesstoken(userAcc, key) {
     return {
       token: jwt,
       expiration: payload.exp,
-      userFingerprint: userFingerprint,
       jti: jwtid,
     };
   } catch (error) {
@@ -116,14 +107,12 @@ export async function makeRefreshtoken(userAcc, key, fastifyInstance, { recovery
 
 export async function makeAdminToken(adminUserAcc, key) {
   try {
-    const { userFingerprint, userFingerprintHash } = await generateClientContext();
     const jwtid = randomUUID();
 
     const claims = {
       sub: adminUserAcc.uuid,
       name: adminUserAcc.name,
       email: adminUserAcc.email,
-      userFingerprint: userFingerprintHash,
       scope: TOKEN_CONFIG.ADMIN.scope,
     };
 
@@ -141,7 +130,6 @@ export async function makeAdminToken(adminUserAcc, key) {
     return {
       token: jwt,
       expiration: payload.exp,
-      userFingerprint: userFingerprint,
       jti: jwtid,
     };
   } catch (error) {
@@ -182,7 +170,7 @@ export async function makeAdminRefreshtoken(adminUserAcc, key, fastifyInstance) 
   }
 }
 
-export async function validateJWT(jwt, key, fingerprint = null) {
+export async function validateJWT(jwt, key) {
   try {
     const { payload } = await jose.jwtVerify(jwt, key, {
       requiredClaims: ["iss", "aud", "sub", "exp", "iat", "jti"],
@@ -195,11 +183,6 @@ export async function validateJWT(jwt, key, fingerprint = null) {
 
     if (payload.aud !== expectedAudience) {
       throw new Error("Invalid token audience");
-    }
-
-    if (fingerprint) {
-      const validContext = await verifyValueWithHash(fingerprint, payload.userFingerprint);
-      if (!validContext) throw new Error("Invalid user context");
     }
 
     return payload;

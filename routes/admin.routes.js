@@ -13,7 +13,7 @@ import { tokenRefreshHandler, tokenRefreshDeleteHandler } from "../services/admi
 import { refreshSchema } from "../services/admin/schema/refreshSchema.js";
 import { logoutHandler } from "../services/admin/logout.js";
 import { logoutSchema } from "../services/admin/schema/logoutSchema.js";
-import { authenticateAdminRequest, authenticateWebAdminRequest } from "../utils/authenticate.js";
+import { authenticateAdminRequest } from "../utils/authenticate.js";
 
 const adminRoutes = async function (fastify, options) {
   //Admin API routes

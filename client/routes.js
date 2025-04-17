@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { decodeJwt } from "jose";
 import Home from "./views/auth/Home.vue";
 import Login from "./views/auth/Login.vue";
 import Register from "./views/auth/Register.vue";
@@ -32,6 +33,7 @@ const routes = [
     component: AdminDashboard,
     meta: {
       requiresAuth: true,
+      requiredScope: "admin",
     },
   },
   {
@@ -46,22 +48,52 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
-  // Check if the route requires authentication
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     const accessToken = localStorage.getItem("ACCESS_TOKEN");
 
+    // No token found
     if (!accessToken) {
-      // Return redirect path
       return {
         path: "/login",
         query: { redirect: to.fullPath },
       };
     }
-    // Return nothing to allow navigation
+
+    // Parse and validate JWT
+    let tokenPayload;
+    try {
+      tokenPayload = decodeJwt(accessToken);
+    } catch (e) {
+      localStorage.removeItem("ACCESS_TOKEN");
+      return {
+        path: "/login",
+        query: { redirect: to.fullPath },
+      };
+    }
+
+    // Check token expiration
+    const currentTime = Math.floor(Date.now() / 1000);
+    if (!tokenPayload.exp || tokenPayload.exp < currentTime) {
+      localStorage.removeItem("ACCESS_TOKEN");
+      return {
+        path: "/login",
+        query: { redirect: to.fullPath },
+      };
+    }
+
+    // Check scope requirement
+    const requiredScope = to.meta.requiredScope;
+    if (requiredScope && tokenPayload.scope !== requiredScope) {
+      localStorage.removeItem("ACCESS_TOKEN");
+      return {
+        path: requiredScope === "admin" ? "/admin/login" : "/login",
+        query: { redirect: to.fullPath },
+      };
+    }
+
     return true;
   }
 
-  // For non-protected routes, allow navigation
   return true;
 });
 

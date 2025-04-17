@@ -1,6 +1,6 @@
 import config from "../../config.js";
 import { eq } from "drizzle-orm";
-import { refreshCookie, fgpCookie } from "../../utils/cookies.js";
+import { refreshCookie } from "../../utils/cookies.js";
 
 export const logoutHandler = async function (request, reply) {
   // Get user ID from validated JWT
@@ -20,10 +20,9 @@ export const logoutHandler = async function (request, reply) {
 
   // Create expired cookies for both token types
   const expiredRefreshCookie = refreshCookie("", true);
-  const expiredFgpCookie = fgpCookie("", true);
 
   reply.headers({
-    "set-cookie": [expiredRefreshCookie, expiredFgpCookie],
+    "set-cookie": [expiredRefreshCookie],
     "x-authc-app-origin": config.APPLICATIONORIGIN,
     "Clear-Site-Data": '"cookies", "storage"',
   });

@@ -138,7 +138,6 @@ console.log(decodedClaims);
   "userid": "qbnjnj3rduw8bgg7hbtgnici",
   "name": "Authy Person",
   "email": "hello@authcompanion.com",
-  "userFingerprint": "$argon2id$v=19$m=64000,t=3,p=1$hLGlPgligsPoP5muWpUEqw$JaR0wRBMDlbN/jBkJbyw/C4GmcScJ3uylQRDjATZNT4",
   "scope": "user",
   "iat": 1688927980,
   "exp": 1688931580

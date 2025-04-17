@@ -1,7 +1,7 @@
 import { makeAccesstoken, makeRefreshtoken, validateJWT } from "../../utils/jwt.js";
 import config from "../../config.js";
 import { parse } from "cookie";
-import { refreshCookie, fgpCookie } from "../../utils/cookies.js";
+import { refreshCookie } from "../../utils/cookies.js";
 import { users } from "../../db/sqlite/sqlite.schema.js";
 import { eq } from "drizzle-orm";
 
@@ -39,7 +39,7 @@ export const tokenRefreshHandler = async function (request, reply) {
   const newRefreshToken = await makeRefreshtoken(user, this.key, this);
 
   reply.headers({
-    "set-cookie": [refreshCookie(newRefreshToken.token), fgpCookie(accessToken.userFingerprint)],
+    "set-cookie": [refreshCookie(newRefreshToken.token)],
     "x-authc-app-origin": config.APPLICATIONORIGIN,
   });
 

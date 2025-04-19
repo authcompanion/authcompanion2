@@ -1,17 +1,36 @@
-version: "3"
+version: "3.8"
 
 services:
   authcompanion:
     build: .
-    container_name: authcompanion
+    restart: unless-stopped
     environment:
-      - SQLITE_DB_PATH=./authdata/sqlite_authc_database.db
-      - ADMIN_KEY_PATH=./authdata/adminkey
-      - SERVER_KEY_PATH=./authdata/serverkey
-    ports:
-      - "3002:3002"
+      - NODE_ENV=production
+      - SQLITE_DB_PATH=/data/sqlite_authc_database.db
+      - ADMIN_KEY_PATH=/data/adminkey
+      - SERVER_KEY_PATH=/data/serverkey
     volumes:
-      - authdata:/home/nodejs/app/authdata
+      - authdata:/data
+    networks:
+      - authnet
+
+  caddy:
+    image: caddy:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    command: caddy reverse-proxy --from localhost --to authcompanion:3002 --insecure
+    networks:
+      - authnet
 
 volumes:
   authdata:
+  caddy_data:
+  caddy_config:
+
+networks:
+  authnet:

@@ -1,8 +1,8 @@
 export const refreshSchema = {
   schema: {
-    description: "post some data",
+    description: "Enpoint that powers the helps you to refresh a user account's acess token when it expires",
     tags: ["Auth API"],
-    summary: "qwerty",
+    summary: "Refresh a User's Access Token",
     body: {
       type: "object",
       properties: {},

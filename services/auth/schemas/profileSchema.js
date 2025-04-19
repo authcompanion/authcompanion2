@@ -1,8 +1,8 @@
 export const profileSchema = {
   schema: {
-    description: "post some data",
+    description: "Enpoint that powers the public web form for updating a user's profile",
     tags: ["Auth API"],
-    summary: "qwerty",
+    summary: "Update the User Account",
     schema: {
       body: {
         type: "object",

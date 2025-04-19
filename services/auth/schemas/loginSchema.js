@@ -1,8 +1,8 @@
 export const loginSchema = {
   schema: {
-    description: "post some data",
+    description: "Enpoint that powers the public web form for user login",
     tags: ["Auth API"],
-    summary: "qwerty",
+    summary: "Login a User Account",
     body: {
       type: "object",
       properties: {

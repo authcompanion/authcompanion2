@@ -1,8 +1,8 @@
 export const registrationSchema = {
   schema: {
-    description: "post some data",
+    description: "Enpoint that powers the public web form for user registration",
     tags: ["Auth API"],
-    summary: "qwerty",
+    summary: "Register a User's Account",
     body: {
       type: "object",
       properties: {

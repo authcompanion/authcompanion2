@@ -1,8 +1,8 @@
 export const refreshSchema = {
   schema: {
-    description: "post some data",
+    description: "Endpoint that enables refreshing of the Admin Access Token.",
     tags: ["Admin API"],
-    summary: "qwerty",
+    summary: "Refresh Admin Access Token",
     body: {
       type: "object",
       properties: {

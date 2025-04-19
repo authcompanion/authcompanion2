@@ -1,8 +1,8 @@
 export const deleteSchema = {
   schema: {
-    description: "post some data",
+    description: "Enpoint that enables admins to delete user accounts",
     tags: ["Admin API"],
-    summary: "qwerty",
+    summary: "Delete User Accounts",
     params: {
       type: "object",
       properties: {

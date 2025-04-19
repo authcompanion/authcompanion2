@@ -1,8 +1,9 @@
 export const loginSchema = {
   schema: {
-    description: "post some data",
+    description:
+      "Enpoint that enables admins to login to the admin portal and/or recieve an admin Access Token to authenticate into the Admin APIs.",
     tags: ["Admin API"],
-    summary: "qwerty",
+    summary: "Login Admins and recieve Admin Access Token for Admin APIs",
     body: {
       type: "object",
       properties: {

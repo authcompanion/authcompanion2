@@ -1,8 +1,8 @@
 export const listUsersSchema = {
   schema: {
-    description: "post some data",
+    description: "Enpoint that enables admins to list user accounts",
     tags: ["Admin API"],
-    summary: "qwerty",
+    summary: "List User Accounts",
     querystring: {
       type: "object",
       properties: {

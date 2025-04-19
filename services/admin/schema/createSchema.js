@@ -1,8 +1,8 @@
 export const createSchema = {
   schema: {
-    description: "post some data",
+    description: "Enpoint that enables admins to create user accounts",
     tags: ["Admin API"],
-    summary: "qwerty",
+    summary: "Create User Accounts",
     body: {
       type: "object",
       properties: {

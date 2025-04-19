@@ -44,31 +44,64 @@ export const buildApp = async (serverOptions = {}) => {
   await app.register(fastifySwagger, {
     openapi: {
       info: {
-        title: "AuthCompanion Server API Documentation",
-        description:
-          "Documentation for the User Management Server - for seamless and secure integration of user authentication. Try out the endpoints directly from the documenation to get to know ther Server.",
+        title: "Server API Documentation",
+        description: `Comprehensive API documentation for AuthCompanion's secure authentication Server.
+          Features
+          - User authentication & session management
+          - Admin-level user administration
+          - Passwordless WebAuthn integration
+          
+          Try endpoints directly from this documentation for interactive testing.`,
         version: "5.0.0",
+        contact: {
+          name: "AuthCompanion Support",
+          email: "support@authcompanion.com",
+        },
       },
       servers: [
         {
           url: "http://localhost:3002",
+          description: "Local development server",
         },
       ],
       tags: [
-        { name: "Auth API", description: "Code related end-points" },
-        { name: "Admin API", description: "User related end-points" },
-        { name: "WebAuthn API", description: "AuthCompanion's Web Forms" },
-        { name: "Health Checks", description: "AuthCompanion's Web Forms" },
+        {
+          name: "Auth API",
+          description:
+            "Authentication flows including login, registration, and token management; that powers the public web forms.",
+        },
+        {
+          name: "Admin API",
+          description: "Privileged user management operations requiring admin permissions",
+          externalDocs: {
+            description: "Admin Guide",
+            url: "https://docs.authcompanion.com/admin-guide",
+          },
+        },
+        {
+          name: "WebAuthn API",
+          description: "FIDO2 WebAuthn integration for passwordless authentication flows",
+        },
+        {
+          name: "Health Checks",
+          description: "Real-time server status monitoring and service health verification",
+        },
       ],
       components: {
         securitySchemes: {
-          apiKey: {
-            type: "apiKey",
-            name: "apiKey",
-            in: "header",
+          bearerAuth: {
+            type: "http",
+            scheme: "bearer",
+            bearerFormat: "JWT",
+            description: "Admin JWT token obtained through authentication",
           },
         },
       },
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
     },
   });
   await app.register(fastifySwaggerUi, {
@@ -95,9 +128,9 @@ export const buildApp = async (serverOptions = {}) => {
       "/health",
       {
         schema: {
-          description: "post some data",
+          description: "For health checking.",
           tags: ["Health Checks"],
-          summary: "qwerty",
+          summary: "Check the health of the AuthC Server",
         },
       },
       async () => ({ status: "OK" })

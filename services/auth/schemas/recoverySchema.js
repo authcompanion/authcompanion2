@@ -1,8 +1,8 @@
 export const recoverySchema = {
   schema: {
-    description: "post some data",
+    description: "Enpoint that powers the public web form for recoverying a user account",
     tags: ["Auth API"],
-    summary: "qwerty",
+    summary: "Recovery a User Account",
     body: {
       type: "object",
       properties: {

@@ -1,8 +1,8 @@
 export const logoutSchema = {
   schema: {
-    description: "post some data",
+    description: "Endpoint that powers the admin portal logout button",
     tags: ["Admin API"],
-    summary: "qwerty",
+    summary: "Logout Admin from Admin Portal",
     params: {
       type: "object",
       properties: {

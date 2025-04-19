@@ -1,8 +1,8 @@
 export const updateSchema = {
   schema: {
-    description: "post some data",
+    description: "Endpoint used for updating User Accounts",
     tags: ["Admin API"],
-    summary: "qwerty",
+    summary: "Update User Accounts",
     body: {
       type: "object",
       properties: {

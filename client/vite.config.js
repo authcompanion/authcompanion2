@@ -9,6 +9,8 @@ export default defineConfig({
     emptyOutDir: true,
   },
   server: {
+    port: 3001, // Frontend port
+    // strictPort: true,
     proxy: {
       "/v1": {
         target: "http://localhost:3002",

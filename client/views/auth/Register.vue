@@ -136,6 +136,7 @@
 </template>
 
 <script setup>
+import { startRegistration } from "@simplewebauthn/browser";
 import ErrorAlert from "../../components/ErrorAlert.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
@@ -193,9 +194,23 @@ const submit = async () => {
 
 const passkeySubmit = async () => {
   try {
+    const userName = name.value;
+    const userEmail = email.value;
+
+    if (!userName || !userEmail) {
+      showError.value = true;
+      errorTitle.value = "Error";
+      errorDetail.value = "Please provide your name and email.";
+      return;
+    }
+
     const optionsResponse = await fetch("/v1/auth/registration-options", {
-      method: "GET",
+      method: "POST",
       headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: userName,
+        email: userEmail,
+      }),
     });
 
     if (optionsResponse.ok) {

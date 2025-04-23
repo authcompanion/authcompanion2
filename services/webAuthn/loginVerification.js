@@ -1,34 +1,45 @@
 import config from "../../config.js";
-import { parse } from "cookie";
-import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import { verifyAuthenticationResponse } from "@simplewebauthn/server";
 import { eq } from "drizzle-orm";
+import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 
 export const loginVerificationHandler = async function (request, reply) {
   try {
-    //set the PR's ID value
-    const appURL = new URL(config.ORIGIN);
+    const { hostname: rpID, origin } = new URL(config.ORIGIN);
+    const { sessionID, attResp } = request.body;
 
-    const rpID = appURL.hostname;
-    // The URL at which registrations and authentications should occur
-    const origin = appURL.origin;
+    if (!sessionID) throw { statusCode: 400, message: "Missing session ID" };
 
-    //fetch cookies (we'll need session id. session id is set on page load in ui.routes.js)
-    const cookies = parse(request.headers.cookie);
-
-    //retrieve the session's challenge from storage
-    const sessionChallenge = await this.db
-      .select({
-        data: this.storage.data,
-      })
+    // Get stored challenge
+    const [session] = await this.db
+      .select({ data: this.storage.data })
       .from(this.storage)
-      .where(eq(this.storage.sessionID, cookies.sessionID));
+      .where(eq(this.storage.sessionID, sessionID));
 
-    //set userID from response
-    const userID = request.body.response.userHandle;
+    if (!session) throw { statusCode: 400, message: "Invalid session" };
 
-    //retrieve the user's authenticator
-    const userAuthenticator = await this.db
+    // Get user handle from response
+    const userID = attResp.response.userHandle;
+    if (!userID) throw { statusCode: 400, message: "Missing user handle" };
+
+    // Get user with ALL required fields + authenticatorId in one query
+    const [user] = await this.db
+      .select({
+        uuid: this.users.uuid,
+        name: this.users.name,
+        email: this.users.email,
+        jwt_id: this.users.jwt_id,
+        created_at: this.users.created_at,
+        authenticatorId: this.users.authenticatorId, // Critical for authenticator lookup
+      })
+      .from(this.users)
+      .where(eq(this.users.uuid, userID));
+
+    if (!user) throw { statusCode: 404, message: "User not found" };
+    if (!user.authenticatorId) throw { statusCode: 400, message: "User has no authenticator linked" };
+
+    // Get authenticator using the user's authenticatorId
+    const [authenticator] = await this.db
       .select({
         credentialPublicKey: this.authenticator.credentialPublicKey,
         credentialID: this.authenticator.credentialID,
@@ -36,80 +47,54 @@ export const loginVerificationHandler = async function (request, reply) {
         transports: this.authenticator.transports,
       })
       .from(this.authenticator)
-      .innerJoin(this.users, eq(this.users.authenticatorId, this.authenticator.id))
-      .where(eq(this.users.uuid, userID));
+      .where(eq(this.authenticator.id, user.authenticatorId));
 
-    // Convert hexadecimal strings back to Uint8Array
-    const credentialPublicKeyUint8Array = Buffer.from(userAuthenticator[0].credentialPublicKey, "hex");
-    const credentialIDUint8Array = Buffer.from(userAuthenticator[0].credentialID, "hex");
+    if (!authenticator) throw { statusCode: 404, message: "Authenticator not found" };
 
-    //verify the request for login with all the information gathered
+    // Verify authentication
     const verification = await verifyAuthenticationResponse({
-      response: request.body,
-      expectedChallenge: sessionChallenge[0].data,
+      response: attResp,
+      expectedChallenge: session.data,
       expectedOrigin: origin,
       expectedRPID: rpID,
-      authenticator: {
-        credentialPublicKey: credentialPublicKeyUint8Array,
-        credentialID: credentialIDUint8Array,
-        counter: userAuthenticator[0].counter,
-        transports: userAuthenticator[0].transports,
+      credential: {
+        publicKey: Buffer.from(authenticator.credentialPublicKey, "hex"),
+        id: Buffer.from(authenticator.credentialID, "hex"),
+        counter: authenticator.counter,
+        transports: authenticator.transports,
       },
       requireUserVerification: false,
     });
 
-    //check if the registration request is verified
-    if (!verification.verified) {
-      request.log.info("Authenticator was not verified - Registration failed");
-      throw { statusCode: 400, message: "Registration Failed" };
-    }
+    if (!verification.verified) throw { statusCode: 401, message: "Verification failed" };
 
-    //session clean up in the storage
-    await this.db.delete(this.storage).where(eq(this.storage.sessionID, cookies.sessionID));
+    // Cleanup session
+    await this.db.delete(this.storage).where(eq(this.storage.sessionID, sessionID));
 
-    // All looks good! Let's prepare the reply
+    // Generate tokens using the user data we already have
+    const accessToken = await makeAccesstoken(user, this.key);
+    const refreshToken = await makeRefreshtoken(user, this.key, this);
 
-    // Fetch user from database
-    const userObj = await this.db
-      .select({
-        uuid: this.users.uuid,
-        name: this.users.name,
-        email: this.users.email,
-        jwt_id: this.users.jwt_id,
-        active: this.users.active,
-        created_at: this.users.created_at,
-      })
-      .from(this.users)
-      .where(eq(this.users.uuid, userID));
-
-    const userAccessToken = await makeAccesstoken(userObj[0], this.key);
-    const userRefreshToken = await makeRefreshtoken(userObj[0], this.key, this);
-
-    const userAttributes = {
-      name: userObj[0].name,
-      email: userObj[0].email,
-      created: userObj[0].created_at,
-      access_token: userAccessToken.token,
-      access_token_expiry: userAccessToken.expiration,
-    };
-    const expireDate = new Date();
-    expireDate.setTime(expireDate.getTime() + 7 * 24 * 60 * 60 * 1000); // TODO: Make configurable now, set to 7 days
-
+    // Set response
     reply.headers({
       "set-cookie": [
-        `userRefreshToken=${userRefreshToken.token}; Path=/; Expires=${expireDate}; SameSite=None; Secure; HttpOnly`,
+        `userRefreshToken=${refreshToken.token}; Path=/; Expires=${new Date(Date.now() + 604800000).toUTCString()}; SameSite=None; Secure; HttpOnly`,
       ],
       "x-authc-app-origin": config.APPLICATIONORIGIN,
     });
 
     return {
       data: {
-        id: userObj[0].uuid,
+        id: user.uuid,
         type: "Login",
-        attributes: userAttributes,
+        attributes: {
+          ...user,
+          access_token: accessToken.token,
+          access_token_expiry: accessToken.expiration,
+        },
       },
     };
   } catch (err) {
-    throw err;
+    throw { statusCode: err.statusCode || 500, message: err.message };
   }
 };

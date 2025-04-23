@@ -135,6 +135,8 @@
 </template>
 
 <script setup>
+import { startAuthentication } from "@simplewebauthn/browser";
+
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import ErrorAlert from "../../components/ErrorAlert.vue";
@@ -195,8 +197,10 @@ const passkeySubmit = async () => {
     });
 
     if (optionsResponse.ok) {
-      const opts = await optionsResponse.json();
+      const { sessionID, ...opts } = await optionsResponse.json();
       const attResp = await startAuthentication(opts);
+
+      sessionStorage.setItem("sessionID", sessionID);
 
       const verificationResponse = await fetch("/v1/auth/login-verification", {
         method: "POST",
@@ -204,7 +208,7 @@ const passkeySubmit = async () => {
           "Content-Type": "application/json",
           "x-authc-app-challenge": opts.challenge,
         },
-        body: JSON.stringify(attResp),
+        body: JSON.stringify({ sessionID, attResp }),
       });
 
       const reply = await verificationResponse.json();

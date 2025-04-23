@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev:server": "node --watch --no-warnings server.js",
-    "dev:client": "vite ./client --port 3001 --open /login",
+    "dev:client": "vite ./client --open /login",
     "dev:all": "concurrently \"pnpm dev:server\" \"pnpm dev:client\"",
     "build": "vite build ./client",
     "start": "npm run build && node --no-warnings server.js",
@@ -24,6 +24,7 @@
     "@fastify/swagger": "^9.4.2",
     "@fastify/swagger-ui": "^5.2.2",
     "@paralleldrive/cuid2": "^2.2.2",
+    "@simplewebauthn/browser": "^13.1.0",
     "@simplewebauthn/server": "^13.1.1",
     "argon2": "^0.41.1",
     "better-sqlite3": "^11.9.1",

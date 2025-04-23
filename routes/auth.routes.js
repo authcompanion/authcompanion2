@@ -18,7 +18,9 @@ import { registrationVerificationHandler } from "../services/webAuthn/registrati
 import { loginOptionsHandler } from "../services/webAuthn/loginOptions.js";
 import { loginVerificationHandler } from "../services/webAuthn/loginVerification.js";
 
+import { registrationOptionsSchema } from "../services/webAuthn/schemas/registrationOptionsSchema.js";
 import { loginVerificationSchema } from "../services/webAuthn/schemas/loginVerificationSchema.js";
+import { loginOptionsSchema } from "../services/webAuthn/schemas/loginOptionsSchema.js";
 import { registerVerificationSchema } from "../services/webAuthn/schemas/registerVerificationSchema.js";
 
 import { authenticateAuthRequest } from "../utils/authenticate.js";
@@ -33,29 +35,9 @@ const authRoutes = async function (fastify, options) {
   fastify.delete("/refresh", refreshSchema, tokenRefreshDeleteHandler);
 
   //webAuthn API routes
-  fastify.get(
-    "/registration-options",
-    {
-      schema: {
-        description: "post some data",
-        tags: ["WebAuthn API"],
-        summary: "qwerty",
-      },
-    },
-    registrationOptionsHandler
-  );
+  fastify.post("/registration-options", registrationOptionsSchema, registrationOptionsHandler);
   fastify.post("/registration-verification", registerVerificationSchema, registrationVerificationHandler);
-  fastify.get(
-    "/login-options",
-    {
-      schema: {
-        description: "post some data",
-        tags: ["WebAuthn API"],
-        summary: "qwerty",
-      },
-    },
-    loginOptionsHandler
-  );
+  fastify.get("/login-options", loginOptionsSchema, loginOptionsHandler);
   fastify.post("/login-verification", loginVerificationSchema, loginVerificationHandler);
 };
 

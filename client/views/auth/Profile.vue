@@ -144,7 +144,7 @@ onMounted(() => {
 });
 
 const updateUser = async () => {
-  return await fetch("/v1/auth/users/me", {
+  return await fetch("/v1/auth/profile", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

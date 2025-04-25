@@ -29,7 +29,7 @@ const authRoutes = async function (fastify, options) {
   //authentication API routes
   fastify.post("/register", registrationSchema, registrationHandler);
   fastify.post("/login", loginSchema, loginHandler);
-  fastify.post("/users/me", { onRequest: [authenticateAuthRequest], ...profileSchema }, profileHandler);
+  fastify.post("/profile", { onRequest: [authenticateAuthRequest], ...profileSchema }, profileHandler);
   fastify.post("/recovery", recoverySchema, recoveryHandler);
   fastify.post("/refresh", refreshSchema, tokenRefreshHandler);
   fastify.delete("/refresh", refreshSchema, tokenRefreshDeleteHandler);

@@ -10,7 +10,7 @@
     "dev:all": "concurrently \"pnpm dev:server\" \"pnpm dev:client\"",
     "build": "vite build ./client",
     "start": "npm run build && node --no-warnings server.js",
-    "test": "ava",
+    "test": "ava --serial ./tests/auth.test.js ./tests/admin.test.js",
     "generate:sqlite": "drizzle-kit generate:sqlite --config=./db/sqlite/sqlite.config.js",
     "generate:pg": "drizzle-kit generate:pg --config=./db/postgres/pg.config.js",
     "release:changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"

@@ -3,10 +3,7 @@ import { asc, count, like } from "drizzle-orm";
 export const listUsersHandler = async function (request, reply) {
   // Parse and validate pagination parameters
   const currentPage = Math.max(Number(request.query["page[number]"] || 1, 1));
-  const itemsPerPage = Math.min(
-    Math.max(Number(request.query["page[size]"] || 10), 1), // Ensure ≥1
-    100 // Ensure ≤100
-  );
+  const itemsPerPage = Math.min(Math.max(Number(request.query["page[size]"] || 10), 1), 100);
   const emailFilter = request.query["search[email]"]?.trim();
 
   // Build base query

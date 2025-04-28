@@ -8,7 +8,6 @@ export const logoutSchema = {
       properties: {
         uuid: {
           type: "string",
-          format: "uuid",
         },
       },
       required: ["uuid"],

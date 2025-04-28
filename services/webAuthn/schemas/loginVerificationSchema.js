@@ -61,7 +61,7 @@ export const loginVerificationSchema = {
               attributes: {
                 type: "object",
                 properties: {
-                  uuid: { type: "string", format: "uuid" },
+                  uuid: { type: "string" },
                   name: { type: "string" },
                   email: { type: "string", format: "email" },
                   jwt_id: { type: "string" },

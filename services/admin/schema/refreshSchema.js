@@ -8,9 +8,9 @@ export const refreshSchema = {
       properties: {
         refreshToken: {
           type: "string",
-          pattern: "^[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+$", // JWT pattern
-          minLength: 128,
-          maxLength: 512,
+          // pattern: "^[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+$", // JWT pattern
+          // minLength: 128,
+          // maxLength: 512,
         },
       },
       required: ["refreshToken"],
@@ -31,12 +31,8 @@ export const refreshSchema = {
                   access_token_expiry: {
                     type: "string",
                   },
-                  refresh_token: {
-                    type: "string",
-                    pattern: "^[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+\\.[A-Za-z0-9-_]+$",
-                  },
                 },
-                required: ["access_token_expiry", "refresh_token"],
+                required: ["access_token_expiry"],
               },
             },
             required: ["type", "id", "attributes"],

@@ -56,7 +56,11 @@ const databasePlugin = async function (fastify) {
     fastify.decorate("authenticator", authenticator);
     fastify.decorate("storage", storage);
 
-    console.log(dbType === "sqlite" ? `Using SQLite Database: ${config.SQLITE_DB_PATH}` : "Using PostgreSQL Database");
+    console.log(
+      dbType === "sqlite"
+        ? `Using SQLite Database: ${process.env.NODE_ENV === "test" ? "./test.db" : config.SQLITE_DB_PATH}`
+        : "Using PostgreSQL Database"
+    );
   } catch (err) {
     console.log("Error initializing database:", err);
     process.exit(1);

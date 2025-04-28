@@ -32,9 +32,6 @@ importers:
       better-sqlite3:
         specifier: ^11.9.1
         version: 11.9.1
-      compadre:
-        specifier: ^3.2.0
-        version: 3.2.0
       cookie:
         specifier: ^1.0.2
         version: 1.0.2
@@ -1123,9 +1120,6 @@ packages:
 
   common-path-prefix@3.0.0:
     resolution: {integrity: sha512-QE33hToZseCH3jS0qN96O/bSh3kaw/h+Tq7ngyY9eWDUnTlTNUyqfqvCXioLe5Na5jFsL78ra/wuBU4iuEgd4w==}
-
-  compadre@3.2.0:
-    resolution: {integrity: sha512-F/YZPCRxZ1viVR178OOCoLKZS9WPIKYXofs9W1lYmRgYA+YEcPzqnsb4LPRXGLtBugBq6rL8NpT6NHERoiGYlQ==}
 
   compare-func@2.0.0:
     resolution: {integrity: sha512-zHig5N+tPWARooBnb0Zx1MFcdfpyJrfTJ3Y5L+IFvUm8rM74hHz66z0gw0x4tijh5CorKkKUCnW82R2vmpeCRA==}
@@ -3182,8 +3176,6 @@ snapshots:
   color-name@1.1.4: {}
 
   common-path-prefix@3.0.0: {}
-
-  compadre@3.2.0: {}
 
   compare-func@2.0.0:
     dependencies:

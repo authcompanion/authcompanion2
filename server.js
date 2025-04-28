@@ -69,16 +69,16 @@ function logStartupDetails(server) {
 
   console.log(`
     ###########################################################
-              🔒 AuthCompanion Server Operational 🔒
+                AuthCompanion Server
 
-         🌐 Version:      ${config.VERSION}
+         🌐 Version:      v5.0.0
          📡 Environment:  ${process.env.NODE_ENV || "development"}
          🚨 Port:         ${port}
 
          🔧 Endpoints:
              🖥️  Client UI:  ${baseUrl}/
              🛠️  Admin UI:   ${baseUrl}/admin/login
-             📒  API Documentation:   ${baseUrl}/docs/api
+             📒 API Documentation:  ${baseUrl}/docs/api
 
 
     ###########################################################

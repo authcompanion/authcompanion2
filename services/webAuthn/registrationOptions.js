@@ -1,7 +1,5 @@
 import config from "../../config.js";
 import { createId } from "@paralleldrive/cuid2";
-import compadre from "compadre";
-import { nouns } from "../../utils/names.js";
 import { createHash } from "../../utils/credential.js";
 import crypto from "crypto";
 import { generateRegistrationOptions } from "@simplewebauthn/server";

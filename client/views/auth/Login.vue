@@ -24,7 +24,7 @@
                 <label class="form-label">
                   Password
                   <span class="form-label-description">
-                    <a href="/v1/web/recovery">I forgot password</a>
+                    <a href="/recovery">I forgot password</a>
                   </span>
                 </label>
                 <div class="input-group input-group-flat">

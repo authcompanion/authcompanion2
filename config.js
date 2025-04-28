@@ -8,7 +8,7 @@ const config = {
   APPLICATIONORIGIN: process.env.APPLICATION_ORIGIN || "/",
   REGISTRATIONORIGIN: process.env.REGISTRATION_ORIGIN || process.env.APPLICATION_ORIGIN || "/",
   ADMINORIGIN: process.env.ADMIN_ORIGIN || "/admin",
-  RECOVERYURL: process.env.RECOVERY_REDIRECT_URL || "http://localhost:3002/v1/web/profile",
+  RECOVERYURL: process.env.RECOVERY_REDIRECT_URL || "http://localhost:3002/profile",
 
   // Security Settings
   KEYPATH: process.env.SERVER_KEY_PATH || "./serverkey",

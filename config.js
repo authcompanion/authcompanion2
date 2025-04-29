@@ -7,7 +7,6 @@ const config = {
   ORIGIN: process.env.ORIGIN || "http://localhost:3002",
   APPLICATIONORIGIN: process.env.APPLICATION_ORIGIN || "/",
   REGISTRATIONORIGIN: process.env.REGISTRATION_ORIGIN || process.env.APPLICATION_ORIGIN || "/",
-  ADMINORIGIN: process.env.ADMIN_ORIGIN || "/admin",
   RECOVERYURL: process.env.RECOVERY_REDIRECT_URL || "http://localhost:3002/profile",
 
   // Security Settings

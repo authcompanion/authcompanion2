@@ -8,7 +8,7 @@
       <div class="container py-2 container-tight">
         <div class="card card-md">
           <div class="card-body">
-            <h2 class="mb-4 text-center h2">Login to your admin panel</h2>
+            <h2 class="mb-4 text-center h2">Login to your Admin Panel</h2>
             <form @submit.prevent="submit" autocomplete="off" novalidate>
               <div class="mb-3">
                 <label class="form-label">Email address</label>
@@ -130,12 +130,11 @@ const submit = async () => {
       }),
     });
 
-    const appOrigin = response.headers.get("x-authc-app-origin");
     const resBody = await response.json();
 
     if (response.ok) {
       localStorage.setItem("ACCESS_TOKEN", resBody.data.attributes.access_token);
-      window.location.href = appOrigin;
+      router.push("/admin");
     } else {
       showError.value = true;
       errorTitle.value = resBody.errors?.[0]?.title || "Error";

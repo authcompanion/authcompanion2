@@ -58,7 +58,6 @@ export const tokenRefreshHandler = async function (request, reply) {
 
   reply.headers({
     "set-cookie": [accessCookie],
-    "x-authc-app-origin": config.ADMIN_ORIGIN,
   });
 
   return {
@@ -101,7 +100,6 @@ export const tokenRefreshDeleteHandler = async function (request, reply) {
     .code(204)
     .headers({
       "set-cookie": [expiredCookie],
-      "x-authc-app-origin": config.ADMIN_ORIGIN,
     })
     .send();
 };

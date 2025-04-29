@@ -27,6 +27,10 @@ RUN groupadd -r nodejs && \
     mkdir -p /home/nodejs/app && \
     chown -R nodejs:nodejs /home/nodejs/app
 
+RUN mkdir -p /data && \
+    chown nodejs:nodejs /data && \
+    chmod 755 /data
+
 WORKDIR /home/nodejs/app
 
 # Copy application files with correct ownership

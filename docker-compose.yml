@@ -5,7 +5,7 @@ services:
     build: .
     restart: unless-stopped
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - SQLITE_DB_PATH=/data/sqlite_authc_database.db
       - ADMIN_KEY_PATH=/data/adminkey
       - SERVER_KEY_PATH=/data/serverkey

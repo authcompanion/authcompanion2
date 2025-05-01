@@ -1,8 +1,13 @@
 <template>
   <div class="d-flex flex-column min-vh-100">
     <!-- Error Alert -->
-    <ErrorAlert :show="showError" :title="errorTitle" :detail="errorDetail" class="alert-container" />
-
+    <ErrorAlert
+      :show="showError"
+      :title="errorTitle"
+      :detail="errorDetail"
+      class="alert-container"
+      @close="showError = false"
+    />
     <!-- Recovery Form -->
     <div class="page page-center flex-grow-1">
       <div class="container py-4 container-tight">

@@ -215,15 +215,13 @@
     />
 
     <!-- Notification Alert -->
-    <div v-cloak v-if="showNotification" class="top-0 p-3 position-fixed end-0">
-      <div
-        :class="['bg-white', 'alert', isError ? 'alert-danger' : 'alert-success', 'alert-dismissible', 'fade', 'show']"
-        role="alert"
-      >
-        <strong>{{ isError ? "Error: " : "Success: " }} </strong>{{ notificationMessage }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    </div>
+    <ErrorAlert
+      :show="showNotification"
+      :type="notificationType"
+      :title="notificationTitle"
+      :detail="notificationMessage"
+      @close="showNotification = false"
+    />
   </div>
 </template>
 
@@ -232,19 +230,23 @@ import { ref, reactive, onMounted } from "vue";
 import * as jose from "jose";
 import UserModal from "../../components/admin/UserModal.vue";
 import AdminTable from "../../components/admin/AdminTable.vue";
+import ErrorAlert from "../../components/ErrorAlert.vue"; // Updated import
 
 // Reactive state
 const adminEmail = ref("");
 const users = reactive({ data: [] });
 const showEditPanel = ref(false);
-const showNotification = ref(false);
-const notificationMessage = ref("");
 const searchValue = ref("");
 const selectedUser = reactive({});
 const confirmPassword = ref("");
 const pageSize = ref(10);
 const pageNumber = ref(1);
-const isError = ref(false);
+
+// Notification system
+const showNotification = ref(false);
+const notificationType = ref("success");
+const notificationTitle = ref("");
+const notificationMessage = ref("");
 
 const userRecord = ref({
   data: {
@@ -260,17 +262,18 @@ if (token) {
   adminEmail.value = claims.email;
 }
 
-// Methods
-const showNotificationMessage = (message, error = false) => {
+// Notification handler
+const showNotificationMessage = (message, type = "success", title = "") => {
+  notificationType.value = type;
+  notificationTitle.value = title || `${type.charAt(0).toUpperCase() + type.slice(1)}`;
   notificationMessage.value = message;
-  isError.value = error;
   showNotification.value = true;
   setTimeout(() => {
     showNotification.value = false;
-    isError.value = false;
   }, 3600);
 };
 
+// Existing methods with updated notifications
 const toggleEditPanel = (user) => {
   Object.assign(selectedUser, user);
   userRecord.value.data.attributes = { ...user.attributes };
@@ -283,7 +286,7 @@ const toggleCreatePanel = () => {
   confirmPassword.value = "";
 };
 
-// API methods
+// API methods with updated notifications
 const fetchUsers = async () => {
   try {
     const url = `/v1/admin/users?page[number]=${pageNumber.value}&page[size]=${pageSize.value}`;
@@ -295,7 +298,7 @@ const fetchUsers = async () => {
     const data = await response.json();
     users.data = data.data;
   } catch (e) {
-    showNotificationMessage(e.message, true);
+    showNotificationMessage(e.message, "danger", "Fetch Error");
   }
 };
 
@@ -304,7 +307,7 @@ const updateUserRecord = async () => {
     const attributes = userRecord.value.data.attributes;
 
     if (attributes.password && attributes.password !== confirmPassword.value) {
-      showNotificationMessage("Passwords do not match!", true);
+      showNotificationMessage("Passwords do not match!", "warning", "Validation Error");
       return;
     }
 
@@ -322,10 +325,10 @@ const updateUserRecord = async () => {
     });
 
     if (!response.ok) throw new Error("Update failed");
-    showNotificationMessage("User updated successfully!");
+    showNotificationMessage("User updated successfully!", "success");
     fetchUsers();
   } catch (e) {
-    showNotificationMessage(e.message, true);
+    showNotificationMessage(e.message, "danger", "Update Error");
   }
 };
 
@@ -334,12 +337,12 @@ const createUserRecord = async () => {
     const attributes = userRecord.value.data.attributes;
 
     if (attributes.password !== confirmPassword.value) {
-      showNotificationMessage("Passwords do not match!", true);
+      showNotificationMessage("Passwords do not match!", "warning", "Validation Error");
       return;
     }
 
     if (!attributes.name || !attributes.email) {
-      showNotificationMessage("Name and Email are required fields", true);
+      showNotificationMessage("Name and Email are required fields", "warning", "Validation Error");
       return;
     }
 
@@ -353,10 +356,10 @@ const createUserRecord = async () => {
     });
 
     if (!response.ok) throw new Error("Create failed");
-    showNotificationMessage("User created successfully!");
+    showNotificationMessage("User created successfully!", "success");
     fetchUsers();
   } catch (e) {
-    showNotificationMessage(e.message, true);
+    showNotificationMessage(e.message, "danger", "Creation Error");
   }
 };
 
@@ -370,10 +373,10 @@ const deleteUserRecord = async (userId) => {
     });
 
     if (!response.ok) throw new Error("Delete failed");
-    showNotificationMessage("User deleted successfully!");
+    showNotificationMessage("User deleted successfully!", "success");
     fetchUsers();
   } catch (e) {
-    showNotificationMessage(e.message, true);
+    showNotificationMessage(e.message, "danger", "Deletion Error");
   }
 };
 
@@ -387,12 +390,13 @@ const searchUser = async () => {
     if (!response.ok) throw new Error("Search failed");
     const data = await response.json();
     users.data = data.data;
-    showNotificationMessage(`Found ${users.data.length} users`);
+    showNotificationMessage(`Found ${users.data.length} users`, "info", "Search Results");
   } catch (e) {
-    showNotificationMessage(e.message, true);
+    showNotificationMessage(e.message, "danger", "Search Error");
   }
 };
 
+// Pagination and search handlers remain the same
 const handleSearchInput = (value) => {
   searchValue.value = value;
   if (value.trim() === "") fetchUsers();
@@ -425,11 +429,10 @@ const logout = async () => {
     localStorage.removeItem("ACCESS_TOKEN");
     window.location.href = "/admin/login";
   } catch (e) {
-    showNotificationMessage("Logout failed", true);
+    showNotificationMessage("Logout failed", "danger", "Logout Error");
   }
 };
 
 onMounted(fetchUsers);
 </script>
-
 <style></style>

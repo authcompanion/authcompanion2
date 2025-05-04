@@ -3,11 +3,13 @@
     <!-- Error Alert -->
     <ErrorAlert
       :show="showError"
+      :type="errorType"
       :title="errorTitle"
       :detail="errorDetail"
       class="alert-container"
       @close="showError = false"
     />
+
     <!-- Registration Form -->
     <div class="page page-center flex-grow-1">
       <div class="container py-2 container-tight">
@@ -141,21 +143,28 @@
 </template>
 
 <script setup>
-import { startRegistration } from "@simplewebauthn/browser";
-import ErrorAlert from "../../components/ErrorAlert.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-const components = {
-  ErrorAlert,
-};
+import { startRegistration } from "@simplewebauthn/browser";
+import ErrorAlert from "../../components/ErrorAlert.vue";
 
 const router = useRouter();
 const name = ref("");
 const email = ref("");
 const password = ref("");
+
+// Error handling
 const showError = ref(false);
+const errorType = ref("danger");
 const errorTitle = ref("");
 const errorDetail = ref("");
+
+const handleError = (title, message, type = "danger") => {
+  errorType.value = type;
+  errorTitle.value = title;
+  errorDetail.value = message;
+  showError.value = true;
+};
 
 const submit = async () => {
   try {
@@ -182,18 +191,13 @@ const submit = async () => {
 
     if (response.ok) {
       localStorage.setItem("ACCESS_TOKEN", resBody.data.attributes.access_token);
-      showError.value = false;
       window.location.href = appOrigin;
     } else {
-      showError.value = true;
-      errorTitle.value = "Error";
-      errorDetail.value = "An issue occurred, please try registering again.";
+      handleError("Registration Failed", resBody.error?.message || "Please check your registration details");
     }
   } catch (error) {
-    console.error(error);
-    showError.value = true;
-    errorTitle.value = "Error";
-    errorDetail.value = "There was an issue connecting, please refresh your browser and try again.";
+    console.error("Registration error:", error);
+    handleError("Connection Error", "Unable to connect to the server. Please check your network connection.");
   }
 };
 
@@ -203,9 +207,7 @@ const passkeySubmit = async () => {
     const userEmail = email.value;
 
     if (!userName || !userEmail) {
-      showError.value = true;
-      errorTitle.value = "Error";
-      errorDetail.value = "Please provide your name and email.";
+      handleError("Missing Information", "Please provide your name and email to use passkey registration", "warning");
       return;
     }
 
@@ -218,37 +220,46 @@ const passkeySubmit = async () => {
       }),
     });
 
-    if (optionsResponse.ok) {
-      const opts = await optionsResponse.json();
-      const attResp = await startRegistration(opts);
-
-      const verificationResponse = await fetch("/v1/auth/registration-verification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-authc-app-userid": opts.user.id,
-        },
-        body: JSON.stringify(attResp),
-      });
-
-      const reply = await verificationResponse.json();
-      const appOrigin = verificationResponse.headers.get("x-authc-app-origin");
-
-      localStorage.setItem("ACCESS_TOKEN", reply.data.attributes.access_token);
-      showError.value = false;
-      window.location.href = appOrigin;
-    } else {
-      showError.value = true;
-      errorTitle.value = "Error";
-      errorDetail.value = "Error occurred, please try registering again";
+    if (!optionsResponse.ok) {
+      handleError("Registration Error", "Failed to start passkey registration");
+      return;
     }
+
+    const opts = await optionsResponse.json();
+    const attResp = await startRegistration(opts);
+
+    const verificationResponse = await fetch("/v1/auth/registration-verification", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-authc-app-userid": opts.user.id,
+      },
+      body: JSON.stringify(attResp),
+    });
+
+    if (!verificationResponse.ok) {
+      handleError("Verification Failed", "Passkey registration failed. Please try again.");
+      return;
+    }
+
+    const reply = await verificationResponse.json();
+    const appOrigin = verificationResponse.headers.get("x-authc-app-origin");
+
+    localStorage.setItem("ACCESS_TOKEN", reply.data.attributes.access_token);
+    window.location.href = appOrigin;
   } catch (error) {
-    console.error(error);
-    showError.value = true;
-    errorTitle.value = "Error";
-    errorDetail.value = "There was an issue connecting, please refresh your browser and try again.";
+    console.error("Passkey registration error:", error);
+    handleError("Registration Error", error.userVisibleMessage || "Passkey registration failed");
   }
 };
 </script>
 
-<style></style>
+<style>
+.alert-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  max-width: min(400px, 95vw);
+}
+</style>

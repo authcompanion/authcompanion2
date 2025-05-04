@@ -1,5 +1,15 @@
 <template>
   <div class="page-body">
+    <!-- Error Alert -->
+    <ErrorAlert
+      :show="showError"
+      :type="errorType"
+      :title="errorTitle"
+      :detail="errorDetail"
+      class="alert-container"
+      @close="showError = false"
+    />
+
     <div class="container-xl">
       <div class="row justify-content-center">
         <div class="col-lg-10 col-xl-9">
@@ -35,58 +45,62 @@
         </div>
       </div>
     </div>
-
-    <!-- Error Alert -->
-    <ErrorAlert :show="showError" :title="errorTitle" :detail="errorDetail" class="alert-container" />
   </div>
 </template>
 
-<script>
-import { ref, computed } from "vue";
+<script setup>
+import { ref, computed, onMounted } from "vue";
 import ErrorAlert from "../../components/ErrorAlert.vue";
 
-export default {
-  components: {
-    ErrorAlert,
-  },
-  setup() {
-    const showError = ref(false);
-    const errorTitle = ref(null);
-    const errorDetail = ref(null);
-    const jwt = ref(window.localStorage.getItem("ACCESS_TOKEN") || "");
+// Error handling
+const showError = ref(false);
+const errorType = ref("warning");
+const errorTitle = ref("");
+const errorDetail = ref("");
 
-    const jwtDebugUrl = computed(() => {
-      return jwt.value ? `https://jwt.io/#debugger-io?token=${jwt.value}` : "";
-    });
+const jwt = ref(localStorage.getItem("ACCESS_TOKEN") || "");
+const jwtDebugUrl = computed(() => (jwt.value ? `https://jwt.io/#debugger-io?token=${jwt.value}` : ""));
 
-    if (!jwt.value) {
-      showError.value = true;
-      errorTitle.value = "Error";
-      errorDetail.value = "Please try logging in again at /login";
-    }
-
-    return {
-      showError,
-      errorTitle,
-      errorDetail,
-      jwtDebugUrl,
-    };
-  },
+const handleError = (title, message, type = "warning") => {
+  errorType.value = type;
+  errorTitle.value = title;
+  errorDetail.value = message;
+  showError.value = true;
 };
+
+onMounted(() => {
+  if (!jwt.value) {
+    handleError("Session Required", "Please login to access this page", "warning");
+  }
+});
 </script>
 
 <style>
 html {
   font-family: "Inter var", sans-serif;
 }
+
 [v-cloak] {
   display: none;
 }
+
 .alert-container {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  max-width: 400px;
+  top: 1rem;
+  right: 1rem;
+  max-width: min(400px, 95vw);
   z-index: 1000;
+}
+
+.text-blue-600 {
+  color: #2563eb;
+}
+
+.hover\:text-blue-800:hover {
+  color: #1e40af;
+}
+
+.underline {
+  text-decoration: underline;
 }
 </style>

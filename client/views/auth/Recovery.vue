@@ -3,11 +3,13 @@
     <!-- Error Alert -->
     <ErrorAlert
       :show="showError"
+      :type="errorType"
       :title="errorTitle"
       :detail="errorDetail"
       class="alert-container"
       @close="showError = false"
     />
+
     <!-- Recovery Form -->
     <div class="page page-center flex-grow-1">
       <div class="container py-4 container-tight">
@@ -64,28 +66,30 @@
 </template>
 
 <script setup>
-import ErrorAlert from "../../components/ErrorAlert.vue";
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-const components = {
-  ErrorAlert,
-};
+import ErrorAlert from "../../components/ErrorAlert.vue";
 
 const router = useRouter();
 const email = ref("");
+
+// Error handling
 const showError = ref(false);
+const errorType = ref("danger");
 const errorTitle = ref("");
 const errorDetail = ref("");
 
-const isSuccess = computed(() => errorTitle.value === "Success");
-const isError = computed(() => errorTitle.value === "Error");
+const handleError = (title, message, type = "danger") => {
+  errorType.value = type;
+  errorTitle.value = title;
+  errorDetail.value = message;
+  showError.value = true;
+};
 
 const submit = async () => {
   try {
     if (!email.value) {
-      showError.value = true;
-      errorTitle.value = "Error";
-      errorDetail.value = "Please enter an email address";
+      handleError("Missing Email", "Please enter an email address", "warning");
       return;
     }
 
@@ -99,21 +103,33 @@ const submit = async () => {
     });
 
     if (response.ok) {
-      errorTitle.value = "Success";
-      errorDetail.value = "A recovery email has been sent to the address provided";
-      showError.value = true;
+      handleError(
+        "Email Sent",
+        "If an account exists with this email, you'll receive a recovery link shortly",
+        "success"
+      );
       email.value = "";
     } else {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to send recovery email");
+      const errorData = await response.json().catch(() => ({}));
+      handleError(
+        "Request Failed",
+        errorData.error?.message || "Failed to send recovery email. Please try again.",
+        "danger"
+      );
     }
   } catch (error) {
-    console.error(error);
-    showError.value = true;
-    errorTitle.value = "Error";
-    errorDetail.value = error.message || "There was an issue with the request. Please try again later.";
+    console.error("Recovery error:", error);
+    handleError("Connection Error", "Unable to connect to the server. Please check your network connection.", "danger");
   }
 };
 </script>
 
-<style></style>
+<style>
+.alert-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  max-width: min(400px, 95vw);
+}
+</style>

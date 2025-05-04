@@ -3,11 +3,13 @@
     <!-- Error Alert -->
     <ErrorAlert
       :show="showError"
+      :type="errorType"
       :title="errorTitle"
       :detail="errorDetail"
       class="alert-container"
       @close="showError = false"
     />
+
     <!-- Login Form -->
     <div class="page page-center flex-grow-1">
       <div class="container py-2 container-tight">
@@ -107,14 +109,24 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import ErrorAlert from "../../components/ErrorAlert.vue"; // Update path as needed
+import ErrorAlert from "../../components/ErrorAlert.vue";
 
 const router = useRouter();
 const email = ref("");
 const password = ref("");
+
+// Error handling
 const showError = ref(false);
+const errorType = ref("danger");
 const errorTitle = ref("");
 const errorDetail = ref("");
+
+const handleError = (title, message, type = "danger") => {
+  errorType.value = type;
+  errorTitle.value = title;
+  errorDetail.value = message;
+  showError.value = true;
+};
 
 const submit = async () => {
   try {
@@ -135,27 +147,35 @@ const submit = async () => {
       }),
     });
 
-    const resBody = await response.json();
+    const resBody = await response.json().catch(() => ({}));
 
     if (response.ok) {
-      localStorage.setItem("ACCESS_TOKEN", resBody.data.attributes.access_token);
+      localStorage.setItem("ACCESS_TOKEN", resBody.data?.attributes?.access_token);
       router.push("/admin");
     } else {
-      showError.value = true;
-      errorTitle.value = resBody.errors?.[0]?.title || "Error";
-      errorDetail.value = resBody.errors?.[0]?.detail || "Login failed, please check your credentials";
+      handleError(
+        resBody.errors?.[0]?.title || "Authentication Failed",
+        resBody.errors?.[0]?.detail || "Invalid admin credentials",
+        "danger"
+      );
     }
   } catch (error) {
-    console.error(error);
-    showError.value = true;
-    errorTitle.value = "Error";
-    errorDetail.value = "There was an issue connecting, please try again";
+    console.error("Admin login error:", error);
+    handleError(
+      "Connection Error",
+      "Unable to connect to the admin server. Please check your network connection.",
+      "danger"
+    );
   }
-};
-
-const forgotPassword = () => {
-  router.push("/recovery");
 };
 </script>
 
-<style></style>
+<style>
+.alert-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  max-width: min(400px, 95vw);
+}
+</style>

@@ -3,11 +3,13 @@
     <!-- Error Alert -->
     <ErrorAlert
       :show="showError"
+      :type="errorType"
       :title="errorTitle"
       :detail="errorDetail"
       class="alert-container"
       @close="showError = false"
     />
+
     <!-- Profile Form -->
     <div class="page page-center flex-grow-1">
       <div class="container py-2 container-tight">
@@ -113,43 +115,45 @@
 </template>
 
 <script setup>
-import ErrorAlert from "../../components/ErrorAlert.vue";
-import { ref, computed, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { jwtDecode } from "jwt-decode";
+import ErrorAlert from "../../components/ErrorAlert.vue";
 
-const components = {
-  ErrorAlert,
-};
 const router = useRouter();
 const name = ref("");
 const email = ref("");
 const password = ref("");
+
+// Error handling
 const showError = ref(false);
+const errorType = ref("danger");
 const errorTitle = ref("");
 const errorDetail = ref("");
 
-const token = computed(() => {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get("token") || localStorage.getItem("ACCESS_TOKEN");
-});
+const token = ref(localStorage.getItem("ACCESS_TOKEN") || new URLSearchParams(window.location.search).get("token"));
 
-const isSuccess = computed(() => errorTitle.value === "Success");
-const isError = computed(() => errorTitle.value === "Error");
+const handleError = (title, message, type = "danger") => {
+  errorType.value = type;
+  errorTitle.value = title;
+  errorDetail.value = message;
+  showError.value = true;
+};
 
 onMounted(() => {
   try {
     const decoded = jwtDecode(token.value);
     email.value = decoded.email;
-    name.value = decoded.name;
+    name.value = decoded.name || "";
   } catch (error) {
-    console.error("Token decoding failed:", error);
-    router.push("/login");
+    console.error("Token invalid:", error);
+    handleError("Session Expired", "Please login again", "warning");
+    setTimeout(() => router.push("/login"), 2000);
   }
 });
 
 const updateUser = async () => {
-  return await fetch("/v1/auth/profile", {
+  return fetch("/v1/auth/profile", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -171,41 +175,52 @@ const updateUser = async () => {
 const submit = async () => {
   try {
     const response = await updateUser();
-    const responseData = await response.json();
+    const responseData = await response.json().catch(() => ({}));
 
     if (response.ok) {
-      localStorage.setItem("ACCESS_TOKEN", responseData.data.attributes.access_token);
-      showError.value = true;
-      errorTitle.value = "Success";
-      errorDetail.value = "Your account has been updated, thank you!";
+      localStorage.setItem("ACCESS_TOKEN", responseData.data?.attributes?.access_token || token.value);
+      handleError("Success", "Account updated successfully!", "success");
+      password.value = "";
     } else if (response.status === 401) {
+      // Attempt token refresh
       const refreshResponse = await fetch("/v1/auth/refresh", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({}),
       });
 
+      const refreshData = await refreshResponse.json().catch(() => ({}));
+
       if (refreshResponse.ok) {
-        const refreshBody = await refreshResponse.json();
-        localStorage.setItem("ACCESS_TOKEN", refreshBody.data.attributes.access_token);
+        localStorage.setItem("ACCESS_TOKEN", refreshData.data?.attributes?.access_token);
         const updatedResponse = await updateUser();
+        const updatedData = await updatedResponse.json().catch(() => ({}));
 
         if (updatedResponse.ok) {
-          showError.value = true;
-          errorTitle.value = "Success";
-          errorDetail.value = "Your account has been updated, thank you!";
+          handleError("Success", "Account updated successfully!", "success");
+          password.value = "";
+        } else {
+          throw new Error(updatedData.error?.message || "Failed to update after refresh");
         }
+      } else {
+        throw new Error(refreshData.error?.message || "Session expired. Please login again");
       }
     } else {
-      throw new Error("Failed to update user");
+      throw new Error(responseData.error?.message || "Failed to update profile");
     }
   } catch (error) {
-    console.error(error);
-    showError.value = true;
-    errorTitle.value = "Error";
-    errorDetail.value = "An issue occurred, please try again";
+    console.error("Update error:", error);
+    handleError("Update Failed", error.message || "An error occurred while updating");
   }
 };
 </script>
 
-<style></style>
+<style>
+.alert-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  max-width: min(400px, 95vw);
+}
+</style>

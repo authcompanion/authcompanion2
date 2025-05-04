@@ -3,11 +3,13 @@
     <!-- Error Alert -->
     <ErrorAlert
       :show="showError"
+      :type="errorType"
       :title="errorTitle"
       :detail="errorDetail"
       class="alert-container"
       @close="showError = false"
     />
+
     <!-- Login Form -->
     <div class="page page-center flex-grow-1">
       <div class="container py-2 container-tight">
@@ -140,21 +142,27 @@
 </template>
 
 <script setup>
-import { startAuthentication } from "@simplewebauthn/browser";
-
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { startAuthentication } from "@simplewebauthn/browser";
 import ErrorAlert from "../../components/ErrorAlert.vue";
 
-const components = {
-  ErrorAlert,
-};
 const router = useRouter();
 const email = ref("");
 const password = ref("");
+
+// Error handling
 const showError = ref(false);
+const errorType = ref("danger");
 const errorTitle = ref("");
 const errorDetail = ref("");
+
+const handleError = (title, message, type = "danger") => {
+  errorType.value = type;
+  errorTitle.value = title;
+  errorDetail.value = message;
+  showError.value = true;
+};
 
 const submit = async () => {
   try {
@@ -182,15 +190,11 @@ const submit = async () => {
       localStorage.setItem("ACCESS_TOKEN", resBody.data.attributes.access_token);
       window.location.href = appOrigin;
     } else {
-      showError.value = true;
-      errorTitle.value = "Error";
-      errorDetail.value = "Login failed, please check your credentials and try again.";
+      handleError("Login Failed", resBody.error?.message || "Invalid email or password");
     }
   } catch (error) {
-    console.log(error);
-    showError.value = true;
-    errorTitle.value = "Error";
-    errorDetail.value = "There was an issue connecting, please refresh your browser and try again.";
+    console.error(error);
+    handleError("Connection Error", "Unable to connect to the server. Please check your network connection.");
   }
 };
 
@@ -201,37 +205,37 @@ const passkeySubmit = async () => {
       headers: { "Content-Type": "application/json" },
     });
 
-    if (optionsResponse.ok) {
-      const { sessionID, ...opts } = await optionsResponse.json();
-      const attResp = await startAuthentication(opts);
-
-      sessionStorage.setItem("sessionID", sessionID);
-
-      const verificationResponse = await fetch("/v1/auth/login-verification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-authc-app-challenge": opts.challenge,
-        },
-        body: JSON.stringify({ sessionID, attResp }),
-      });
-
-      const reply = await verificationResponse.json();
-      const appOrigin = verificationResponse.headers.get("x-authc-app-origin");
-
-      localStorage.setItem("ACCESS_TOKEN", reply.data.attributes.access_token);
-      showError.value = false;
-      window.location.href = appOrigin;
-    } else {
-      showError.value = true;
-      errorTitle.value = "Error";
-      errorDetail.value = "There was an issue logging in, please try again";
+    if (!optionsResponse.ok) {
+      handleError("Authentication Error", "Failed to start passkey authentication");
+      return;
     }
+
+    const { sessionID, ...opts } = await optionsResponse.json();
+    const attResp = await startAuthentication(opts);
+    sessionStorage.setItem("sessionID", sessionID);
+
+    const verificationResponse = await fetch("/v1/auth/login-verification", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-authc-app-challenge": opts.challenge,
+      },
+      body: JSON.stringify({ sessionID, attResp }),
+    });
+
+    if (!verificationResponse.ok) {
+      handleError("Verification Failed", "Passkey authentication failed. Please try again.");
+      return;
+    }
+
+    const reply = await verificationResponse.json();
+    const appOrigin = verificationResponse.headers.get("x-authc-app-origin");
+
+    localStorage.setItem("ACCESS_TOKEN", reply.data.attributes.access_token);
+    window.location.href = appOrigin;
   } catch (error) {
-    console.log(error);
-    showError.value = true;
-    errorTitle.value = "Error";
-    errorDetail.value = "There was an issue connecting, please refresh your browser and try again.";
+    console.error("Passkey error:", error);
+    handleError("Authentication Error", error.userVisibleMessage || "Passkey authentication failed");
   }
 };
 
@@ -240,4 +244,12 @@ const createAccount = () => {
 };
 </script>
 
-<style></style>
+<style>
+.alert-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  max-width: min(400px, 95vw);
+}
+</style>

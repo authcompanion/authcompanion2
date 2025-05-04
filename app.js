@@ -130,7 +130,7 @@ export const buildApp = async (serverOptions = {}) => {
         schema: {
           description: "For health checking.",
           tags: ["Health Checks"],
-          summary: "Check the health of the AuthC Server",
+          summary: "Check the health of the AuthC Server v5",
         },
       },
       async () => ({ status: "OK" })

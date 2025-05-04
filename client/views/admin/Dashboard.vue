@@ -2,7 +2,6 @@
   <div class="page">
     <!-- Navbar -->
     <header class="navbar navbar-expand-md d-print-none">
-      <!-- Keep existing navbar structure -->
       <div class="container-xl">
         <button
           class="navbar-toggler"
@@ -133,122 +132,19 @@
         <div class="container-xl">
           <div class="row row-deck row-cards">
             <div class="col-12">
-              <div class="card">
-                <div class="card-header">
-                  <h3 class="card-title">Accounts</h3>
-                </div>
-                <div class="py-3 card-body border-bottom">
-                  <div class="d-flex">
-                    <div class="text-muted">
-                      Show
-                      <div class="mx-2 d-inline-block">
-                        <select
-                          v-model="pageSize"
-                          @change="handlePageSizeInputChange()"
-                          class="form-select form-select-sm"
-                        >
-                          <option value="10">10</option>
-                          <option value="20">20</option>
-                          <option value="30">30</option>
-                        </select>
-                      </div>
-                      entries
-                    </div>
-                    <div class="ms-auto text-muted">
-                      Search:
-                      <div class="ms-2 d-inline-block">
-                        <input
-                          placeholder="User Email"
-                          v-model="searchValue"
-                          @keyup.enter="searchUser()"
-                          @input="handleSearchInputChange()"
-                          type="text"
-                          class="form-control form-control-sm"
-                          aria-label="Search users"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div v-cloak class="table-responsive">
-                  <table class="table table-vcenter card-table table-striped">
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Status</th>
-                        <th>Admin</th>
-                        <th>Created At</th>
-                        <th>Updated At</th>
-                        <th class="w-1"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="(user, index) in users.data" :key="user.id">
-                        <td>{{ user.id }}</td>
-                        <td class="text-muted">{{ user.attributes.name }}</td>
-                        <td class="text-muted">{{ user.attributes.email }}</td>
-                        <td class="text-muted">{{ user.attributes.active == 1 ? "Active" : "Inactive" }}</td>
-                        <td class="text-muted">{{ user.attributes.isAdmin == 1 ? "Yes" : "No" }}</td>
-                        <td class="text-muted">{{ user.attributes.created }}</td>
-                        <td class="text-muted">{{ user.attributes.updated }}</td>
-                        <td class="text-muted">
-                          <a data-bs-toggle="modal" data-bs-target="#modal-user" href="#" @click="toggleEditPanel(user)"
-                            >Edit</a
-                          >
-                          <a href="#" class="mx-2" @click.stop="deleteUserRecord(user.id)">Delete</a>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <div class="card-footer d-flex align-items-center">
-                  <ul class="m-0 pagination ms-auto">
-                    <li class="page-item">
-                      <a class="page-link" href="#" tabindex="-1" @click="previousPage">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="icon"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          stroke-width="2"
-                          stroke="currentColor"
-                          fill="none"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                          <path d="M15 6l-6 6l6 6" />
-                        </svg>
-                        prev
-                      </a>
-                    </li>
-                    <input class="w-4 mx-2 form-control form-control-sm" type="text" v-model="pageNumber" readonly />
-                    <li class="page-item">
-                      <a class="page-link" href="#" @click="nextPage">
-                        next
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="icon"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          stroke-width="2"
-                          stroke="currentColor"
-                          fill="none"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                          <path d="M9 6l6 6l-6 6" />
-                        </svg>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
+              <AdminTable
+                :users="users"
+                :page-size="pageSize"
+                :page-number="pageNumber"
+                :search-value="searchValue"
+                @page-size-change="handlePageSizeInputChange"
+                @search-input="handleSearchInput"
+                @search="searchUser"
+                @edit-user="toggleEditPanel"
+                @delete-user="deleteUserRecord"
+                @previous-page="previousPage"
+                @next-page="nextPage"
+              />
             </div>
           </div>
         </div>
@@ -308,114 +204,15 @@
       </footer>
     </div>
 
-    <!-- User Modal -->
-    <div class="modal modal-blur fade" id="modal-user" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">{{ showEditPanel ? "Edit User" : "Create User" }}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-lg-6">
-                <div class="mb-3">
-                  <label class="form-label">Full Name</label>
-                  <input type="text" class="form-control" v-model="userRecord.data.attributes.name" required />
-                </div>
-              </div>
-              <div class="col-lg-6">
-                <div class="mb-3">
-                  <label class="form-label">Email</label>
-                  <input type="email" class="form-control" v-model="userRecord.data.attributes.email" required />
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-lg-6">
-                <div class="mb-3">
-                  <label class="form-label">Password</label>
-                  <input
-                    type="password"
-                    class="form-control"
-                    v-model="userRecord.data.attributes.password"
-                    :required="!showEditPanel"
-                  />
-                  <small v-if="showEditPanel" class="text-muted">Leave blank to keep current password</small>
-                </div>
-              </div>
-              <div class="col-lg-6">
-                <div class="mb-3">
-                  <label class="form-label">Confirm Password</label>
-                  <input type="password" class="form-control" v-model="confirmPassword" :required="!showEditPanel" />
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-lg-6">
-                <div class="mb-3">
-                  <label class="form-label">Status</label>
-                  <select class="form-select" v-model="userRecord.data.attributes.active">
-                    <option :value="1">Active</option>
-                    <option :value="0">Inactive</option>
-                  </select>
-                </div>
-              </div>
-              <div class="col-lg-6">
-                <div class="mb-3">
-                  <label class="form-label">Admin Privileges</label>
-                  <select class="form-select" v-model="userRecord.data.attributes.isAdmin">
-                    <option :value="1">Yes</option>
-                    <option :value="0">No</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="mb-3">
-                  <label class="form-label">Metadata (JSON format)</label>
-                  <textarea
-                    class="form-control"
-                    rows="3"
-                    v-model="metadataJson"
-                    placeholder='{"department": "engineering", "custom_field": "value"}'
-                  ></textarea>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="mb-3">
-                  <label class="form-label">App Data (JSON format)</label>
-                  <textarea
-                    class="form-control"
-                    rows="3"
-                    v-model="appdataJson"
-                    placeholder='{"preferences": {"theme": "dark"}}'
-                  ></textarea>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="modal-footer">
-            <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal"> Cancel </a>
-            <a
-              href="#"
-              class="btn btn-primary ms-auto"
-              @click.prevent="showEditPanel ? updateUserRecord() : createUserRecord()"
-            >
-              {{ showEditPanel ? "Update User" : "Create User" }}
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- User Modal Component -->
+    <UserModal
+      :show-edit-panel="showEditPanel"
+      :user-record="userRecord"
+      :confirm-password="confirmPassword"
+      @update:user-record="(val) => (userRecord = val)"
+      @update:confirm-password="(val) => (confirmPassword = val)"
+      @submit="showEditPanel ? updateUserRecord() : createUserRecord()"
+    />
 
     <!-- Notification Alert -->
     <div v-cloak v-if="showNotification" class="top-0 p-3 position-fixed end-0">
@@ -431,8 +228,10 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, computed } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import * as jose from "jose";
+import UserModal from "../../components/admin/UserModal.vue";
+import AdminTable from "../../components/admin/AdminTable.vue";
 
 // Reactive state
 const adminEmail = ref("");
@@ -446,40 +245,11 @@ const confirmPassword = ref("");
 const pageSize = ref(10);
 const pageNumber = ref(1);
 const isError = ref(false);
-const refForm = ref(null);
 
-// User record structure
-const userRecord = reactive({
+const userRecord = ref({
   data: {
     type: "users",
     attributes: {},
-  },
-});
-
-// Computed properties for JSON fields
-const metadataJson = computed({
-  get() {
-    return JSON.stringify(userRecord.data.attributes.metadata || {}, null, 2);
-  },
-  set(newValue) {
-    try {
-      userRecord.data.attributes.metadata = JSON.parse(newValue);
-    } catch (e) {
-      showNotificationMessage("Invalid JSON format for Metadata", true);
-    }
-  },
-});
-
-const appdataJson = computed({
-  get() {
-    return JSON.stringify(userRecord.data.attributes.appdata || {}, null, 2);
-  },
-  set(newValue) {
-    try {
-      userRecord.data.attributes.appdata = JSON.parse(newValue);
-    } catch (e) {
-      showNotificationMessage("Invalid JSON format for App Data", true);
-    }
   },
 });
 
@@ -491,8 +261,6 @@ if (token) {
 }
 
 // Methods
-const resetForm = () => refForm.value?.reset();
-
 const showNotificationMessage = (message, error = false) => {
   notificationMessage.value = message;
   isError.value = error;
@@ -504,16 +272,14 @@ const showNotificationMessage = (message, error = false) => {
 };
 
 const toggleEditPanel = (user) => {
-  resetForm();
   Object.assign(selectedUser, user);
-  Object.assign(userRecord.data.attributes, user.attributes);
+  userRecord.value.data.attributes = { ...user.attributes };
   showEditPanel.value = true;
 };
 
 const toggleCreatePanel = () => {
-  resetForm();
   showEditPanel.value = false;
-  userRecord.data.attributes = {};
+  userRecord.value.data.attributes = {};
   confirmPassword.value = "";
 };
 
@@ -535,14 +301,15 @@ const fetchUsers = async () => {
 
 const updateUserRecord = async () => {
   try {
-    if (userRecord.data.attributes.password && userRecord.data.attributes.password !== confirmPassword.value) {
+    const attributes = userRecord.value.data.attributes;
+
+    if (attributes.password && attributes.password !== confirmPassword.value) {
       showNotificationMessage("Passwords do not match!", true);
       return;
     }
 
-    // Remove password if empty in edit mode
-    if (!userRecord.data.attributes.password) {
-      delete userRecord.data.attributes.password;
+    if (!attributes.password) {
+      delete attributes.password;
     }
 
     const response = await fetch(`/v1/admin/users/${selectedUser.id}`, {
@@ -551,7 +318,7 @@ const updateUserRecord = async () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(userRecord),
+      body: JSON.stringify(userRecord.value),
     });
 
     if (!response.ok) throw new Error("Update failed");
@@ -564,12 +331,14 @@ const updateUserRecord = async () => {
 
 const createUserRecord = async () => {
   try {
-    if (userRecord.data.attributes.password !== confirmPassword.value) {
+    const attributes = userRecord.value.data.attributes;
+
+    if (attributes.password !== confirmPassword.value) {
       showNotificationMessage("Passwords do not match!", true);
       return;
     }
 
-    if (!userRecord.data.attributes.name || !userRecord.data.attributes.email) {
+    if (!attributes.name || !attributes.email) {
       showNotificationMessage("Name and Email are required fields", true);
       return;
     }
@@ -580,7 +349,7 @@ const createUserRecord = async () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(userRecord),
+      body: JSON.stringify(userRecord.value),
     });
 
     if (!response.ok) throw new Error("Create failed");
@@ -624,11 +393,13 @@ const searchUser = async () => {
   }
 };
 
-const handleSearchInputChange = () => {
-  if (searchValue.value.trim() === "") fetchUsers();
+const handleSearchInput = (value) => {
+  searchValue.value = value;
+  if (value.trim() === "") fetchUsers();
 };
 
-const handlePageSizeInputChange = () => {
+const handlePageSizeInputChange = (newSize) => {
+  pageSize.value = Number(newSize);
   pageNumber.value = 1;
   searchValue.value ? searchUser() : fetchUsers();
 };

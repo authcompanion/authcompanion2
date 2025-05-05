@@ -22,6 +22,10 @@ RUN groupadd -r nodejs && \
     mkdir -p /home/nodejs/app && \
     chown -R nodejs:nodejs /home/nodejs/app
 
+RUN mkdir -p /data && \
+    chown nodejs:nodejs /data && \
+    chmod 755 /data
+
 WORKDIR /home/nodejs/app
 
 COPY --from=builder --chown=nodejs:nodejs /app .

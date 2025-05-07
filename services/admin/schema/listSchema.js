@@ -3,6 +3,7 @@ export const listUsersSchema = {
     description: "Enpoint that enables admins to list user accounts",
     tags: ["Admin API"],
     summary: "List User Accounts",
+    security: [{ bearerAuth: [] }],
     querystring: {
       type: "object",
       properties: {

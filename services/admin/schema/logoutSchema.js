@@ -3,6 +3,7 @@ export const logoutSchema = {
     description: "Endpoint that powers the admin portal logout button",
     tags: ["Admin API"],
     summary: "Logout Admin from Admin Portal",
+    security: [{ bearerAuth: [] }],
     params: {
       type: "object",
       properties: {

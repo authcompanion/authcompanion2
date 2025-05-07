@@ -35,6 +35,6 @@ Below is a summarized table of the key endpoints available. For detailed, intera
 - **Authentication:** Most Admin endpoints require a Bearer JWT token; obtain one via the `/v1/admin/login` endpoint.
 - **WebAuthn:** For passwordless flows, use endpoints under the _WebAuthn API_ tag.
 
----
+## ![OAS Screenshot](/serverapidoc.png)
 
 For full request/response details, parameter descriptions, and advanced features, **please consult the live documentation** at [http://localhost:3002/docs/api](http://localhost:3002/docs/api).

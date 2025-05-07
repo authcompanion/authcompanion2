@@ -3,6 +3,7 @@ export const updateSchema = {
     description: "Endpoint used for updating User Accounts",
     tags: ["Admin API"],
     summary: "Update User Accounts",
+    security: [{ bearerAuth: [] }],
     body: {
       type: "object",
       properties: {

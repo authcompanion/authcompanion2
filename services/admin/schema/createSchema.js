@@ -3,6 +3,7 @@ export const createSchema = {
     description: "Enpoint that enables admins to create user accounts",
     tags: ["Admin API"],
     summary: "Create User Accounts",
+    security: [{ bearerAuth: [] }],
     body: {
       type: "object",
       properties: {

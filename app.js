@@ -53,10 +53,6 @@ export const buildApp = async (serverOptions = {}) => {
           
           Try endpoints directly from this documentation for interactive testing.`,
         version: "5.0.0",
-        contact: {
-          name: "AuthCompanion Support",
-          email: "support@authcompanion.com",
-        },
       },
       servers: [
         {
@@ -73,10 +69,6 @@ export const buildApp = async (serverOptions = {}) => {
         {
           name: "Admin API",
           description: "Privileged user management operations requiring admin permissions",
-          externalDocs: {
-            description: "Admin Guide",
-            url: "https://docs.authcompanion.com/admin-guide",
-          },
         },
         {
           name: "WebAuthn API",
@@ -93,15 +85,10 @@ export const buildApp = async (serverOptions = {}) => {
             type: "http",
             scheme: "bearer",
             bearerFormat: "JWT",
-            description: "Admin JWT token obtained through authentication",
+            description: "Admin JWT token obtained through the admin login endpoint",
           },
         },
       },
-      security: [
-        {
-          bearerAuth: [],
-        },
-      ],
     },
   });
   await app.register(fastifySwaggerUi, {

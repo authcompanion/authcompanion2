@@ -3,6 +3,7 @@ export const deleteSchema = {
     description: "Enpoint that enables admins to delete user accounts",
     tags: ["Admin API"],
     summary: "Delete User Accounts",
+    security: [{ bearerAuth: [] }],
     params: {
       type: "object",
       properties: {

@@ -2,14 +2,11 @@
 
 ---
 
-AuthCompanion is licensed under the
-[Big Time Public License](https://bigtimelicense.com/versions/2.0.1) which lets
-you use and share this software for noncommercial purposes and in small business
-for free, while also guaranteeing that paid licenses for larger businesses will
-be available on fair, reasonable, and nondiscriminatory terms.
+AuthCompanion is provided under the [Big Time Public License](https://bigtimelicense.com/versions/2.0.1). This license allows you to use and share the software for free in noncommercial contexts and within small businesses. For larger businesses, commercial licensing is available on fair, reasonable, and nondiscriminatory (FRAND) terms, ensuring broad accessibility while sustaining the project.
 
-For more information check out
-[https://writing.kemitchell.com/2021/06/15/Big-Time-1.0.0.html](https://writing.kemitchell.com/2021/06/15/Big-Time-1.0.0.html)
+If you're a nonprofit, educational, or public service organization, or using AuthCompanion for personal or hobby projects, you can use it at no cost. Small businesses—defined by headcount and revenue thresholds—are also covered under the free terms. For organizations that outgrow these limits, a clear and fair path to commercial licensing is guaranteed.
+
+For more details, see the [Big Time Public License introduction](https://writing.kemitchell.com/2021/06/15/Big-Time-1.0.0.html).
 
 ---
 

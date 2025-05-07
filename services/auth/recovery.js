@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { makeRefreshtoken } from "../../utils/jwt.js";
 import config from "../../config.js";
 import { SMTPClient } from "emailjs";

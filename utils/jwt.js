@@ -1,9 +1,6 @@
 import * as jose from "jose";
 import { randomUUID } from "crypto";
 import { eq } from "drizzle-orm";
-import config from "../config.js";
-import { createHash, verifyValueWithHash } from "./credential.js";
-import crypto from "crypto";
 
 // Constants for token configuration
 const TOKEN_CONFIG = {
@@ -22,6 +19,25 @@ const TOKEN_CONFIG = {
     refreshExpiration: "7d",
   },
 };
+
+export async function verifyRefreshtoken(token, key) {
+  try {
+    const payload = await validateJWT(token, key);
+
+    if (payload.iss !== TOKEN_CONFIG.USER.issuer) {
+      throw new Error("Invalid issuer for refresh token");
+    }
+
+    return payload;
+  } catch (error) {
+    throw {
+      statusCode: 401,
+      message: "Refresh token validation failed",
+      error: error.message,
+      code: "INVALID_REFRESH_TOKEN",
+    };
+  }
+}
 
 export async function makeAccesstoken(userAcc, key) {
   try {
@@ -73,6 +89,7 @@ export async function makeRefreshtoken(userAcc, key, fastifyInstance, { recovery
       name: userAcc.name,
       email: userAcc.email,
       scope: TOKEN_CONFIG.USER.scope,
+      ...(recoveryToken && { recoveryToken: "true" }),
     };
 
     if (userAcc.metadata && userAcc.metadata !== "{}") {
@@ -177,7 +194,6 @@ export async function validateJWT(jwt, key) {
       issuer: [TOKEN_CONFIG.USER.issuer, TOKEN_CONFIG.ADMIN.issuer],
     });
 
-    // Validate audience based on issuer
     const expectedAudience =
       payload.iss === TOKEN_CONFIG.USER.issuer ? TOKEN_CONFIG.USER.audience : TOKEN_CONFIG.ADMIN.audience;
 

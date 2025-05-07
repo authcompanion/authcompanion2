@@ -17,7 +17,7 @@
      <img alt="GitHub stars" src="https://img.shields.io/github/stars/authcompanion/authcompanion2">
    </a>
    <a href="https://nodejs.org/en/">
-     <img src="https://img.shields.io/badge/node-v20.11.0-green?logo=node.js"/>
+     <img src="https://img.shields.io/badge/node-v22-green?logo=node.js"/>
    </a>
       <a href="https://github.com/authcompanion/authcompanion2/tags">
      <img src="https://img.shields.io/github/v/release/authcompanion/authcompanion2?color=purple&include_prereleases&style=flat-square"/>
@@ -25,16 +25,14 @@
 
 </div>
 <br />
-<p align="center"> Useful Links:  <a href="https://docs.authcompanion.com/"> Documentation</a> | <a href="https://github.com/authcompanion/authcompanion2/blob/main/CHANGELOG.md"> CHANGELOG</a> | <a href="https://demo.authcompanion.com/v1/web/login"> Demo Site</a> | <a rel="me" href="https://hachyderm.io/@paulfish"> Follow on Mastodon</a>
+<p align="center"> Useful Links:  <a href="https://docs.authcompanion.com/"> Documentation</a> | <a href="https://github.com/authcompanion/authcompanion2/blob/main/CHANGELOG.md"> CHANGELOG</a> | <a href="https://demo.authcompanion.com/login"> Demo Site</a> | <a rel="me" href="https://hachyderm.io/@paulfish"> Follow progress on Mastodon</a>
 </p>
 
 ---
 
 ## Hot topics
 
-- Our documentation now includes 2 new [.rest files](https://github.com/authcompanion/authcompanion2/tree/main/tools) that utilize the VS Code [REST Client plugin](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) to simplify API testing and provide clear examples of Authcompanion's admin and authentication APIs.
-- New Support for Postgres when storing user accounts + New Login & Registration Web Form Styling - [#22](https://github.com/authcompanion/authcompanion2/pull/22) [Done]
-- A Refresh of the Admin Dashboard Design - [#21](https://github.com/authcompanion/authcompanion2/pull/21) [Done]
+- We've added full OpenAPI 3.0 specificaiton integration. Access the interactive documenation at: http://localhost:3002/docs/api when running the AuthC Server. Also refresh all of the site documentation for better clarity and instruction.
 
 ## Introduction
 
@@ -44,7 +42,7 @@ With AuthC you can:
 
 - Securely handle the registration, login, logout, and account recovery of user accounts.
 - Generate and verify [JWTs](https://jwt.io/introduction), a token used for your user's session and authenticating them into your web application's backend APIs.
-- Manage Users via a self-service Dashboard and confidently store and own your web application's user accounts, on your terms.
+- Manage users via a self-service Dashboard and confidently store and own your web application's user accounts, on premises.
 - Help users create accounts and login with a passkey on their mobile device (aka passwordless) or by using traditional username/passwords instead.
 
 |             Login Screen             |            Registration Screen             |
@@ -59,7 +57,7 @@ The instructions below will launch the default server for exploring the features
 
 Pre-requirement:
 
-- [Node.js](http://nodejs.org) **version >=18.13**
+- [Node.js](http://nodejs.org) **version >=22**
 
 Clone the repo if you haven't done so, and install dependencies using this
 command:
@@ -171,13 +169,12 @@ Have a look through the [Integration Guide](https://docs.authcompanion.com/guide
 
 The RESTful Authentication API powers the Web Forms by which users authenticate into your web app. It's important to note that the web forms alone doesn't cover every authentication flow for your users. For example: refreshing an expired access token would require interacting with AuthC's APIs in addition to using the Web Froms.
 
-For more information about the Authentication API check out the docs here: [Auth API](https://docs.authcompanion.com/guide/authapi.html)
-
 ### Admin API
 
 The Admin API helps an administrator to manage the users of their web application. It provides a range of functions through which administrators can programatially create, edit, and delete user accounts. The Admin API is also natively used by the Admin Dashboard.
 
-For more information about the Admin API check out the docs here: [Admin API](https://docs.authcompanion.com/guide/adminapi.html)
+- **Try the API:** Open [http://localhost:3002/docs/api](http://localhost:3002/docs/api) in your browser while the AuthC server is running.
+- **Interactive Documentation:** The documentation UI allows you to try endpoints, inspect request/response schemas, and view detailed requirements.
 
 ---
 

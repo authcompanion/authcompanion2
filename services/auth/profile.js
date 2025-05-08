@@ -1,101 +1,134 @@
+// @ts-nocheck
 import { createHash } from "../../utils/credential.js";
-import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
+import { makeAccesstoken, makeRefreshtoken, verifyRefreshtoken } from "../../utils/jwt.js";
 import config from "../../config.js";
-import { refreshCookie, fgpCookie } from "../../utils/cookies.js";
+import { refreshCookie } from "../../utils/cookies.js";
 import { eq } from "drizzle-orm";
+import { randomUUID } from "crypto";
 
-export const userProfileHandler = async function (request, reply) {
-  try {
-    //Check the request's type attibute is set to users
-    if (request.body.data.type !== "users") {
-      request.log.info("Auth API: The request's type is not set to Users, update failed");
-      throw { statusCode: 400, message: "Invalid Type Attribute" };
-    }
+export const profileHandler = async function (request, reply) {
+  const {
+    data: { type, attributes },
+  } = request.body;
 
-    //Fetch user from Database
-    const existingAccount = await this.db
-      .select({
-        name: this.users.name,
-        email: this.users.email,
-      })
-      .from(this.users)
-      .where(eq(this.users.uuid, request.jwtRequestPayload.userid));
+  let sub;
+  let isRecoveryFlow = false;
 
-    //Check if the user exists already
-    if (existingAccount.length === 0) {
-      request.log.info("Auth API: User does not exist in database, update failed");
-      throw { statusCode: 400, message: "Profile Update Failed" };
-    }
-
-    //Check if the user's email is being updated and if its not the same email as the user's current email, check if the new email is already in use
-    if (request.body.data.attributes.email && request.body.data.attributes.email !== existingAccount.email) {
-      const existingEmail = await this.db
-        .select({ email: this.users.email })
-        .from(this.users)
-        .where(eq(this.users.email, request.body.data.attributes.email));
-
-      if (existingEmail[0]) {
-        request.log.info("Admin API: User's email is already in use, update failed");
-        throw { statusCode: 400, message: "Email Already In Use" };
+  if (request.query.token) {
+    try {
+      const payload = await verifyRefreshtoken(request.query.token, this.key);
+      if (payload.recoveryToken !== "true") {
+        throw new Error("Invalid recovery token");
       }
+      sub = payload.sub;
+      isRecoveryFlow = true;
+    } catch (error) {
+      request.log.error(`Recovery token validation failed: ${error.message}`);
+      throw { statusCode: 401, message: "Invalid recovery token" };
     }
+  } else {
+    sub = request.jwtRequestPayload?.sub;
+    if (!sub) throw { statusCode: 401, message: "Authentication required" };
+  }
 
-    //if the user's password is being updated, hash the new password
-    if (request.body.data.attributes.password) {
-      const hashpwd = await createHash(request.body.data.attributes.password);
-      request.body.data.attributes.password = hashpwd;
-    }
+  const now = new Date().toISOString();
 
-    const data = request.body.data.attributes;
-    const now = new Date().toISOString(); // Create a Date object with the current date and time
+  if (type !== "users") {
+    throw { statusCode: 400, message: "Invalid request type" };
+  }
 
-    const updateData = {
-      name: data.name ?? existingAccount[0].name,
-      email: data.email ?? existingAccount[0].email,
-      password: data.password ?? request.body.data.attributes.password,
-      updated_at: now,
-    };
-
-    const user = await this.db
-      .update(this.users)
-      .set(updateData)
-      .where(eq(this.users.uuid, request.jwtRequestPayload.userid))
-      .returning({
+  try {
+    const [currentUser] = await this.db
+      .select({
         uuid: this.users.uuid,
         name: this.users.name,
         email: this.users.email,
         metadata: this.users.metadata,
-        active: this.users.active,
-        created_at: this.users.created_at,
-        updated_at: this.users.updated_at,
-      });
+        appdata: this.users.appdata,
+        jwt_id: this.users.jwt_id,
+      })
+      .from(this.users)
+      .where(eq(this.users.uuid, sub));
 
-    //Prepare the reply
-    const userAccessToken = await makeAccesstoken(user[0], this.key);
-    const userRefreshToken = await makeRefreshtoken(user[0], this.key, this);
+    if (!currentUser) {
+      throw { statusCode: 404, message: "User not found" };
+    }
 
-    const userAttributes = {
-      name: user[0].name,
-      email: user[0].email,
-      created: user[0].created_at,
-      updated: user[0].updated_at,
-      access_token: userAccessToken.token,
-      access_token_expiry: userAccessToken.expiration,
+    if (attributes.email && attributes.email !== currentUser.email) {
+      const [existing] = await this.db
+        .select({ email: this.users.email })
+        .from(this.users)
+        .where(eq(this.users.email, attributes.email));
+
+      if (existing) {
+        throw { statusCode: 409, message: "Email already in use" };
+      }
+    }
+
+    const updateData = {
+      name: attributes.name ?? currentUser.name,
+      email: attributes.email ?? currentUser.email,
+      updated_at: now,
     };
 
-    reply.headers({
-      "set-cookie": [refreshCookie(userRefreshToken.token), fgpCookie(userAccessToken.userFingerprint)],
-      "x-authc-app-origin": config.APPLICATIONORIGIN,
+    if (attributes.password) {
+      updateData.password = await createHash(attributes.password);
+      // Invalidate all sessions by changing jwt_id
+      updateData.jwt_id = randomUUID();
+    }
+
+    const [updatedUser] = await this.db.update(this.users).set(updateData).where(eq(this.users.uuid, sub)).returning({
+      uuid: this.users.uuid,
+      name: this.users.name,
+      email: this.users.email,
+      metadata: this.users.metadata,
+      appdata: this.users.appdata,
+      created_at: this.users.created_at,
+      updated_at: this.users.updated_at,
+      jwt_id: this.users.jwt_id,
     });
+
+    let accessToken, refreshToken;
+    if (!isRecoveryFlow) {
+      accessToken = await makeAccesstoken(
+        { ...updatedUser, metadata: updatedUser.metadata || "{}", appdata: updatedUser.appdata || "{}" },
+        this.key
+      );
+
+      refreshToken = await makeRefreshtoken(
+        { ...updatedUser, metadata: updatedUser.metadata || "{}", appdata: updatedUser.appdata || "{}" },
+        this.key,
+        this
+      );
+    }
+
+    const headers = { "x-authc-app-origin": config.APPLICATIONORIGIN };
+    if (!isRecoveryFlow && refreshToken) {
+      headers["set-cookie"] = [refreshCookie(refreshToken.token)];
+    }
+    reply.headers(headers);
 
     return {
       data: {
         type: "users",
-        id: user[0].uuid,
-        attributes: userAttributes,
+        id: updatedUser.uuid,
+        attributes: {
+          name: updatedUser.name,
+          email: updatedUser.email,
+          created: updatedUser.created_at,
+          updated: updatedUser.updated_at,
+          ...(!isRecoveryFlow && {
+            access_token: accessToken?.token,
+            access_token_expiry: accessToken?.expiration,
+          }),
+        },
       },
     };
-  } catch (err) {
-    throw err;
+  } catch (error) {
+    request.log.error(`Profile update error: ${error.message}`);
+    throw {
+      statusCode: error.statusCode || 500,
+      message: error.message || "Profile update failed",
+    };
   }
 };

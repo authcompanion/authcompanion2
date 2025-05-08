@@ -8,6 +8,3 @@ export function refreshCookie(token) {
     config.SAMESITE
   }; HttpOnly; ${secureCookie()}`;
 }
-export function fgpCookie(fingerprint) {
-  return `Fgp=${fingerprint}; Path=/; Max-Age=3600; SameSite=${config.SAMESITE}; HttpOnly; ${secureCookie()}`;
-}

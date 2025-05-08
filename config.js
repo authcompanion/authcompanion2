@@ -2,34 +2,30 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const config = {
-  //Application Settings
-  AUTHPORT: parseInt(process.env.PORT, 10) || 3002, // Port for AuthC server
-  ORIGIN: process.env.ORIGIN || "http://localhost:3002", // Origin for web application used as the appurl in webauthn
-
-  APPLICATIONORIGIN: process.env.APPLICATION_ORIGIN || "http://localhost:3002/v1/web/home", // After a successful login, redirect the user to your application.
-
-  REGISTRATIONORIGIN:
-    process.env.REGISTRATION_ORIGIN || process.env.APPLICATION_ORIGIN || "http://localhost:3002/v1/web/home",
-  ADMINORIGIN: process.env.ADMIN_ORIGIN || "http://localhost:3002/v1/admin/dashboard", //URL for the admin dashboard
-  RECOVERYURL: process.env.RECOVERY_REDIRECT_URL || "http://localhost:3002/v1/web/profile", // URL for recovery redirect, used in magic link redirect. defaults to a recovery profile URL
+  // Application Settings
+  AUTHPORT: parseInt(process.env.PORT || "", 10) || 3002,
+  ORIGIN: process.env.ORIGIN || "http://localhost:3002",
+  APPLICATIONORIGIN: process.env.APPLICATION_ORIGIN || "/",
+  REGISTRATIONORIGIN: process.env.REGISTRATION_ORIGIN || process.env.APPLICATION_ORIGIN || "/",
+  RECOVERYURL: process.env.RECOVERY_REDIRECT_URL || "http://localhost:3002/profile",
 
   // Security Settings
-  KEYPATH: process.env.SERVER_KEY_PATH || "./serverkey", // Path for the server key used for signing/verifying JWTs
-  ADMINKEYPATH: process.env.ADMIN_KEY_PATH || "./adminkey", // Path for the admin's username and password for the Admin Panel
-  SAMESITE: process.env.SAMESITE || "None", // SameSite attribute for cookies, defaulting to "None"
+  KEYPATH: process.env.SERVER_KEY_PATH || "./serverkey",
+  ADMINKEYPATH: process.env.ADMIN_KEY_PATH || "./adminkey",
+  SAMESITE: process.env.SAMESITE || "None",
 
   // Email SMTP Integration Settings
-  SMTPHOSTNAME: process.env.SMTP_HOSTNAME || "", // SMTP server hostname
-  SMTPPORT: parseInt(process.env.SMTP_PORT, 10) || 2525, // SMTP server port (default: 2525)
-  SMTPUSER: process.env.SMTP_USERNAME || "", // Username for SMTP authentication
-  SMTPPASSWORD: process.env.SMTP_PASSWORD || "", // Password for SMTP authentication
-  FROMADDRESS: process.env.FROM_ADDRESS || "no_reply@example.com", // Default "From" address for outgoing emails
+  SMTPHOSTNAME: process.env.SMTP_HOSTNAME || "",
+  SMTPPORT: parseInt(process.env.SMTP_PORT || "", 10) || 2525,
+  SMTPUSER: process.env.SMTP_USERNAME || "",
+  SMTPPASSWORD: process.env.SMTP_PASSWORD || "",
+  FROMADDRESS: process.env.FROM_ADDRESS || "no_reply@example.com",
 
-  // SQLite and PostgreSQL Configurations
-  SQLITE_ENABLED: process.env.SQLITE_ENABLED || true, // Set to true if SQLite is enabled
-  POSTGRESQL_ENABLED: process.env.POSTGRESQL_ENABLED || false, // Set to true if PostgreSQL is enabled. Make sure other db is false.
-  SQLITE_DB_PATH: process.env.SQLITE_DB_PATH || "./sqlite_authc_database.db", // Path for SQLite database
-  POSTGRESQL_CONNECTION_STRING: process.env.POSTGRESQL_CONNECTION_STRING || "postgresql://admin@localhost:5432/users", // Connection string for PostgreSQL
+  // Database Configurations
+  SQLITE_ENABLED: process.env.SQLITE_ENABLED ? process.env.SQLITE_ENABLED === "true" : true,
+  POSTGRESQL_ENABLED: process.env.POSTGRESQL_ENABLED ? process.env.POSTGRESQL_ENABLED === "true" : false,
+  SQLITE_DB_PATH: process.env.SQLITE_DB_PATH || "./sqlite_authc_database.db",
+  POSTGRESQL_CONNECTION_STRING: process.env.POSTGRESQL_CONNECTION_STRING || "postgresql://admin@localhost:5432/users",
 };
 
 export default config;

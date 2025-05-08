@@ -7,12 +7,11 @@ processes = []
 
 [env]
 ORIGIN="https://demo.authcompanion.com"
-APPLICATION_ORIGIN="https://demo.authcompanion.com/v1/web/home"
-ADMIN_ORIGIN="http://demo.authcompanion.com/v1/admin/dashboard"
-SERVER_KEY_PATH="/data/serverkey"
-ADMIN_KEY_PATH="/data/adminkey"
-SQLITE_DB_PATH="/data/sqlite_authc_database.db"
-RECOVERY_REDIRECT_URL="https://demo.authcompanion.com/v1/web/profile"
+APPLICATION_ORIGIN="https://demo.authcompanion.com/home"
+SERVER_KEY_PATH="/data/serverkeyv5"
+ADMIN_KEY_PATH="/data/adminkeyv5"
+SQLITE_DB_PATH="/data/sqlite_authc_databasev5.db"
+RECOVERY_REDIRECT_URL="https://demo.authcompanion.com/profile"
 SMTP_HOSTNAME="smtp.migadu.com"	
 SMTP_PORT=465
 SMTP_USERNAME="hello@authcompanion.com"

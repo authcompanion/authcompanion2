@@ -1,17 +1,23 @@
-version: "3"
+version: "3.8"
 
 services:
   authcompanion:
     build: .
-    container_name: authcompanion
+    restart: unless-stopped
     environment:
-      - SQLITE_DB_PATH=./authdata/sqlite_authc_database.db
-      - ADMIN_KEY_PATH=./authdata/adminkey
-      - SERVER_KEY_PATH=./authdata/serverkey
+      - NODE_ENV=development
+      - SQLITE_DB_PATH=/data/sqlite_authc_database.db
+      - ADMIN_KEY_PATH=/data/adminkey
+      - SERVER_KEY_PATH=/data/serverkey
+    volumes:
+      - authdata:/data
+    networks:
+      - authnet
     ports:
       - "3002:3002"
-    volumes:
-      - authdata:/home/nodejs/app/authdata
 
 volumes:
   authdata:
+
+networks:
+  authnet:

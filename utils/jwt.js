@@ -1,92 +1,105 @@
 import * as jose from "jose";
 import { randomUUID } from "crypto";
 import { eq } from "drizzle-orm";
-import config from "../config.js";
-import { createHash, verifyValueWithHash } from "./credential.js";
-import crypto from "crypto";
 
-// Generate a random string & hash that will constitute the fingerprint for this user
-async function generateClientContext() {
-  //generate a random string of length 16
-  const fingerprint = crypto.randomBytes(16).toString("hex");
-  //has the random string
-  const hash = await createHash(fingerprint);
-  return { userFingerprint: fingerprint, userFingerprintHash: hash };
+// Constants for token configuration
+const TOKEN_CONFIG = {
+  USER: {
+    issuer: "authcompanion",
+    audience: "authcompanion-client",
+    scope: "user",
+    accessExpiration: "1h",
+    refreshExpiration: "7d",
+  },
+  ADMIN: {
+    issuer: "authcompanion-admin",
+    audience: "authcompanion-admin-console",
+    scope: "admin",
+    accessExpiration: "1h",
+    refreshExpiration: "7d",
+  },
+};
+
+export async function verifyRefreshtoken(token, key) {
+  try {
+    const payload = await validateJWT(token, key);
+
+    if (payload.iss !== TOKEN_CONFIG.USER.issuer) {
+      throw new Error("Invalid issuer for refresh token");
+    }
+
+    return payload;
+  } catch (error) {
+    throw {
+      statusCode: 401,
+      message: "Refresh token validation failed",
+      error: error.message,
+      code: "INVALID_REFRESH_TOKEN",
+    };
+  }
 }
 
-// Creates a JWT token used for user authentication, with scope as "user"
-export async function makeAccesstoken(userAcc, secretKey) {
+export async function makeAccesstoken(userAcc, key) {
   try {
-    // set default expiration time of the access jwt token
-    let expirationTime = "1h";
+    const jwtid = randomUUID();
 
-    //generate the client context for storing the hash in the jwt claims
-    const { userFingerprint, userFingerprintHash } = await generateClientContext();
-
-    // build the token claims
     const claims = {
-      userid: userAcc.uuid,
+      sub: userAcc.uuid,
       name: userAcc.name,
       email: userAcc.email,
-      userFingerprint: userFingerprintHash,
-      scope: "user",
+      scope: TOKEN_CONFIG.USER.scope,
     };
 
-    if (userAcc.metadata !== undefined && userAcc.metadata !== null && userAcc.metadata !== "{}") {
+    if (userAcc.metadata && userAcc.metadata !== "{}") {
       claims.metadata = userAcc.metadata;
     }
 
-    if (userAcc.appdata !== undefined && userAcc.appdata !== null && userAcc.appdata !== "{}") {
+    if (userAcc.appdata && userAcc.appdata !== "{}") {
       claims.app = userAcc.appdata;
     }
 
     const jwt = await new jose.SignJWT(claims)
       .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+      .setIssuer(TOKEN_CONFIG.USER.issuer)
+      .setAudience(TOKEN_CONFIG.USER.audience)
+      .setJti(jwtid)
       .setIssuedAt()
-      .setExpirationTime(expirationTime)
-      .sign(secretKey);
+      .setExpirationTime(TOKEN_CONFIG.USER.accessExpiration)
+      .sign(key);
 
-    const { payload } = await jose.jwtVerify(jwt, secretKey);
+    const { payload } = await jose.jwtVerify(jwt, key);
 
     return {
       token: jwt,
       expiration: payload.exp,
-      userFingerprint: userFingerprint,
+      jti: jwtid,
     };
   } catch (error) {
-    console.log(error);
-    throw { statusCode: 500, message: "Server Error" };
+    throw { statusCode: 500, message: "JWT Generation Error", error };
   }
 }
 
-//https://datatracker.ietf.org/doc/html/draft-ietf-oauth-browser-based-apps-05#section-8
-export async function makeRefreshtoken(userAcc, secretKey, fastifyInstance, { recoveryToken = false } = {}) {
+export async function makeRefreshtoken(userAcc, key, fastifyInstance, { recoveryToken = false } = {}) {
   try {
-    // set default expiration time of the jwt token
-    let expirationTime = "7d";
+    const expirationTime = recoveryToken ? "15m" : TOKEN_CONFIG.USER.refreshExpiration;
+    const jwtid = randomUUID();
 
-    // If a "recovery token" is requested for account recovery route, return token with shorter expiration time
-    if (recoveryToken) {
-      expirationTime = "15m";
-    }
     const claims = {
-      userid: userAcc.uuid,
+      sub: userAcc.uuid,
       name: userAcc.name,
       email: userAcc.email,
+      scope: TOKEN_CONFIG.USER.scope,
+      ...(recoveryToken && { recoveryToken: "true" }),
     };
 
-    if (userAcc.metadata !== undefined && userAcc.metadata !== null && userAcc.metadata !== "{}") {
+    if (userAcc.metadata && userAcc.metadata !== "{}") {
       claims.metadata = userAcc.metadata;
     }
 
-    if (userAcc.appdata !== undefined && userAcc.appdata !== null && userAcc.appdata !== "{}") {
+    if (userAcc.appdata && userAcc.appdata !== "{}") {
       claims.app = userAcc.appdata;
     }
 
-    // Generate a random UUID for the token
-    const jwtid = randomUUID();
-
-    // Update the admin table with the new JWT ID
     await fastifyInstance.db
       .update(fastifyInstance.users)
       .set({ jwt_id: jwtid })
@@ -94,115 +107,107 @@ export async function makeRefreshtoken(userAcc, secretKey, fastifyInstance, { re
 
     const jwt = await new jose.SignJWT(claims)
       .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+      .setIssuer(TOKEN_CONFIG.USER.issuer)
+      .setAudience(TOKEN_CONFIG.USER.audience)
+      .setJti(jwtid)
       .setIssuedAt()
       .setExpirationTime(expirationTime)
-      .setJti(jwtid)
-      .sign(secretKey);
+      .sign(key);
 
-    const { payload } = await jose.jwtVerify(jwt, secretKey);
+    const { payload } = await jose.jwtVerify(jwt, key);
 
-    return { token: jwt, expiration: payload.exp };
+    return { token: jwt, expiration: payload.exp, jti: jwtid };
   } catch (error) {
-    console.log(error);
-    throw { statusCode: 500, message: "Server Error" };
+    throw { statusCode: 500, message: "Refresh Token Generation Error", error };
   }
 }
 
-// Creates a JWT token used for Admin dashboard authentication, with scope as "admin"
-export async function makeAdminToken(adminUserAcc, secretKey) {
+export async function makeAdminToken(adminUserAcc, key) {
   try {
-    // set default expiration time of the jwt token
-    let expirationTime = "1h";
-
-    //generate the client context for storing the hash in the jwt claims
-    const { userFingerprint, userFingerprintHash } = await generateClientContext();
+    const jwtid = randomUUID();
 
     const claims = {
-      userid: adminUserAcc.uuid,
+      sub: adminUserAcc.uuid,
       name: adminUserAcc.name,
       email: adminUserAcc.email,
-      userFingerprint: userFingerprintHash,
-      scope: "admin",
+      scope: TOKEN_CONFIG.ADMIN.scope,
     };
 
     const jwt = await new jose.SignJWT(claims)
       .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+      .setIssuer(TOKEN_CONFIG.ADMIN.issuer)
+      .setAudience(TOKEN_CONFIG.ADMIN.audience)
+      .setJti(jwtid)
       .setIssuedAt()
-      .setExpirationTime(expirationTime)
-      .sign(secretKey);
+      .setExpirationTime(TOKEN_CONFIG.ADMIN.accessExpiration)
+      .sign(key);
 
-    const { payload } = await jose.jwtVerify(jwt, secretKey);
+    const { payload } = await jose.jwtVerify(jwt, key);
 
     return {
       token: jwt,
       expiration: payload.exp,
-      userFingerprint: userFingerprint,
+      jti: jwtid,
     };
   } catch (error) {
-    throw { statusCode: 500, message: "Server Error" };
+    throw { statusCode: 500, message: "Admin Token Generation Error", error };
   }
 }
 
-export async function makeAdminRefreshtoken(adminUserAcc, secretKey, fastifyInstance) {
+export async function makeAdminRefreshtoken(adminUserAcc, key, fastifyInstance) {
   try {
-    // Set default expiration time of the JWT token
-    let expirationTime = "7d";
-
-    // Define the token claims for the admin refresh token
-    const claims = {
-      userid: adminUserAcc.uuid,
-      name: adminUserAcc.name,
-      email: adminUserAcc.email,
-      userFingerprint: null,
-      scope: "admin",
-    };
-
-    // Generate a random UUID for the token
     const jwtid = randomUUID();
 
-    // Update the admin table with the new JWT ID
+    const claims = {
+      sub: adminUserAcc.uuid,
+      name: adminUserAcc.name,
+      email: adminUserAcc.email,
+      scope: TOKEN_CONFIG.ADMIN.scope,
+    };
+
     await fastifyInstance.db
       .update(fastifyInstance.users)
       .set({ jwt_id: jwtid })
       .where(eq(fastifyInstance.users.uuid, adminUserAcc.uuid));
 
-    // Create and sign the JWT token
     const jwt = await new jose.SignJWT(claims)
       .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-      .setIssuedAt()
-      .setExpirationTime(expirationTime)
+      .setIssuer(TOKEN_CONFIG.ADMIN.issuer)
+      .setAudience(TOKEN_CONFIG.ADMIN.audience)
       .setJti(jwtid)
-      .sign(secretKey);
+      .setIssuedAt()
+      .setExpirationTime(TOKEN_CONFIG.ADMIN.refreshExpiration)
+      .sign(key);
 
-    // Verify the token and retrieve its payload
-    const { payload } = await jose.jwtVerify(jwt, secretKey);
+    const { payload } = await jose.jwtVerify(jwt, key);
 
-    return { token: jwt, expiration: payload.exp };
+    return { token: jwt, expiration: payload.exp, jti: jwtid };
   } catch (error) {
-    console.log(error);
-    throw { statusCode: 500, message: "Server Error" };
+    throw { statusCode: 500, message: "Admin Refresh Token Error", error };
   }
 }
 
-// Validates a JWT token
-export async function validateJWT(jwt, secretKey, fingerprint = null) {
+export async function validateJWT(jwt, key) {
   try {
-    const { payload } = await jose.jwtVerify(jwt, secretKey, {
-      requiredClaims: fingerprint === null ? [] : ["userFingerprint"],
+    const { payload } = await jose.jwtVerify(jwt, key, {
+      requiredClaims: ["iss", "aud", "sub", "exp", "iat", "jti"],
+      issuer: [TOKEN_CONFIG.USER.issuer, TOKEN_CONFIG.ADMIN.issuer],
     });
 
-    if (!fingerprint) {
-      return payload;
-    }
+    const expectedAudience =
+      payload.iss === TOKEN_CONFIG.USER.issuer ? TOKEN_CONFIG.USER.audience : TOKEN_CONFIG.ADMIN.audience;
 
-    const validUserContext = await verifyValueWithHash(fingerprint, payload.userFingerprint);
-
-    if (!validUserContext) {
-      throw { statusCode: 500, message: "Server Error" };
+    if (payload.aud !== expectedAudience) {
+      throw new Error("Invalid token audience");
     }
 
     return payload;
   } catch (error) {
-    throw { statusCode: 500, message: "Server Error" };
+    throw {
+      statusCode: 401,
+      message: "Token validation failed",
+      error: error.message,
+      code: "INVALID_TOKEN",
+    };
   }
 }

@@ -75,4 +75,4 @@ const setupServerKey = async function (fastify, options) {
 };
 
 //Wrap as Fastify Plugin
-export default fastifyPlugin(setupServerKey, { fastify: "4.x" });
+export default fastifyPlugin(setupServerKey, { fastify: "5.x" });

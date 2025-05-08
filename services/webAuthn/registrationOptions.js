@@ -1,33 +1,33 @@
 import config from "../../config.js";
 import { createId } from "@paralleldrive/cuid2";
-import compadre from "compadre";
-import { nouns } from "../../utils/names.js";
 import { createHash } from "../../utils/credential.js";
 import crypto from "crypto";
 import { generateRegistrationOptions } from "@simplewebauthn/server";
 
 export const registrationOptionsHandler = async function (request, reply) {
   try {
-    //create a user.id for the new registration
-    const userUUID = createId();
+    const { name: userName, email: userEmail } = request.body;
 
-    //set the PR's ID value
+    if (!userName || !userEmail) {
+      return reply.code(400).send({ error: "Name and email are required" });
+    }
+
+    const userUUID = createId();
     const appURL = new URL(config.ORIGIN);
     const rpID = appURL.hostname;
 
-    //build the userName field
-    const nameGenerator = new compadre({
-      glue: "-",
-      nouns: nouns,
-    });
-    const userName = nameGenerator.generate();
+    // Generate secure random password (not shown to user)
+    const passwordBuffer = crypto.randomBytes(32); // 256 bits entropy
+    const rawPassword = passwordBuffer
+      .toString("base64")
+      .replace(/[+/=]/g, "") // Remove special characters
+      .slice(0, 24); // 24-character password
+    const hashedPassword = await createHash(rawPassword);
 
-    //build webauthn options for "passwordless" flow.
-    let options = {
+    const options = {
       rpName: "AuthCompanion",
       rpID,
-      userID: userUUID,
-      userName: userName,
+      userName,
       timeout: 60000,
       authenticatorSelection: {
         userVerification: "preferred",
@@ -36,36 +36,23 @@ export const registrationOptionsHandler = async function (request, reply) {
       supportedAlgorithmIDs: [-7, -257],
     };
 
-    //generate registration options to prepare the response
     const generatedOptions = await generateRegistrationOptions(options);
+    const now = new Date().toISOString();
 
-    //Generate user data and create user in database
-
-    //build password
-    //generate a random string of length 16
-    const fingerprint = crypto.randomBytes(16).toString("hex");
-    const hashpwd = await createHash(fingerprint);
-
-    //build email
-    const generatedUniqueEmail = `placeholder+${Math.random().toString(36).substring(8)}@example.com`;
-
-    const now = new Date().toISOString(); // Create a Date object with the current date and time
-
-    //create user
     await this.db.insert(this.users).values({
-      uuid: userUUID,
+      uuid: generatedOptions.user.id,
       name: userName,
-      email: generatedUniqueEmail,
-      password: hashpwd,
+      email: userEmail,
+      password: hashedPassword,
       challenge: generatedOptions.challenge,
       active: 0,
       created_at: now,
       updated_at: now,
     });
 
-    //send the reply
     return generatedOptions;
   } catch (err) {
-    throw err;
+    console.error("Registration options error:", err);
+    return reply.code(500).send({ error: "Internal server error" });
   }
 };

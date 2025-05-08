@@ -1,0 +1,5 @@
+onlyBuiltDependencies:
+  - argon2
+  - better-sqlite3
+  - es5-ext
+  - esbuild

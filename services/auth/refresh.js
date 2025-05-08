@@ -1,121 +1,74 @@
 import { makeAccesstoken, makeRefreshtoken, validateJWT } from "../../utils/jwt.js";
 import config from "../../config.js";
 import { parse } from "cookie";
-import { refreshCookie, fgpCookie } from "../../utils/cookies.js";
-import { users } from "../../db/sqlite/schema.js";
-import { eq, sql } from "drizzle-orm";
+import { refreshCookie } from "../../utils/cookies.js";
+import { users } from "../../db/sqlite/sqlite.schema.js";
+import { eq } from "drizzle-orm";
 
-export const tokenRefreshHandler = async function (request, reply) {
-  try {
-    //Check if the request includes a refresh token in request cookie
-    if (request.headers.cookie) {
-      const cookies = parse(request.headers.cookie);
-      request.refreshToken = cookies.userRefreshToken;
-
-      if (!request.refreshToken) {
-        request.log.info("Auth API: The request does not include a refresh token as cookie, refresh failed");
-        throw { statusCode: 400, message: "Refresh Token Failed" };
-      }
-    } else {
-      request.log.info("Auth API: The request does not include a refresh token as cookie, refresh failed");
-      throw { statusCode: 400, message: "Refresh Token Failed" };
-    }
-
-    //Validate the refresh token
-    const jwtClaims = await validateJWT(request.refreshToken, this.key);
-
-    //Fetch user from Database
-    const existingAccount = await this.db
-      .select({
-        uuid: users.uuid,
-        name: users.name,
-        email: users.email,
-        jwt_id: users.jwt_id,
-        active: users.active,
-        created: this.users.created_at,
-        updated: this.users.updated_at,
-      })
-      .from(this.users)
-      .where(eq(this.users.jwt_id, jwtClaims.jti));
-
-    if (existingAccount.length === 0) {
-      request.log.info("Auth API: User not found");
-      throw { statusCode: 400, message: "Refresh Token Failed" };
-    }
-
-    //Prepare the reply
-    const userAccessToken = await makeAccesstoken(existingAccount[0], this.key);
-    const userRefreshToken = await makeRefreshtoken(existingAccount[0], this.key, this);
-
-    const userAttributes = {
-      name: existingAccount[0].name,
-      email: existingAccount[0].email,
-      created: existingAccount[0].created_at,
-      access_token: userAccessToken.token,
-      access_token_expiry: userAccessToken.expiration,
-    };
-
-    reply.headers({
-      "set-cookie": [refreshCookie(userRefreshToken.token), fgpCookie(userAccessToken.userFingerprint)],
-      "x-authc-app-origin": config.APPLICATIONORIGIN,
-    });
-
-    return {
-      data: {
-        id: existingAccount[0].uuid,
-        type: "users",
-        attributes: userAttributes,
-      },
-    };
-  } catch (err) {
-    throw err;
+const getRefreshToken = (request) => {
+  const { userRefreshToken } = parse(request.headers.cookie || "");
+  if (!userRefreshToken) {
+    request.log.info("Missing refresh token");
+    throw { statusCode: 401, message: "Authentication required" };
   }
+  return userRefreshToken;
 };
 
-export const tokenRefreshDeleteHandler = async function (request, reply) {
-  try {
-    //Check if the request includes a refresh token in request cookie
-    if (request.headers.cookie) {
-      const cookies = parse(request.headers.cookie);
-      request.refreshToken = cookies.userRefreshToken;
+const validateUser = async function (jti, db) {
+  const [user] = await db
+    .select({
+      uuid: users.uuid,
+      name: users.name,
+      email: users.email,
+      jwt_id: users.jwt_id,
+      created_at: users.created_at,
+    })
+    .from(users)
+    .where(eq(users.jwt_id, jti));
 
-      if (!request.refreshToken) {
-        request.log.info("Auth API: The request does not include a refresh token as cookie, refresh failed");
-        throw { statusCode: 400, message: "Refresh Token Failed" };
-      }
-    } else {
-      request.log.info("Auth API: The request does not include a refresh token as cookie, refresh failed");
-      throw { statusCode: 400, message: "Refresh Token Failed" };
-    }
+  if (!user) throw { statusCode: 401, message: "Invalid token" };
+  return user;
+};
 
-    //Validate the refresh token
-    const jwtClaims = await validateJWT(request.refreshToken, this.key);
-    //Fetch user from Database
-    const existingAccount = await this.db
-      .select({
-        uuid: users.uuid,
-      })
-      .from(this.users)
-      .where(eq(this.users.jwt_id, jwtClaims.jti));
+export const tokenRefreshHandler = async function (request, reply) {
+  const refreshToken = getRefreshToken(request);
+  const { jti } = await validateJWT(refreshToken, this.key);
+  const user = await validateUser(jti, this.db);
 
-    if (existingAccount.length === 0) {
-      request.log.info("Auth API: User not found");
-      throw { statusCode: 400, message: "Refresh Token Failed" };
-    }
+  const accessToken = await makeAccesstoken(user, this.key);
+  const newRefreshToken = await makeRefreshtoken(user, this.key, this);
 
-    const resp = await this.db
-      .update(this.users)
-      .set({ jwt_id: null })
-      .where(eq(this.users.jwt_id, jwtClaims.jti))
-      .returning({ uuid: this.users.uuid });
+  reply.headers({
+    "set-cookie": [refreshCookie(newRefreshToken.token)],
+    "x-authc-app-origin": config.APPLICATIONORIGIN,
+  });
 
-    if (resp.length === 0) {
-      request.log.info("Error deleting token id");
-      throw { statusCode: 500, message: "Internal Error" };
-    }
+  return {
+    data: {
+      type: "users",
+      id: user.uuid,
+      attributes: {
+        name: user.name,
+        email: user.email,
+        created: user.created_at,
+        access_token: accessToken.token,
+        access_token_expiry: accessToken.expiration,
+      },
+    },
+  };
+};
 
-    reply.code(204);
-  } catch (err) {
-    throw err;
+export const tokenRefreshDeleteHandler = async function (request) {
+  const refreshToken = getRefreshToken(request);
+  const { jti } = await validateJWT(refreshToken, this.key);
+
+  const [result] = await this.db
+    .update(users)
+    .set({ jwt_id: null })
+    .where(eq(users.jwt_id, jti))
+    .returning({ uuid: users.uuid });
+
+  if (!result) {
+    throw { statusCode: 500, message: "Token revocation failed" };
   }
 };

@@ -7,55 +7,64 @@ import postgres from "postgres";
 import Database from "better-sqlite3";
 import config from "../config.js";
 
-// PostgreSQL schema
-import * as postgresSchema from "./postgres/schema.js";
-// SQLite schema
-import * as sqliteSchema from "./sqlite/schema.js";
-
-const dbPlugin = async function (fastify) {
-  let db, users, authenticator, storage;
-
-  try {
-    if (config.POSTGRESQL_ENABLED) {
-      const migrationClient = postgres(config.POSTGRESQL_CONNECTION_STRING, {
+// Database configurations
+const dbConfig = {
+  postgresql: {
+    enabled: config.POSTGRESQL_ENABLED,
+    drizzle: postgresDrizzle,
+    migrate: postgresMigrate,
+    schema: import("./postgres/pg.schema.js"),
+    migrationsFolder: "./db/postgres",
+    getClient: () =>
+      postgres(config.POSTGRESQL_CONNECTION_STRING, {
         max: 1,
-        onnotice: () => {}, // Ignore NOTICE messages
-      });
-
-      await postgresMigrate(postgresDrizzle(migrationClient), { migrationsFolder: "./db/postgres" });
-
-      db = postgresDrizzle(migrationClient);
-      users = postgresSchema.users;
-      authenticator = postgresSchema.authenticator;
-      storage = postgresSchema.storage;
-
-      fastify.log.info("Using PostgreSQL Database");
-    } else if (config.SQLITE_ENABLED) {
-      if (process.env.NODE_ENV === "test") {
-        config.SQLITE_DB_PATH = "./test.db";
-        fastify.log.info("Test database - ENABLED");
-      }
-
-      const migrationClient = new Database(config.SQLITE_DB_PATH);
-      sqliteMigrate(sqliteDrizzle(migrationClient), { migrationsFolder: "./db/sqlite" });
-      db = sqliteDrizzle(migrationClient);
-      users = sqliteSchema.users;
-      authenticator = sqliteSchema.authenticator;
-      storage = sqliteSchema.storage;
-
-      fastify.log.info(`Using SQLite Database: ${config.SQLITE_DB_PATH}`);
-    } else {
-      throw new Error("Neither PostgreSQL nor SQLite is enabled in the configuration.");
-    }
-  } catch (err) {
-    console.error("Error initializing database:", err);
-    process.exit(1);
-  }
-
-  fastify.decorate("db", db);
-  fastify.decorate("users", users);
-  fastify.decorate("authenticator", authenticator);
-  fastify.decorate("storage", storage);
+        onnotice: () => {},
+      }),
+  },
+  sqlite: {
+    enabled: config.SQLITE_ENABLED,
+    drizzle: sqliteDrizzle,
+    migrate: sqliteMigrate,
+    schema: import("./sqlite/sqlite.schema.js"),
+    migrationsFolder: "./db/sqlite",
+    getClient: () => new Database(process.env.NODE_ENV === "test" ? "./test.db" : config.SQLITE_DB_PATH),
+  },
 };
 
-export default fastifyPlugin(dbPlugin, { fastify: "4.x" });
+const databasePlugin = async function (fastify) {
+  try {
+    // Determine which database to use
+    const dbType = Object.keys(dbConfig).find((type) => dbConfig[type].enabled);
+    if (!dbType) throw new Error("No database enabled in configuration");
+
+    const { drizzle, migrate, schema, migrationsFolder, getClient } = dbConfig[dbType];
+
+    // Initialize database
+    const migrationClient = getClient();
+    if (dbType === "postgresql") {
+      await migrate(drizzle(migrationClient), { migrationsFolder });
+    } else {
+      migrate(drizzle(migrationClient), { migrationsFolder });
+    }
+
+    // Assign schema components
+    const { users, authenticator, storage } = await schema;
+
+    // Decorate Fastify instance
+    fastify.decorate("db", drizzle(migrationClient));
+    fastify.decorate("users", users);
+    fastify.decorate("authenticator", authenticator);
+    fastify.decorate("storage", storage);
+
+    console.log(
+      dbType === "sqlite"
+        ? `Using SQLite Database: ${process.env.NODE_ENV === "test" ? "./test.db" : config.SQLITE_DB_PATH}`
+        : "Using PostgreSQL Database"
+    );
+  } catch (err) {
+    console.log("Error initializing database:", err);
+    process.exit(1);
+  }
+};
+
+export default fastifyPlugin(databasePlugin, { fastify: "5.x" });

@@ -7,3 +7,4 @@ serverkey
 adminkey
 .DS_Store
 .idea
+/client/dist

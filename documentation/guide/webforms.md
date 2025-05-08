@@ -1,17 +1,46 @@
 # Web Forms
 
-AuthCompanion provides built-in web forms for your application users to login with their account, register new accounts, and trigger forgotten password should they can't login. In this way you don't have to build your own - simply host AuthC.
+AuthCompanion includes ready-to-use web forms for user authentication and management, so you can quickly add login and registration flows to your application without building them from scratch. Simply host the AuthCompanion server and direct your users to these endpoints.
 
-These forms are built using [Vue.js](https://v3.vuejs.org/) and [tabler](https://tabler.io/) - making them easily customizable for your specific branding and auth needs (without a build step).
+These forms are implemented with [Vue.js](https://v3.vuejs.org/) and styled using [Tabler](https://tabler.io/), allowing quick customization for your branding and authentication requirements directly.
 
-## Available Web Form Paths
+---
 
-- **Register:** `http://localhost:3002/v1/web/register` - New user accounts are created here.
-- **Login:** `http://localhost:3002/v1/web/login` - Here a user can login with their passkey or username/pass
-- **Profile:**`http://localhost:3002/v1/web/profile` - Here a user can change their account's email, password and name.
-- **Recovery:**`http://localhost:3002/v1/web/recovery` - Where a user can trigger the forgot password flow should they be unable to access their account
-- **Home:**`http://localhost:3002/v1/web/home` - A temporary landing page for users when they they successfully login or register - AuthC should instead route the user to your application's home page using the `APPLICATION_ORIGIN=http://localhost:3002/v1/web/home` config.
+## Web Form Endpoints
+
+Below are the available web form routes provided by the AuthCompanion user management server:
+
+| Path        | Description                                                                                                                                                                                                          |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/register` | New user registration. Allows users to create new accounts.                                                                                                                                                          |
+| `/login`    | User authentication. Supports passkey and username/password login.                                                                                                                                                   |
+| `/profile`  | User profile management. Users can update their email, password, and display name.                                                                                                                                   |
+| `/recovery` | Account recovery. Initiates the password reset/forgot password flow.                                                                                                                                                 |
+| `/home`     | Post-login/register landing page. You should configure your app to redirect users here after authentication.<br>Set `APPLICATION_ORIGIN=http://localhost:3002/home` in your config to customize the redirect target. |
+
+**Example (default local URLs):**
+
+- Register: `http://localhost:3002/register`
+- Login: `http://localhost:3002/login`
+- Profile: `http://localhost:3002/profile`
+- Recovery: `http://localhost:3002/recovery`
+- Home: `http://localhost:3002/home`
+
+---
+
+## Customization
+
+- **Branding:** Easily modify the look and feel of these forms by editing the Vue.js and Tabler-based templates in your AuthCompanion installation.
+- **Redirects:** After login or registration, AuthCompanion routes users your application home page like `/home`. Change the `APPLICATION_ORIGIN` environment variable to redirect users to your application's homepage or dashboard.
+
+---
+
+## Screenshots
 
 |                                              Login Screen                                              |                                             Registration Screen                                              |
 | :----------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------: |
 | ![Login](https://raw.githubusercontent.com/authcompanion/authcompanion2/main/.github/public/login.png) | ![Register](https://raw.githubusercontent.com/authcompanion/authcompanion2/main/.github/public/register.png) |
+
+---
+
+By using these built-in web forms, you can integrate user authentication and management into your app without the hassle of building and maintaining your own UI for these flows.

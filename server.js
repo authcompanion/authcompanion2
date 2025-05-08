@@ -1,55 +1,108 @@
+/* Application Modules */
 import { buildApp } from "./app.js";
 import config from "./config.js";
 
-const startServer = async () => {
-  try {
-    const server = await buildApp({
-      logger: true,
-      forceCloseConnections: true,
-    });
-
-    await server.listen({
-      port: config.AUTHPORT,
-      host: "0.0.0.0",
-    });
-    const addresses = server.addresses();
-
-    printStartupMessage(addresses[0].address, addresses[0].port);
-    setupGracefulShutdown(server);
-  } catch (err) {
-    console.error(err);
-    process.exit(1);
-  }
+/* Constants */
+const SERVER_SHUTDOWN_SIGNALS = ["SIGTERM", "SIGINT", "SIGUSR2"];
+const SERVER_CONFIG = {
+  logger: {
+    level: "info",
+  },
+  forceCloseConnections: true,
+  listenOptions: {
+    port: config.AUTHPORT,
+    host: "0.0.0.0",
+  },
 };
 
-function printStartupMessage(address, port) {
-  console.log(`
-      ###########################################################
-                The AuthCompanion Server has started
-
-           🖥️   Client UI on: http://localhost:${port}/v1/web/login
-           🚀   Admin UI on: http://localhost:${port}/v1/admin/login
-
-      ###########################################################
-      `);
-  console.log("Use CTRL-C to shut down AuthCompanion");
+/**
+ * Main entry point for starting the AuthCompanion server
+ */
+async function startServer() {
+  try {
+    const server = await initializeServer();
+    registerShutdownHooks(server);
+    logStartupDetails(server);
+  } catch (error) {
+    handleStartupError(error);
+  }
 }
 
-function setupGracefulShutdown(server) {
-  const handleSignal = async () => {
+/**
+ * Initializes and starts the Fastify server
+ */
+async function initializeServer() {
+  const server = await buildApp({
+    ...SERVER_CONFIG,
+  });
+
+  await server.listen(SERVER_CONFIG.listenOptions);
+  return server;
+}
+
+/**
+ * Handles server shutdown gracefully
+ */
+function registerShutdownHooks(server) {
+  const shutdownHandler = async (signal) => {
     try {
+      console.log(`\nReceived ${signal} - Shutting down gracefully`);
       await server.close();
-      server.log.info(`AuthCompanion has exited. Goodbye! 👋`);
+      console.log("AuthCompanion has exited. Goodbye! 👋");
       process.exit(0);
-    } catch (err) {
-      console.error(err);
-      process.exit(1);
+    } catch (error) {
+      handleShutdownError(error);
     }
   };
 
-  process.on("SIGTERM", handleSignal);
-  process.on("SIGINT", handleSignal);
-  process.on("SIGUSR2", handleSignal);
+  SERVER_SHUTDOWN_SIGNALS.forEach((signal) => {
+    process.on(signal, () => shutdownHandler(signal));
+  });
 }
 
+/**
+ * Displays formatted startup message with server details
+ */
+function logStartupDetails(server) {
+  const { address, port } = server.addresses()[0];
+  const baseUrl = `http://localhost:${port}`;
+
+  console.log(`
+    ###########################################################
+                AuthCompanion Server
+
+         🌐 Version:      v5.0.0
+         📡 Environment:  ${process.env.NODE_ENV || "development"}
+         🚨 Port:         ${port}
+
+         🔧 Endpoints:
+             🖥️  Client UI:  ${baseUrl}/
+             🛠️  Admin UI:   ${baseUrl}/admin/login
+             📒 API Documentation:  ${baseUrl}/docs/api
+
+
+    ###########################################################
+  `);
+  console.log("Use CTRL-C to initiate graceful shutdown\n");
+}
+
+/**
+ * Handles critical startup failures
+ */
+function handleStartupError(error) {
+  console.error("💥 Critical Server Startup Failure:");
+  console.error(error);
+  process.exit(1);
+}
+
+/**
+ * Handles shutdown sequence errors
+ */
+function handleShutdownError(error) {
+  console.error("❌ Graceful shutdown failed:");
+  console.error(error);
+  process.exit(1);
+}
+
+// Start the application
 startServer();

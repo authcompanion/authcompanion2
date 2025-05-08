@@ -1,9 +1,9 @@
 import config from "../../config.js";
 
 export default {
-  schema: "./db/postgres/schema.js",
+  schema: "./db/postgres/pg.schema.js",
   out: "./db/postgres",
-  driver: "pg",
+  dialect: "postgresql",
   dbCredentials: {
     host: "localhost",
     port: "5432",

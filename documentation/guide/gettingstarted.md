@@ -74,7 +74,7 @@ $ docker run --name authcompanion \
 authc_server
 ```
 
-The app will be live at [http://localhost:3002/login](http://localhost:3002/login).
+The app will be live at `http://localhost:3002/login`.
 
 Optionally, If you have your own configuration file you can pass it into your docker command
 with:

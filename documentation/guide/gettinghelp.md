@@ -17,7 +17,7 @@ Your question or problem might already have been addressed! Here are some resour
   [Search the Issues on GitHub](https://github.com/authcompanion/authcompanion2/issues)
 
 - **Project Documentation:**  
-  Our documentation may have the answer you need. Please review the [README](./README.md) and any other documentation files provided in the repository.
+  Our documentation may have the answer you need. Please review the [README](https://github.com/authcompanion/authcompanion2) and any other documentation files provided in the repository.
 
 ## What to Include When You Reach Out
 

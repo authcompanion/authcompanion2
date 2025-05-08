@@ -1,6 +1,6 @@
 # Server API Summary
 
-Below is a summarized table of the key endpoints available. For detailed, interactive documentation and to try the API live, visit: [http://localhost:3002/docs/api](http://localhost:3002/docs/api) when you're running the AuthC Server.
+Below is a summarized table of the key endpoints available. For detailed, interactive documentation and to try the API live, visit: `http://localhost:3002/docs/api` when you're running the AuthC Server.
 
 ---
 
@@ -30,11 +30,11 @@ Below is a summarized table of the key endpoints available. For detailed, intera
 
 ## **How to Explore Further**
 
-- **Try the API:** Open [http://localhost:3002/docs/api](http://localhost:3002/docs/api) in your browser while the server is running.
+- **Try the API:** Open `http://localhost:3002/docs/api` in your browser while the server is running.
 - **Interactive Documentation:** The documentation UI allows you to try endpoints, inspect request/response schemas, and view detailed requirements.
 - **Authentication:** Most Admin endpoints require a Bearer JWT token; obtain one via the `/v1/admin/login` endpoint.
 - **WebAuthn:** For passwordless flows, use endpoints under the _WebAuthn API_ tag.
 
 ## ![OAS Screenshot](/serverapidoc.png)
 
-For full request/response details, parameter descriptions, and advanced features, **please consult the live documentation** at [http://localhost:3002/docs/api](http://localhost:3002/docs/api).
+For full request/response details, parameter descriptions, and advanced features, **please consult the live documentation** at `http://localhost:3002/docs/api`

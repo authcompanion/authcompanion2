@@ -13,7 +13,7 @@ export default {
       },
       {
         text: "Demo",
-        link: "https://demo.authcompanion.com/v1/web/register",
+        link: "https://demo.authcompanion.com/register",
       },
       {
         text: "Contributing",

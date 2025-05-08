@@ -9,7 +9,7 @@ The **Admin Panel** is a web-based interface designed to help administrators or 
 - **URL:**  
   By default, the Admin Panel is available at `/admin/`.  
   For local development, you can access it at:  
-  `http://localhost:3002/v1/admin/login`  
+  `http://localhost:3002/admin/login`  
   (Replace `3002` with your configured port, if different. The port is set in your `.env` file.)
 
 ### Administrator Login
@@ -28,7 +28,7 @@ The **Admin Panel** is a web-based interface designed to help administrators or 
 
 - The Admin Panel is built using [Vue 3](https://vuejs.org/) and deployed as a Single Page Application (SPA).
 - It is served directly from the AuthCompanion server; no separate deployment is necessary.
-- All user management actions performed in the Admin Panel are powered by the [AuthCompanion Admin API](/reference/adminapi.md).
+- All user management actions performed in the Admin Panel are powered by the Admin API
 
 ### Key Features
 
@@ -85,9 +85,3 @@ The Admin Panel uses AuthCompanion's Admin API for all privileged user managemen
   - **Logout:**  
     `DELETE /v1/admin/logout/{uuid}`  
     Path param: admin user UUID
-
-> For the complete schema and request/response details, refer to the [Admin API Reference](/reference/adminapi.md) or your OpenAPI documentation.
-
----
-
-For more advanced usage and API details, see the [Admin API Reference](/reference/adminapi.md).

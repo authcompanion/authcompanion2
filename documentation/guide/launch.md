@@ -46,9 +46,9 @@ In the `[env]` section of `fly.toml`, set these (replace with your app's values)
   # Public URL for authentication (required for passkeys)
   ORIGIN = "https://<your-app>.fly.dev"
   # Where users are redirected after login/register
-  APPLICATION_ORIGIN = "https://<your-app>.fly.dev/v1/web/home"
+  APPLICATION_ORIGIN = "https://<your-app>.fly.dev/home"
   # AuthCompanion Admin dashboard (optional; set for user management)
-  ADMIN_ORIGIN = "http://demo.authcompanion.com/v1/admin/dashboard"
+  ADMIN_ORIGIN = "http://demo.authcompanion.com/admin/dashboard"
 ```
 
 ### **Set the Internal Port**
@@ -71,8 +71,8 @@ processes = []
 
 [env]
   ORIGIN = "https://<your-app>.fly.dev"
-  APPLICATION_ORIGIN = "https://<your-app>.fly.dev/v1/web/home"
-  ADMIN_ORIGIN = "http://demo.authcompanion.com/v1/admin/dashboard"
+  APPLICATION_ORIGIN = "https://<your-app>.fly.dev/home"
+  ADMIN_ORIGIN = "http://demo.authcompanion.com/admin/dashboard"
 
 [[services]]
   internal_port = 3002
@@ -87,7 +87,7 @@ processes = []
 flyctl deploy
 ```
 
-- After deployment, visit: `https://<your-app>.fly.dev/v1/web/login`
+- After deployment, visit: `https://<your-app>.fly.dev/login`
   - _Replace `<your-app>` with the value in your `fly.toml`_
 
 ---
@@ -115,7 +115,7 @@ flyctl deploy
    ```toml
    [env]
      ORIGIN = "https://auth.example.com"
-     APPLICATION_ORIGIN = "https://auth.example.com/v1/web/home"
+     APPLICATION_ORIGIN = "https://auth.example.com/home"
      # ...other env vars...
    ```
 
@@ -174,7 +174,7 @@ To enable password recovery (and similar features), configure SMTP settings:
 
    ```toml
    [env]
-     RECOVERY_REDIRECT_URL = "https://auth.example.com/v1/web/profile"
+     RECOVERY_REDIRECT_URL = "https://auth.example.com/profile"
      SMTP_HOSTNAME         = "smtp.migadu.com"
      SMTP_PORT             = 465
      SMTP_USERNAME         = "<your-username>"
@@ -232,7 +232,7 @@ FROM_ADDRESS="hello@authcompanion.com"
 
 ## 9. Troubleshooting & Further Help
 
-- If you run into issues, see [Getting Help](../contributing/gettinghelp.md).
+- If you run into issues, see [Getting Help](../guide/gettinghelp.md).
 - For more configuration examples, check the [official fly.toml](https://github.com/authcompanion/authcompanion2/blob/main/fly.toml).
 
 ---

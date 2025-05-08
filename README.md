@@ -137,7 +137,7 @@ Check out the Admin Dashboard in the documentation to learn how to access it: [A
 
 The best way to learn is by doing; here's a couple ways to get started.
 
-You can either use the publicly available demo at [demo.authcompanion.com](https://demo.authcompanion.com/v1/web/login) or start the server locally.
+You can either use the publicly available demo at [demo.authcompanion.com](https://demo.authcompanion.com/login) or start the server locally.
 
 ### 1. Create a user
 
@@ -145,12 +145,12 @@ AuthC comes with pre-built [Web Forms](#web-forms-for-authentication) to help
 you quickly integrate user auth alongside your web application.
 
 With the AuthC server running (in the prior steps), start first by registering an account using this
-web form: http://localhost:3002/v1/web/register
+web form: http://localhost:3002/register
 
 ### 2. Login as the new user
 
 Next, log in with the account you just created using your email and password at
-this web form: http://localhost:3002/v1/web/login. The server response includes
+this web form: http://localhost:3002/login. The server response includes
 an access token for use when authenticating to backend APIs and redirects the user to your application's home page.
 
 ### 3. Login as the Administrator
@@ -173,7 +173,7 @@ The RESTful Authentication API powers the Web Forms by which users authenticate 
 
 The Admin API helps an administrator to manage the users of their web application. It provides a range of functions through which administrators can programatially create, edit, and delete user accounts. The Admin API is also natively used by the Admin Dashboard.
 
-- **Try the API:** Open [http://localhost:3002/docs/api](http://localhost:3002/docs/api) in your browser while the AuthC server is running.
+- **Try the API:** Open http://localhost:3002/docs/api in your browser while the AuthC server is running.
 - **Interactive Documentation:** The documentation UI allows you to try endpoints, inspect request/response schemas, and view detailed requirements.
 
 ---

@@ -58,7 +58,7 @@
           <div class="d-flex flex-column flex-md-row flex-fill align-items-stretch align-items-md-center">
             <ul class="navbar-nav">
               <li class="nav-item active">
-                <a class="nav-link" href="/v1/admin/dashboard">
+                <a class="nav-link" href="/admin/dashboard">
                   <span class="nav-link-icon d-md-none d-lg-inline-block">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

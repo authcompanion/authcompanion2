@@ -1,10 +1,12 @@
 import { createHash, secureCookie } from "../../utils/credential.js";
 import { randomUUID } from "crypto";
-import { createId } from "@paralleldrive/cuid2";
+import { init } from "@paralleldrive/cuid2";
 import { makeAccesstoken, makeRefreshtoken } from "../../utils/jwt.js";
 import config from "../../config.js";
 import { refreshCookie } from "../../utils/cookies.js";
 import { eq } from "drizzle-orm";
+
+const createId = init({ length: 10 });
 
 export const registrationHandler = async function (request, reply) {
   const {

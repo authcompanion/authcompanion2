@@ -1,6 +1,6 @@
 import { createHash } from "../../utils/credential.js";
 import { randomUUID } from "crypto";
-import { createId } from "@paralleldrive/cuid2";
+import { init } from "@paralleldrive/cuid2";
 import { eq } from "drizzle-orm";
 
 const validateStatus = (value, fieldName) => {
@@ -11,6 +11,8 @@ const validateStatus = (value, fieldName) => {
     };
   }
 };
+
+const createId = init({ length: 10 });
 
 export const createUserHandler = async function (request, reply) {
   const { data } = request.body;

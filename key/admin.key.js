@@ -1,7 +1,7 @@
 import fastifyPlugin from "fastify-plugin";
 import config from "../config.js";
 import { writeFileSync } from "fs";
-import { createId } from "@paralleldrive/cuid2";
+import { init } from "@paralleldrive/cuid2";
 import { createHash } from "../utils/credential.js";
 import * as crypto from "crypto";
 import { eq } from "drizzle-orm";
@@ -29,6 +29,7 @@ const setupAdminKey = async function (fastify) {
     }
 
     //Create the default admin user in the Database, set the password to a random UUID as a placeholder
+    const createId = init({ length: 10 });
     const uuid = createId();
     const adminPwd = generatePassword();
     const hashPwd = await createHash(adminPwd);

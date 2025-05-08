@@ -1,8 +1,10 @@
 import config from "../../config.js";
-import { createId } from "@paralleldrive/cuid2";
+import { init } from "@paralleldrive/cuid2";
 import { createHash } from "../../utils/credential.js";
 import crypto from "crypto";
 import { generateRegistrationOptions } from "@simplewebauthn/server";
+
+const createId = init({ length: 10 });
 
 export const registrationOptionsHandler = async function (request, reply) {
   try {

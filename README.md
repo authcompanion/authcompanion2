@@ -32,7 +32,7 @@
 
 ## Hot topics
 
-- We've added full OpenAPI 3.0 specificaiton integration. Access the interactive documenation at: http://localhost:3002/docs/api when running the AuthC Server. Also refresh all of the site documentation for better clarity and instruction.
+- We've added full OpenAPI 3.0 specification integration. Access the interactive documentation at: http://localhost:3002/docs/api when running the AuthC Server. Also refresh all of the site documentation for better clarity and instruction.
 
 ## Introduction
 

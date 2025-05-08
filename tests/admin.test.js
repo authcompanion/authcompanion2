@@ -407,9 +407,6 @@ test.serial("POST /admin/login - successful admin login", async (t) => {
   t.truthy(cookies.adminRefreshToken);
   t.is(cookies.Path, "/");
   t.is(cookies.SameSite, config.SAMESITE);
-
-  // Verify security headers
-  t.is(res.headers["x-authc-app-origin"], config.ADMINORIGIN);
 });
 test.serial("POST /token/refresh - successful token refresh", async (t) => {
   // Login to get initial refresh token

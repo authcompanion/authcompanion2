@@ -1,3 +1,21 @@
+# [5.0.0-beta.1](https://github.com/authcompanion/authcompanion2/compare/4.0.0-beta.1...5.0.0-beta.1) (2025-05-08)
+
+We'd like to introduce **AuthCompanion v5.0.0-beta.1**, a landmark update focused on enhancing security, developer experience, and maintainability. Here’s what’s new:
+
+### Key Improvements
+- **Interactive API Documentation**: Added an interactive **OpenAPI Specification (OAS)** interface at `/docs/api`, enabling API exploration and testing.
+- **Server Architecture Overhaul**: Redesigned server architecture with:
+  - Streamlined API routes.
+  - Simplified form handlers.
+  - Improved maintainability and scalability.
+- **Modernized Codebase**:
+  - Refactored code organization for intuitive navigation.
+  - Simplified debugging and accelerated feature development.
+
+This release sets a strong foundation for future growth and innovation while ensuring a smoother experience for developers and administrators alike. Take the AuthC server for a test drive and let us how its working for you. 
+
+For more detials see - refactor: overhaul server and upgrade AuthC to v5 ([#26](https://github.com/authcompanion/authcompanion2/pull/26))
+
 # [4.0.0-beta.1](https://github.com/authcompanion/authcompanion2/compare/3.0.0-beta.23...4.0.0-beta.1) (2024-04-03)
 
 Introducing AuthCompanion v4.0.0 (beta), a major release packed with enhancements. This update significantly simplifies the codebase, ensuring consistent feature growth in the future. Enjoy the addition of PostgreSQL support (alongside SQLite), popular choices for storing AuthC's user accounts. Plus, explore the refreshed web forms, particularly the Login and Registration screens. Start your implementation fresh with this version for a smoother authentication experience!

@@ -43,7 +43,7 @@ export default {
         {
           text: "Developer Reference",
           items: [
-            { text: "API Summery", link: "/reference/apisummary" },
+            { text: "API Summary", link: "/reference/apisummary" },
             { text: "Tokens & Claims", link: "/reference/tokens" },
 
           ],

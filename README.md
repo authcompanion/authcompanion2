@@ -5,7 +5,7 @@
 
 <h2 align="center"><b>AuthCompanion 2</b></h2>
 
-<p align="center"> An admin-friendly, User Management Server (with Passkeys & JWTs) - for seamless and secure integration of user authentication.
+<p align="center"> An admin-friendly, User Management Server - for seamless and secure integration of user authentication.
 </p>
 
 <div align="center">
@@ -25,14 +25,14 @@
 
 </div>
 <br />
-<p align="center"> Useful Links:  <a href="https://docs.authcompanion.com/"> Documentation</a> | <a href="https://github.com/authcompanion/authcompanion2/blob/main/CHANGELOG.md"> CHANGELOG</a> | <a href="https://demo.authcompanion.com/login"> Demo Site</a> | <a rel="me" href="https://hachyderm.io/@paulfish"> Follow progress on Mastodon</a>
+<p align="center"> Useful Links:  <a href="https://docs.authcompanion.com/"> Documentation</a> | <a href="https://github.com/authcompanion/authcompanion2/blob/main/CHANGELOG.md"> CHANGELOG</a> | <a href="https://demo.authcompanion.com/login"> Demo Site</a> | <a rel="me" href="https://hachyderm.io/@paulfish"> Follow on Mastodon</a>
 </p>
 
 ---
 
 ## Hot topics
 
-- We've added full OpenAPI 3.0 specification integration. Access the interactive documentation at: http://localhost:3002/docs/api when running the AuthC Server. Also refresh all of the site documentation for better clarity and instruction.
+- We've added full OpenAPI 3.0 specification integration. Access the interactive documentation at: http://localhost:3002/docs/api when running the AuthC Server.
 
 ## Introduction
 
@@ -41,9 +41,15 @@ AuthCompanion aims to satisfy the most common authentication and user management
 With AuthC you can:
 
 - Securely handle the registration, login, logout, and account recovery of user accounts.
-- Generate and verify [JWTs](https://jwt.io/introduction), a token used for your user's session and authenticating them into your web application's backend APIs.
+- Generate and verify [JWTs](https://jwt.io/introduction), a token used for your user's session and for authenticating them into your web application's backend APIs.
 - Manage users via a self-service Dashboard and confidently store and own your web application's user accounts, on premises.
-- Help users create accounts and login with a passkey on their mobile device (aka passwordless) or by using traditional username/passwords instead.
+- Enable users to login with a passkey on their mobile device (aka passwordless) or by using traditional username/passwords instead.
+
+### Web Forms for Authentication
+
+AuthCompanion provides built-in web forms for user authentiation including both login and registration pages. After a user authenticates with AuthC's web forms, we pass them to your web application with a user session.
+
+For a full list of AuthC's Web Forms, see the [Web Form Guide](https://docs.authcompanion.com/guide/webforms.html).
 
 |             Login Screen             |            Registration Screen             |
 | :----------------------------------: | :----------------------------------------: |
@@ -53,13 +59,23 @@ With AuthC you can:
 
 The instructions below will launch the default server for exploring the features.
 
+### With Docker
+
+Start the server (with the default configuration):
+
+```bash
+$ docker run -it -p 3002:3002 --name AuthCompanion ghcr.io/authcompanion/authcompanion2:main
+```
+
+Also available is the [docker-compose.yml](https://github.com/authcompanion/authcompanion2/blob/main/docker-compose.yml)
+
 ### From Source
 
 Pre-requirement:
 
 - [Node.js](http://nodejs.org) **version >=22**
 
-Clone the repo if you haven't done so, and install dependencies using this
+Clone the repository, and install dependencies using this
 command:
 
 ```bash
@@ -72,19 +88,9 @@ When you're ready, start the server with the default settings!
 $ npm start
 ```
 
-### With Docker
-
-Start the server (with the default config):
-
-```bash
-$ docker run -it -p 3002:3002 --name AuthCompanion ghcr.io/authcompanion/authcompanion2:main
-```
-
-Also available is the [docker-compose.yml](https://github.com/authcompanion/authcompanion2/blob/main/docker-compose.yml)
-
 ### Configure AuthCompanion
 
-If you're just trying AuthC out for the first time, the default configuration will work. See the [Configuration Guide](https://docs.authcompanion.com/guide/configuration.html) for a closer look at how to configure the server for other environments.
+If you're just trying AuthC out for the first time, the default configuration will work just fine. See the [Configuration Guide](https://docs.authcompanion.com/guide/configuration.html) for a closer look at how to configure the server for other environments.
 
 ### Launch
 
@@ -113,14 +119,6 @@ When ready, read the [Launch Guide](https://docs.authcompanion.com/guide/launch.
       [plugin system](https://www.fastify.io/docs/latest/Reference/Plugins/) for
       easily adding new functionality to cover more of your authentication needs.
 
-### Web Forms for Authentication
-
-Authcompanion provides built-in web forms for user authentiation including both login and registration pages.
-
-After a user authenticates with AuthC's web forms, we pass them to your web application.
-
-For a full list of AuthC's Web Forms, see the [Web Form Guide](https://docs.authcompanion.com/guide/webforms.html).
-
 ---
 
 ## Admin Dashboard
@@ -135,9 +133,7 @@ Check out the Admin Dashboard in the documentation to learn how to access it: [A
 
 ## Explore
 
-The best way to learn is by doing; here's a couple ways to get started.
-
-You can either use the publicly available demo at [demo.authcompanion.com](https://demo.authcompanion.com/login) or start the server locally.
+The best way to learn is by doing; here's a couple ways to get started. You can either use the publicly available demo at [demo.authcompanion.com](https://demo.authcompanion.com/login) or start the server locally.
 
 ### 1. Create a user
 
@@ -165,6 +161,8 @@ Have a look through the [Integration Guide](https://docs.authcompanion.com/guide
 
 ## API Docs
 
+- **Try the API:** Open http://localhost:3002/docs/api in your browser while the AuthC server is running. The documentation UI allows you to try endpoints, inspect request/response schemas, and view detailed requirements.
+
 ### Authentication API
 
 The RESTful Authentication API powers the Web Forms by which users authenticate into your web app. It's important to note that the web forms alone doesn't cover every authentication flow for your users. For example: refreshing an expired access token would require interacting with AuthC's APIs in addition to using the Web Froms.
@@ -172,9 +170,6 @@ The RESTful Authentication API powers the Web Forms by which users authenticate 
 ### Admin API
 
 The Admin API helps an administrator to manage the users of their web application. It provides a range of functions through which administrators can programatially create, edit, and delete user accounts. The Admin API is also natively used by the Admin Dashboard.
-
-- **Try the API:** Open http://localhost:3002/docs/api in your browser while the AuthC server is running.
-- **Interactive Documentation:** The documentation UI allows you to try endpoints, inspect request/response schemas, and view detailed requirements.
 
 ---
 

@@ -50,7 +50,7 @@
               </div>
             </a>
             <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-              <p class="dropdown-item" @click="logout()">logout</p>
+              <p class="dropdown-item" @click="logout()">Logout</p>
             </div>
           </div>
         </div>
@@ -144,6 +144,7 @@
                 @delete-user="deleteUserRecord"
                 @previous-page="previousPage"
                 @next-page="nextPage"
+                :format-date="formatDate"
               />
             </div>
           </div>
@@ -160,6 +161,7 @@
                     href="https://github.com/authcompanion/authcompanion2/blob/main/CHANGELOG.md"
                     class="link-secondary"
                     rel="noopener"
+                    target="_blank"
                   >
                     Changelog
                   </a>
@@ -231,6 +233,19 @@ import * as jose from "jose";
 import UserModal from "../../components/admin/UserModal.vue";
 import AdminTable from "../../components/admin/AdminTable.vue";
 import ErrorAlert from "../../components/ErrorAlert.vue"; // Updated import
+
+// Utility: Format ISO date string to human-readable
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  return date.toLocaleString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
 
 // Reactive state
 const adminEmail = ref("");

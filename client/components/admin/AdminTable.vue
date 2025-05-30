@@ -57,8 +57,20 @@
             <td class="text-muted">{{ user.attributes.email }}</td>
             <td class="text-muted">{{ user.attributes.active == 1 ? "Active" : "Inactive" }}</td>
             <td class="text-muted">{{ user.attributes.isAdmin == 1 ? "Yes" : "No" }}</td>
-            <td class="text-muted">{{ user.attributes.created }}</td>
-            <td class="text-muted">{{ user.attributes.updated }}</td>
+            <td class="text-muted">
+              {{
+                formatDate
+                  ? formatDate(user.attributes.created_at || user.attributes.created)
+                  : user.attributes.created_at || user.attributes.created
+              }}
+            </td>
+            <td class="text-muted">
+              {{
+                formatDate
+                  ? formatDate(user.attributes.updated_at || user.attributes.updated)
+                  : user.attributes.updated_at || user.attributes.updated
+              }}
+            </td>
             <td class="text-muted">
               <a href="#" data-bs-toggle="modal" data-bs-target="#modal-user" @click="$emit('edit-user', user)">
                 Edit
@@ -134,6 +146,10 @@ defineProps({
   searchValue: {
     type: String,
     default: "",
+  },
+  formatDate: {
+    type: Function,
+    default: null,
   },
 });
 

@@ -58,7 +58,7 @@
           <div class="d-flex flex-column flex-md-row flex-fill align-items-stretch align-items-md-center">
             <ul class="navbar-nav">
               <li class="nav-item active">
-                <a class="nav-link" href="/admin/dashboard">
+                <a class="nav-link" href="/admin">
                   <span class="nav-link-icon d-md-none d-lg-inline-block">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -150,7 +150,7 @@
         </div>
       </div>
 
-      <footer class="footer footer-transparent d-print-none">
+      <footer class="footer footer-transparent position-fixed bottom-0 w-100 d-print-none">
         <div class="container-xl">
           <div class="flex-row-reverse text-center row align-items-center">
             <div class="col-lg-auto ms-lg-auto">
@@ -194,7 +194,7 @@
             <div class="mt-3 col-12 col-lg-auto mt-lg-0">
               <ul class="mb-0 list-inline list-inline-dots">
                 <li class="list-inline-item">
-                  Copyright &copy; 2023
+                  Copyright &copy; 2025
                   <a href="" class="link-secondary">AuthCompanion</a>. All rights reserved.
                 </li>
               </ul>
